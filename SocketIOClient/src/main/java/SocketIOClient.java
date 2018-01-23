@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -15,6 +16,7 @@ public class SocketIOClient {
     private static final Logger clientLogger = Logger.getLogger(SocketIOClient.class.getSimpleName());
 
     static {
+        clientLogger.setLevel(Level.ALL);
         if (Main.LOGGER_USE_FILE_HANDLER) {
             try {
                 Utils.addFileHandler(clientLogger);
@@ -51,15 +53,15 @@ public class SocketIOClient {
 
             @Override
             public void call(Object... args) {
-                logInfo("received 'event'");
+                //logInfo("received 'event'");
                 if (args.length > 0) {
                     Object data = args[0];
-                    logInfo(data.toString());
+                    //logFine(data.toString());
                     if (data instanceof String) {
 
                     } else if (data instanceof JSONObject) {
                         JSONObject json = (JSONObject) data;
-                        if (json.length() > 0) logInfo("json response:" + json.getString("res"));
+                        if (json.length() > 0) logFine("json response:" + json.getString("res"));
                     }
                 }
             }
@@ -74,7 +76,8 @@ public class SocketIOClient {
                         } else if (data instanceof JSONObject) {
                             JSONObject json = (JSONObject) data;
                             if (json.length() > 0) {
-                                logInfo("sms:" + json.getString("content"));
+//                                logInfo("sms:" + json.getString("content"));
+                                logFine(json.toString());
                                 if (json.getInt("id") == clientId) rightSMSCounter++;
                                 else wrongSMSCounter++;
                             }
@@ -98,6 +101,10 @@ public class SocketIOClient {
 
     private void logInfo(String msg) {
         clientLogger.info(tag + msg);
+    }
+
+    private void logFine(String msg) {
+        clientLogger.fine(tag + msg);
     }
 
     public static class SimpleDTO implements Serializable {

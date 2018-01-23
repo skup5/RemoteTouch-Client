@@ -12,7 +12,8 @@ import java.util.logging.Logger;
 public class Main {
 
     static Logger logger = Logger.getLogger("Main");
-    static int CLIENT_COUNT = 1, CLIENT_FIRST_ID = 1;
+    static int CLIENT_COUNT = 1, CLIENT_FIRST_ID = 1, PORT = 3000;
+    static String HOSTNAME = "http://localhost";
     public static final boolean LOGGER_USE_FILE_HANDLER = true;
 
 
@@ -32,8 +33,7 @@ public class Main {
 
     private static void run() throws URISyntaxException {
 
-//        URI uri = new URI("http://localhost:3000");
-        URI uri = new URI("http://10.0.0.9:3000");
+        URI uri = new URI(HOSTNAME + ":" + PORT);
         SocketIOClient[] clients = new SocketIOClient[CLIENT_COUNT];
 
         for (int i = 0; i < CLIENT_COUNT; i++) {
@@ -96,7 +96,24 @@ public class Main {
             }
         }
 
+        // Parse port
+        if (cmd.hasOption("p")) {
+            String value = cmd.getOptionValue("p");
+            try {
+                PORT = Integer.parseInt(value);
 
+                if (PORT < 0 || PORT > 65535) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Port has to be positive integer between 1 and 65535, '" + value + "' given.");
+            }
+        }
+
+        // Parse hostname
+        if (cmd.hasOption("H")) {
+            HOSTNAME = cmd.getOptionValue("H");
+        }
     }
 
     private static Options setOptions() {
@@ -115,6 +132,16 @@ public class Main {
         // First client ID
         option = new Option("i", "first-id", true, "id of first client (default: " + CLIENT_FIRST_ID + ")");
         option.setArgName("first-id");
+        options.addOption(option);
+
+        // Hostname
+        option = new Option("H", "host", true, "hostname (default: " + HOSTNAME + ")");
+        option.setArgName("hostname");
+        options.addOption(option);
+
+        // Port
+        option = new Option("p", "port", true, "port (default: " + PORT + ")");
+        option.setArgName("port");
         options.addOption(option);
 
         return options;
