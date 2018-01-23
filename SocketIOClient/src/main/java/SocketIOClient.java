@@ -13,6 +13,7 @@ import java.util.logging.Logger;
  */
 public class SocketIOClient {
     private static final Logger clientLogger = Logger.getLogger(SocketIOClient.class.getSimpleName());
+
     static {
         if (Main.LOGGER_USE_FILE_HANDLER) {
             try {
@@ -31,7 +32,6 @@ public class SocketIOClient {
     private int wrongSMSCounter = 0;
 
     public SocketIOClient(int clientId, URI uri) {
-        super();
         this.socket = IO.socket(uri);
         this.clientId = clientId;
         this.uri = uri;
@@ -85,7 +85,7 @@ public class SocketIOClient {
         socket.connect();
     }
 
-    public void stop() {
+    public void close() {
         socket.disconnect();
         logInfo("received " + (rightSMSCounter + wrongSMSCounter) + " sms (" + wrongSMSCounter + " wrong)");
     }

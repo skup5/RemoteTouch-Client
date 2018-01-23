@@ -1,20 +1,9 @@
 
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
-import org.json.JSONObject;
+import org.apache.commons.cli.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Scanner;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -23,23 +12,32 @@ import java.util.logging.Logger;
 public class Main {
 
     static Logger logger = Logger.getLogger("Main");
-    static int clientCount = 4;
+    static int CLIENT_COUNT = 1, CLIENT_FIRST_ID = 1;
     public static final boolean LOGGER_USE_FILE_HANDLER = true;
 
 
     public static void main(String[] args) throws URISyntaxException {
+        Options options = setOptions();
+
         try {
-            parseArgs(args);
-        } catch (RuntimeException runtimeException) {
-            printHelp();
+            processArgs(options, args);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            printHelp(options);
             System.exit(1);
         }
 
-        URI uri = new URI("http://localhost:3000");
-        SocketIOClient[] clients = new SocketIOClient[clientCount];
+        run();
+    }
 
-        for (int i = 0; i < clientCount; i++) {
-            clients[i] = new SocketIOClient(i + 1, uri);
+    private static void run() throws URISyntaxException {
+
+//        URI uri = new URI("http://localhost:3000");
+        URI uri = new URI("http://10.0.0.9:3000");
+        SocketIOClient[] clients = new SocketIOClient[CLIENT_COUNT];
+
+        for (int i = 0; i < CLIENT_COUNT; i++) {
+            clients[i] = new SocketIOClient(i + CLIENT_FIRST_ID, uri);
             clients[i].run();
         }
 
@@ -47,20 +45,78 @@ public class Main {
         new Scanner(System.in).hasNext();
 
         System.out.println("Stopping...");
-        for (int i = 0; i < clientCount; i++) {
-            clients[i].stop();
+        for (int i = 0; i < CLIENT_COUNT; i++) {
+            clients[i].close();
         }
     }
 
-    private static void printHelp() {
-        System.out.println("Usage: java -jar socket-io-client.jar [clients]");
+    private static void printHelp(Options options) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp(120, "java -jar socket-io-client.jar", "\nDESCRIPTION", options, null, true);
     }
 
-    private static void parseArgs(String[] args) {
-        if (args.length > 0) {
-            clientCount = Integer.parseInt(args[0]);
-            if (clientCount < 1) throw new IllegalArgumentException("Number of clients have to be greater then 0");
+    private static void processArgs(Options options, String[] args) throws ParseException {
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmd;
+
+        cmd = parser.parse(options, args);
+
+        // Parse help
+        if (cmd.hasOption("help")) {
+            printHelp(options);
+            System.exit(0);
         }
+
+        // Parse number of clients
+        if (cmd.hasOption("n")) {
+            String value = cmd.getOptionValue("n");
+            try {
+                CLIENT_COUNT = Integer.parseInt(value);
+
+                if (CLIENT_COUNT < 1) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Number of clients has to be greater then 0, '" + value + "' given.");
+            }
+        }
+
+        // Parse id of first client
+        if (cmd.hasOption("i")) {
+            String value = cmd.getOptionValue("i");
+
+            try {
+                CLIENT_FIRST_ID = Integer.parseInt(value);
+
+                if (CLIENT_FIRST_ID < 0) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Client ID has to start from zero or positive integer, '" + value + "' given\n");
+            }
+        }
+
+
     }
 
+    private static Options setOptions() {
+        Options options = new Options();
+        Option option;
+
+        // Help
+        option = new Option("h", "help", false, "display help");
+        options.addOption(option);
+
+        // Number of running clients
+        option = new Option("n", true, "number of running clients (default: " + CLIENT_COUNT + ")");
+        option.setArgName("n");
+        options.addOption(option);
+
+        // First client ID
+        option = new Option("i", "first-id", true, "id of first client (default: " + CLIENT_FIRST_ID + ")");
+        option.setArgName("first-id");
+        options.addOption(option);
+
+        return options;
+    }
 }
