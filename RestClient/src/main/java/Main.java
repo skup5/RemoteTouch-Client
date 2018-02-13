@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Scanner;
 import java.util.logging.Logger;
 
 /**
@@ -33,6 +32,7 @@ public class Main {
         try {
             parseArgs(args);
         } catch (RuntimeException runtimeException) {
+            System.out.println(runtimeException.getLocalizedMessage());
             printHelp();
             System.exit(1);
         }
