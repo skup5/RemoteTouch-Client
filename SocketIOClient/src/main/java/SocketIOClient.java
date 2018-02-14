@@ -42,49 +42,54 @@ public class SocketIOClient {
 
     public void run() {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-
             @Override
             public void call(Object... args) {
                 logInfo("connected");
                 sendIntro();
             }
+        }).on(Socket.EVENT_DISCONNECT, args -> logInfo("disconnected")
+        ).on("event", args -> {
+            //logInfo("received 'event'");
+            if (args.length > 0) {
+                Object data = args[0];
+                //logFine(data.toString());
+                if (data instanceof String) {
 
-        }).on("event", new Emitter.Listener() {
+                } else if (data instanceof JSONObject) {
+                    JSONObject json = (JSONObject) data;
+                    if (json.length() > 0) logFine("json response:" + json.getString("res"));
+                }
+            }
+        }).on(EEventType.SMS.name(), (args) -> {
+            // logInfo("received 'sms'");
+            if (args.length > 0) {
+                Object data = args[0];
+                //   logInfo(data.toString());
+                if (data instanceof String) {
 
-            @Override
-            public void call(Object... args) {
-                //logInfo("received 'event'");
-                if (args.length > 0) {
-                    Object data = args[0];
-                    //logFine(data.toString());
-                    if (data instanceof String) {
-
-                    } else if (data instanceof JSONObject) {
-                        JSONObject json = (JSONObject) data;
-                        if (json.length() > 0) logFine("json response:" + json.getString("res"));
+                } else if (data instanceof JSONObject) {
+                    JSONObject json = (JSONObject) data;
+                    if (json.length() > 0) {
+                    //  logInfo("sms:" + json.getString("content"));
+                        logFine(json.toString());
+                        if (json.getInt("id") == clientId) rightSMSCounter++;
+                        else wrongSMSCounter++;
                     }
                 }
             }
+        }).on(EEventType.NOTIFICATION.name(), (args -> {
+            //logInfo("received 'notification'");
+            if (args.length > 0) {
+                Object data = args[0];
+                //logFine(data.toString());
+                if (data instanceof String) {
 
-        }).on("sms", (args) -> {
-                    // logInfo("received 'sms'");
-                    if (args.length > 0) {
-                        Object data = args[0];
-                        //   logInfo(data.toString());
-                        if (data instanceof String) {
-
-                        } else if (data instanceof JSONObject) {
-                            JSONObject json = (JSONObject) data;
-                            if (json.length() > 0) {
-//                                logInfo("sms:" + json.getString("content"));
-                                logFine(json.toString());
-                                if (json.getInt("id") == clientId) rightSMSCounter++;
-                                else wrongSMSCounter++;
-                            }
-                        }
-                    }
+                } else if (data instanceof JSONObject) {
+                    JSONObject json = (JSONObject) data;
+                    if (json.length() > 0) logInfo("notification:" + json.getString("content"));
                 }
-        ).on(Socket.EVENT_DISCONNECT, args -> logInfo("disconnected"));
+            }
+        }));
         socket.connect();
     }
 
