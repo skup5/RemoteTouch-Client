@@ -28,7 +28,6 @@ public class SocketIOClient {
 
     private final String tag;
     private final int clientId;
-    private final URI uri;
     private final Socket socket;
     private int rightSMSCounter = 0;
     private int wrongSMSCounter = 0;
@@ -36,7 +35,6 @@ public class SocketIOClient {
     public SocketIOClient(int clientId, URI uri) {
         this.socket = IO.socket(uri);
         this.clientId = clientId;
-        this.uri = uri;
         this.tag = "[" + clientId + "] ";
     }
 
