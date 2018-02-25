@@ -1,8 +1,10 @@
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import javafx.scene.control.Alert;
 import org.json.JSONObject;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
@@ -29,10 +31,12 @@ public class SocketIOClient {
     private final String tag;
     private final int clientId;
     private final Socket socket;
+    private final URI serverUri;
     private int rightSMSCounter = 0;
     private int wrongSMSCounter = 0;
 
     public SocketIOClient(int clientId, URI uri) {
+        this.serverUri = uri;
         this.socket = IO.socket(uri);
         this.clientId = clientId;
         this.tag = "[" + clientId + "] ";
@@ -42,10 +46,10 @@ public class SocketIOClient {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                logInfo("connected");
+                logInfo("connected to " + serverUri);
                 sendIntro();
             }
-        }).on(Socket.EVENT_DISCONNECT, args -> logInfo("disconnected")
+        }).on(Socket.EVENT_DISCONNECT, args -> logInfo("disconnected from " + serverUri)
         ).on("event", args -> {
             //logInfo("received 'event'");
             if (args.length > 0) {
@@ -68,8 +72,8 @@ public class SocketIOClient {
                 } else if (data instanceof JSONObject) {
                     JSONObject json = (JSONObject) data;
                     if (json.length() > 0) {
-                    //  logInfo("sms:" + json.getString("content"));
-                        logFine(json.toString());
+                        logInfo("sms:" + json.optString("content"));
+//                        logFine(json.toString());
                         if (json.getInt("id") == clientId) rightSMSCounter++;
                         else wrongSMSCounter++;
                     }
@@ -84,7 +88,7 @@ public class SocketIOClient {
 
                 } else if (data instanceof JSONObject) {
                     JSONObject json = (JSONObject) data;
-                    if (json.length() > 0) logInfo("notification:" + json.getString("content"));
+                    if (json.length() > 0) logInfo("notification:" + json.optString("content"));
                 }
             }
         }));
