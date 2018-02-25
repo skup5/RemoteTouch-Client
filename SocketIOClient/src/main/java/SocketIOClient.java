@@ -79,7 +79,7 @@ public class SocketIOClient {
                     }
                 }
             }
-        }).on(EEventType.NOTIFICATION.name(), (args -> {
+        }).on(EEventType.NOTIFICATION.name(), (args) -> {
             //logInfo("received 'notification'");
             if (args.length > 0) {
                 Object data = args[0];
@@ -91,7 +91,19 @@ public class SocketIOClient {
                     if (json.length() > 0) logInfo("notification:" + json.optString("content"));
                 }
             }
-        }));
+        }).on(EEventType.CALL.name(), args -> {
+            //logInfo("received 'call'");
+            if (args.length > 0) {
+                Object data = args[0];
+                //logFine(data.toString());
+                if (data instanceof String) {
+
+                } else if (data instanceof JSONObject) {
+                    JSONObject json = (JSONObject) data;
+                    if (json.length() > 0) logInfo("call:" + json.optString("content"));
+                }
+            }
+        });
         socket.connect();
     }
 
