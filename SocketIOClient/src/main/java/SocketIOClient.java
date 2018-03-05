@@ -1,10 +1,8 @@
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-import javafx.scene.control.Alert;
 import org.json.JSONObject;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
@@ -62,7 +60,7 @@ public class SocketIOClient {
                     if (json.length() > 0) logFine("json response:" + json.getString("res"));
                 }
             }
-        }).on(EEventType.SMS.name(), (args) -> {
+        }).on(EventType.SMS.name(), (args) -> {
             // logInfo("received 'sms'");
             if (args.length > 0) {
                 Object data = args[0];
@@ -79,7 +77,7 @@ public class SocketIOClient {
                     }
                 }
             }
-        }).on(EEventType.NOTIFICATION.name(), (args) -> {
+        }).on(EventType.NOTIFICATION.name(), (args) -> {
             //logInfo("received 'notification'");
             if (args.length > 0) {
                 Object data = args[0];
@@ -91,7 +89,7 @@ public class SocketIOClient {
                     if (json.length() > 0) logInfo("notification:" + json.optString("content"));
                 }
             }
-        }).on(EEventType.CALL.name(), args -> {
+        }).on(EventType.CALL.name(), args -> {
             //logInfo("received 'call'");
             if (args.length > 0) {
                 Object data = args[0];
