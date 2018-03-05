@@ -1,8 +1,11 @@
 
 import org.apache.commons.cli.*;
+import security.AESCipher;
+import security.SymmetricCipher;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -11,16 +14,18 @@ import java.util.logging.Logger;
  */
 public class Main {
 
-    static Logger logger = Logger.getLogger("Main");
-    static int CLIENT_COUNT = 1, CLIENT_FIRST_ID = 1, PORT = 80;
-//    static String HOSTNAME = "http://localhost";
-    static String HOSTNAME = "http://remote-touch.azurewebsites.net";
-//    static String SUB_DOMAIN = "";
-    static String SUB_DOMAIN = "/socket";
+    private static Logger logger = Logger.getLogger("Main");
+    private static int CLIENT_COUNT = 1, CLIENT_FIRST_ID = 1, PORT = 80;
+    //    static String HOSTNAME = "http://localhost";
+    private static String HOSTNAME = "http://remote-touch.azurewebsites.net";
+    //    static String SUB_DOMAIN = "";
+    private static String SUB_DOMAIN = "/socket";
+    private static String SECURE_KEY = "[B@6e3c1e69";
+
     public static final boolean LOGGER_USE_FILE_HANDLER = false;
 
 
-    public static void main(String[] args) throws URISyntaxException {
+    public static void main(String[] args) throws URISyntaxException, NoSuchAlgorithmException {
         Options options = setOptions();
 
         try {
@@ -32,18 +37,47 @@ public class Main {
         }
 
         run();
+
+        //cipherTest();
     }
 
-    private static void run() throws URISyntaxException {
+    private static void cipherTest() throws NoSuchAlgorithmException {
+        String aesKey = AESCipher.generatePlainAESKey();
+        aesKey = "[B@6e3c1e69";
+//        aesKey = "a23b23c";
+//        String message = "{'a':'Hello', 'b':'world', 'c':01210}";
+        System.out.println("Key: " + aesKey);
 
-        URI uri = new URI(HOSTNAME + ":" + PORT+SUB_DOMAIN);
+        SymmetricCipher symmetricCipher = new AESCipher(aesKey);
+
+        String message = "{'a':'Hello', 'b':'world', 'c':01210, 'd':{'a':'Hello', 'b':'world', 'c':01210}}";
+        System.out.println("Plain message: " + message);
+
+        String encryptedMessage = symmetricCipher.encrypt(message);
+        System.out.println("Encrypted message: \n" + encryptedMessage);
+
+        String decryptedMessage = symmetricCipher.decrypt(encryptedMessage);
+        System.out.println("Decrypted message: " + decryptedMessage);
+
+        boolean equal = message.equals(decryptedMessage);
+        System.out.println("Equal messages: " + equal);
+
+        /*for (int i = 0; i < 20; i++) {
+            byte[] key  = CipherHelper.AESCipher.generateAESKey();
+            System.out.println(key+" ["+key.length+"]");
+        }*/
+    }
+
+    private static void run() throws URISyntaxException, NoSuchAlgorithmException {
+
+        URI uri = new URI(HOSTNAME + ":" + PORT + SUB_DOMAIN);
 //        URI uri = new URI(HOSTNAME );
 //        URI uri = new URI("http://remote-touch.azurewebsites.net");
 
         SocketIOClient[] clients = new SocketIOClient[CLIENT_COUNT];
 
         for (int i = 0; i < CLIENT_COUNT; i++) {
-            clients[i] = new SocketIOClient(i + CLIENT_FIRST_ID, uri);
+            clients[i] = new SocketIOClient(i + CLIENT_FIRST_ID, uri, SECURE_KEY);
             clients[i].run();
         }
 

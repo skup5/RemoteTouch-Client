@@ -2,10 +2,13 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import org.json.JSONObject;
+import security.AESCipher;
+import security.SymmetricCipher;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,14 +33,16 @@ public class SocketIOClient {
     private final int clientId;
     private final Socket socket;
     private final URI serverUri;
+    private final SymmetricCipher symmetricCipher;
     private int rightSMSCounter = 0;
     private int wrongSMSCounter = 0;
 
-    public SocketIOClient(int clientId, URI uri) {
+    public SocketIOClient(int clientId, URI uri, String secureKey) throws NoSuchAlgorithmException, AESCipher.UnsupportedCipherException {
         this.serverUri = uri;
         this.socket = IO.socket(uri);
         this.clientId = clientId;
         this.tag = "[" + clientId + "] ";
+        this.symmetricCipher = new AESCipher(secureKey);
     }
 
     public void run() {
@@ -70,7 +75,9 @@ public class SocketIOClient {
                 } else if (data instanceof JSONObject) {
                     JSONObject json = (JSONObject) data;
                     if (json.length() > 0) {
-                        logInfo("sms:" + json.optString("content"));
+                        String content = json.optString("content");
+                        if (!content.isEmpty()) content = decryptMessage(content);
+                        logInfo("sms:" + content);
 //                        logFine(json.toString());
                         if (json.getInt("id") == clientId) rightSMSCounter++;
                         else wrongSMSCounter++;
@@ -86,7 +93,11 @@ public class SocketIOClient {
 
                 } else if (data instanceof JSONObject) {
                     JSONObject json = (JSONObject) data;
-                    if (json.length() > 0) logInfo("notification:" + json.optString("content"));
+                    if (json.length() > 0) {
+                        String content = json.optString("content");
+                        if (!content.isEmpty()) content = decryptMessage(content);
+                        logInfo("notification:" + content);
+                    }
                 }
             }
         }).on(EventType.CALL.name(), args -> {
@@ -98,7 +109,11 @@ public class SocketIOClient {
 
                 } else if (data instanceof JSONObject) {
                     JSONObject json = (JSONObject) data;
-                    if (json.length() > 0) logInfo("call:" + json.optString("content"));
+                    if (json.length() > 0){
+                        String content = json.optString("content");
+                        if (!content.isEmpty()) content = decryptMessage(content);
+                        logInfo("call:" + content);
+                    }
                 }
             }
         });
@@ -114,6 +129,10 @@ public class SocketIOClient {
         JSONObject json = Utils.toJson(new SimpleDTO(clientId, ""));
         logInfo("sendIntro " + json.toString());
         socket.emit("intro", json);
+    }
+
+    private String decryptMessage(String encrypted) {
+        return symmetricCipher.decrypt(encrypted);
     }
 
     private void logInfo(String msg) {
