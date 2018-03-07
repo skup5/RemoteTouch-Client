@@ -15,10 +15,12 @@ import java.util.logging.Logger;
 public class Main {
 
     private static Logger logger = Logger.getLogger("Main");
-    private static int CLIENT_COUNT = 1, CLIENT_FIRST_ID = 1, PORT = 80;
-    //    static String HOSTNAME = "http://localhost";
-    private static String HOSTNAME = "http://remote-touch.azurewebsites.net";
-    //    static String SUB_DOMAIN = "";
+    private static int CLIENT_COUNT = 1, CLIENT_FIRST_ID = 1,
+            PORT = 443;
+//            PORT = 80;
+//        static String HOSTNAME = "https://localhost";
+    private static String HOSTNAME = "https://remote-touch.azurewebsites.net";
+//        static String SUB_DOMAIN = "";
     private static String SUB_DOMAIN = "/socket";
     private static String SECURE_KEY = "[B@6e3c1e69";
 

@@ -1,14 +1,17 @@
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import okhttp3.OkHttpClient;
 import org.json.JSONObject;
 import security.AESCipher;
 import security.SymmetricCipher;
 
+import javax.net.ssl.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,15 +41,24 @@ public class SocketIOClient {
     private int wrongSMSCounter = 0;
 
     public SocketIOClient(int clientId, URI uri, String secureKey) throws NoSuchAlgorithmException, AESCipher.UnsupportedCipherException {
+        IO.Options options = new IO.Options();
+        options.secure = true;
+
+//      Code for server self-signed certificate
+//        OkHttpClient okHttpClient = createSSL();
+//        options.callFactory = okHttpClient;
+//        options.webSocketFactory = okHttpClient;
+
         this.serverUri = uri;
-        this.socket = IO.socket(uri);
+        this.socket = IO.socket(uri, options);
         this.clientId = clientId;
         this.tag = "[" + clientId + "] ";
         this.symmetricCipher = new AESCipher(secureKey);
     }
 
     public void run() {
-        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+        socket.on(Socket.EVENT_CONNECTING, args -> logInfo("connecting to " + serverUri)
+        ).on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 logInfo("connected to " + serverUri);
@@ -109,15 +121,63 @@ public class SocketIOClient {
 
                 } else if (data instanceof JSONObject) {
                     JSONObject json = (JSONObject) data;
-                    if (json.length() > 0){
+                    if (json.length() > 0) {
                         String content = json.optString("content");
                         if (!content.isEmpty()) content = decryptMessage(content);
                         logInfo("call:" + content);
                     }
                 }
             }
-        });
+        }).on(Socket.EVENT_MESSAGE, args -> logInfo(args[0].toString())
+        );
         socket.connect();
+    }
+
+    /**
+     * This is needed if server is using self-signed certificate.
+     *
+     * @return
+     */
+    private OkHttpClient createSSL() {
+        //Security.insertProviderAt(new BouncyCastleProvider(), 1);
+
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+
+                @Override
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            }};
+
+            // Install the all-trusting trust manager
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            HostnameVerifier myHostnameVerifier = new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession sslSession) {
+                    //logInfo("HostnameVerifier for " + hostname);
+                    return serverUri.getHost().equals(hostname);
+                }
+            };
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .hostnameVerifier(myHostnameVerifier)
+                    .sslSocketFactory(sc.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                    .build();
+
+            return okHttpClient;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return null;
     }
 
     public void close() {
