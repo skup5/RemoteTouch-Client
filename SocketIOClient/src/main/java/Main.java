@@ -17,10 +17,10 @@ public class Main {
     private static Logger logger = Logger.getLogger("Main");
     private static int CLIENT_COUNT = 1, CLIENT_FIRST_ID = 1,
             PORT = 443;
-//            PORT = 80;
+    //            PORT = 80;
 //        static String HOSTNAME = "https://localhost";
     private static String HOSTNAME = "https://remote-touch.azurewebsites.net";
-//        static String SUB_DOMAIN = "";
+    //        static String SUB_DOMAIN = "";
     private static String SUB_DOMAIN = "/socket";
     private static String SECURE_KEY = "[B@6e3c1e69";
 
@@ -162,6 +162,11 @@ public class Main {
             SUB_DOMAIN = cmd.getOptionValue("s");
         }
 
+        // Parse secure key
+        if (cmd.hasOption("k")) {
+            SECURE_KEY = cmd.getOptionValue("k");
+        }
+
     }
 
     private static Options setOptions() {
@@ -195,6 +200,11 @@ public class Main {
         // Port
         option = new Option("p", "port", true, "port (default: " + PORT + ")");
         option.setArgName("port");
+        options.addOption(option);
+
+        // Secure key
+        option = new Option("k", "key", true, "secure key to pair mobile device (default: " + SECURE_KEY + ")");
+        option.setArgName("secureKey");
         options.addOption(option);
 
         return options;
