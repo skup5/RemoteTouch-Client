@@ -9,7 +9,6 @@ import cz.zelenikr.remotetouch.security.SymmetricCipher;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -19,10 +18,11 @@ import java.util.logging.Logger;
 public class Main {
 
     private static Logger logger = Logger.getLogger("Main");
-    private static int PORT = 443;
-    //            PORT = 80;
-//        static String HOSTNAME = "https://localhost";
-    private static String HOSTNAME = "https://remote-touch.azurewebsites.net";
+    private static int
+            PORT = 443;
+    //                PORT = 8080;
+//        static String HOSTNAME = "http://localhost";
+    private static String HOSTNAME = "https://remotetouch-75ea3.appspot.com";
     //        static String SUB_DOMAIN = "";
     private static String SUB_DOMAIN = "/socket";
     private static String

@@ -2,8 +2,9 @@ package cz.zelenikr.remotetouch.network;
 
 import cz.zelenikr.remotetouch.Main;
 import cz.zelenikr.remotetouch.Utils;
-import cz.zelenikr.remotetouch.data.EventType;
-import cz.zelenikr.remotetouch.data.SimpleMessageDTO;
+import cz.zelenikr.remotetouch.data.JsonMapper;
+import cz.zelenikr.remotetouch.data.event.*;
+import cz.zelenikr.remotetouch.data.message.MessageDTO;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 import cz.zelenikr.remotetouch.security.AESCipher;
 import cz.zelenikr.remotetouch.security.SymmetricCipher;
 import cz.zelenikr.remotetouch.security.exception.UnsupportedCipherException;
+
 import javax.net.ssl.*;
 import java.io.IOException;
 import java.net.URI;
@@ -24,6 +26,7 @@ import java.util.logging.Logger;
  */
 public class SocketIOClient {
     private static final Logger clientLogger = Logger.getLogger(SocketIOClient.class.getSimpleName());
+    private static final String EVENT_EVENT = "event";
 
     static {
         clientLogger.setLevel(Level.ALL);
@@ -44,8 +47,6 @@ public class SocketIOClient {
     private final Socket socket;
     private final URI serverUri;
     private final SymmetricCipher symmetricCipher;
-    private int rightSMSCounter = 0;
-    private int wrongSMSCounter = 0;
 
     public SocketIOClient(String clientToken, URI uri, String secureKey) throws UnsupportedCipherException {
         IO.Options options = new IO.Options();
@@ -72,68 +73,12 @@ public class SocketIOClient {
                 sendIntro();
             }
         }).on(Socket.EVENT_DISCONNECT, args -> logInfo("disconnected from " + serverUri)
-        ).on("event", args -> {
-            //logInfo("received 'event'");
+        ).on(EVENT_EVENT, args -> {
+            logInfo("received 'event'");
             if (args.length > 0) {
                 Object data = args[0];
                 //logFine(data.toString());
-                if (data instanceof String) {
-
-                } else if (data instanceof JSONObject) {
-                    JSONObject json = (JSONObject) data;
-                    if (json.length() > 0) logFine("json response:" + json.getString("res"));
-                }
-            }
-        }).on(EventType.SMS.name(), (args) -> {
-            // logInfo("received 'sms'");
-            if (args.length > 0) {
-                Object data = args[0];
-                //   logInfo(data.toString());
-                if (data instanceof String) {
-
-                } else if (data instanceof JSONObject) {
-                    JSONObject json = (JSONObject) data;
-                    if (json.length() > 0) {
-                        String content = json.optString("content");
-                        if (!content.isEmpty()) content = decryptMessage(content);
-                        logInfo("sms:" + content);
-//                        logFine(json.toString());
-                        if (clientToken.equals(json.getString("id"))) rightSMSCounter++;
-                        else wrongSMSCounter++;
-                    }
-                }
-            }
-        }).on(EventType.NOTIFICATION.name(), (args) -> {
-            //logInfo("received 'notification'");
-            if (args.length > 0) {
-                Object data = args[0];
-                //logFine(data.toString());
-                if (data instanceof String) {
-
-                } else if (data instanceof JSONObject) {
-                    JSONObject json = (JSONObject) data;
-                    if (json.length() > 0) {
-                        String content = json.optString("content");
-                        if (!content.isEmpty()) content = decryptMessage(content);
-                        logInfo("notification:" + content);
-                    }
-                }
-            }
-        }).on(EventType.CALL.name(), args -> {
-            //logInfo("received 'call'");
-            if (args.length > 0) {
-                Object data = args[0];
-                //logFine(data.toString());
-                if (data instanceof String) {
-
-                } else if (data instanceof JSONObject) {
-                    JSONObject json = (JSONObject) data;
-                    if (json.length() > 0) {
-                        String content = json.optString("content");
-                        if (!content.isEmpty()) content = decryptMessage(content);
-                        logInfo("call:" + content);
-                    }
-                }
+                onEventReceived(data);
             }
         }).on(Socket.EVENT_MESSAGE, args -> logInfo(args[0].toString())
         );
@@ -189,11 +134,55 @@ public class SocketIOClient {
 
     public void close() {
         socket.disconnect();
-        logInfo("received " + (rightSMSCounter + wrongSMSCounter) + " sms (" + wrongSMSCounter + " wrong)");
+    }
+
+    private void onCallReceived(CallEventContent content) {
+        logInfo("call: " + content);
+
+    }
+
+    private void onEventReceived(Object data) {
+        if (data instanceof String) {
+
+        } else if (data instanceof JSONObject) {
+            JSONObject json = (JSONObject) data;
+            if (json.length() > 0) {
+                String content = json.optString("content");
+                if (content.isEmpty()) {
+                    logInfo("Empty content");
+                } else {
+                    content = decryptMessage(content);
+                    EventDTO eventDTO = JsonMapper.eventFromJsonString(content);
+                    switch (eventDTO.getType()) {
+                        case CALL:
+                            onCallReceived((CallEventContent) eventDTO.getContent());
+                            break;
+                        case NOTIFICATION:
+                            onNotificationReceived((NotificationEventContent) eventDTO.getContent());
+                            break;
+                        case SMS:
+                            onSmsReceived((SmsEventContent) eventDTO.getContent());
+                            break;
+                        default:
+                            logError("Unknown EventType: " + eventDTO.getType());
+                    }
+                }
+            }
+        }
+    }
+
+    private void onNotificationReceived(NotificationEventContent content) {
+        logInfo("notification: " + content);
+
+    }
+
+    private void onSmsReceived(SmsEventContent content) {
+        logInfo("sms: " + content);
+
     }
 
     private void sendIntro() {
-        JSONObject json = Utils.toJson(new SimpleMessageDTO(clientToken, ""));
+        JSONObject json = JsonMapper.toJSONObject(new MessageDTO(clientToken, ""));
         logInfo("sendIntro " + json.toString());
         socket.emit("intro", json);
     }
@@ -210,5 +199,8 @@ public class SocketIOClient {
         clientLogger.fine(tag + msg);
     }
 
+    private void logError(String error) {
+        clientLogger.severe(tag + error);
+    }
 
 }

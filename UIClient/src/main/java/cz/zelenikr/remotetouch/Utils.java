@@ -1,7 +1,5 @@
 package cz.zelenikr.remotetouch;
 
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,11 +19,6 @@ public final class Utils {
     private static final Level FILE_LEVEL = Level.ALL;
     private static final String FILE_NAME_PATTERN = "log_";
     private static final Date CURRENT_DATE = new Date();
-
-
-    public static JSONObject toJson(Object object) {
-        return new JSONObject(object);
-    }
 
     public static void addFileHandler(Logger logger) throws IOException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss");
