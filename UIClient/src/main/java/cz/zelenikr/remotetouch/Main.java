@@ -55,13 +55,16 @@ public class Main {
 //        String message = "{'a':'Hello', 'b':'world', 'c':01210}";
         System.out.println("Key: " + aesKey);
 
-        SymmetricCipher symmetricCipher = new AESCipher(aesKey);
+        SymmetricCipher<String> symmetricCipher = new AESCipher(aesKey);
 
         String message = "{'a':'Hello', 'b':'world', 'c':01210, 'd':{'a':'Hello', 'b':'world', 'c':01210}}";
         System.out.println("Plain message: " + message);
 
         String encryptedMessage = symmetricCipher.encrypt(message);
         System.out.println("Encrypted message: \n" + encryptedMessage);
+
+        aesKey = "[B@6e3c1e69";
+        symmetricCipher.changeKey(aesKey);
 
         String decryptedMessage = symmetricCipher.decrypt(encryptedMessage);
         System.out.println("Decrypted message: " + decryptedMessage);

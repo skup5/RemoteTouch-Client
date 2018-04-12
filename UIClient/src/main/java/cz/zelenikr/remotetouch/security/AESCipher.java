@@ -14,14 +14,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-public final class AESCipher implements SymmetricCipher {
+public final class AESCipher implements SymmetricCipher<String> {
 
     private static final int KEY_BITS_LENGTH = 128; // 192 and 256 bits may not be available
     private static final String HASH_VERSION = "SHA-1";
-
-    private final SecretKey secretKey;
-    private final Cipher cipher;
     private static final Charset charset = StandardCharsets.UTF_8;
+
+    private final Cipher cipher;
+    private SecretKey secretKey;
 
     /**
      * Initializes new AES cipher with a specific key.
@@ -131,6 +131,12 @@ public final class AESCipher implements SymmetricCipher {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean changeKey(@NotNull String plainKey){
+        this.secretKey = toSecretKey(plainKey);
+        return true;
     }
 
     private byte[] encrypt(byte[] input) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
