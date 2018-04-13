@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import java.lang.String?>
+<?import java.net.URL?>
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121"
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zelenikr.remotetouch.sample.PairDeviceController">
+    <padding>
+        <Insets bottom="10" left="25" right="25" top="25"/>
+    </padding>
+    <Label text="%Settings.Device.Name" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+    <TextField fx:id="deviceName"  GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+    <Label text="%Settings.Device.PairKey" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+    <TextField fx:id="pairKey" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+        <Button onAction="#onPairBtClick" text="%Actions.Pair_device"/>
+    </HBox>
+
+    <Text fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+    <stylesheets>
+        <URL value="@../css/style.css"/>
+        <URL value="@../css/pair_device.css"/>
+    </stylesheets>
+    <columnConstraints>
+        <ColumnConstraints/>
+        <ColumnConstraints/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+    </rowConstraints>
+    <styleClass>
+        <String fx:value="bg-primary"/>
+        <String fx:value="root"/>
+    </styleClass>
+</GridPane>

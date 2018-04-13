@@ -1,0 +1,35 @@
+* {
+ -fx-color-primary: #1976d2;
+ -fx-color-primary-dark: #004ba0;
+ -fx-color-primary-light: #63a4ff;
+}
+
+.bg-primary, .bg-primary .label {
+    -fx-text-fill: white;
+    -fx-background-color: -fx-color-primary;
+}
+
+.bg-primary-dark, .bg-primary-dark .label {
+    -fx-text-fill: white;
+    -fx-background-color: -fx-color-primary-dark;
+}
+
+.bg-primary-accent, .bg-primary-accent .label {
+    -fx-text-fill: white;
+    -fx-background-color: -fx-color-primary-light;
+}
+
+.button {
+    -fx-text-fill: white;
+    /*-fx-font-family: "Arial Narrow";*/
+    -fx-font-weight: bold;
+    /*-fx-background-color: linear-gradient(#61a2b1, #2A5058);*/
+    -fx-background-color: linear-gradient(-fx-color-primary-light, -fx-color-primary-dark);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+.label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    /*-fx-text-fill: #333333;*/
+}
