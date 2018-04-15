@@ -31,7 +31,11 @@ public final class Resources {
      */
     public static final class Strings {
         public static final String
-                APPLICATION_TITLE = "Application.Title";
+                APPLICATION_TITLE = "Application.Title",
+                NAVIGATION_ITEMS_PAIR = "Navigation.Items.Pair",
+                NAVIGATION_ITEMS_SETTINGS = "Navigation.Items.Settings",
+                NAVIGATION_ITEMS_MESSAGES = "Navigation.Items.Messages",
+                NAVIGATION_ITEMS_CALLS = "Navigation.Items.Calls";
     }
 
     private Resources() {

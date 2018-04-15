@@ -1,4 +1,4 @@
-package cz.zelenikr.remotetouch.sample;
+package cz.zelenikr.remotetouch.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

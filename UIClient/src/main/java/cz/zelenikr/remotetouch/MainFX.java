@@ -1,4 +1,4 @@
-package cz.zelenikr.remotetouch.sample;
+package cz.zelenikr.remotetouch;
 
 import com.sun.istack.internal.NotNull;
 import cz.zelenikr.remotetouch.Resources;
