@@ -1,6 +1,8 @@
 package cz.zelenikr.remotetouch;
 
 import cz.zelenikr.remotetouch.network.SocketIOClient;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
 import org.apache.commons.cli.*;
 import cz.zelenikr.remotetouch.security.AESCipher;
 import cz.zelenikr.remotetouch.security.Hash;

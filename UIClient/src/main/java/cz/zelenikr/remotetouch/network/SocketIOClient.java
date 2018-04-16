@@ -1,6 +1,7 @@
 package cz.zelenikr.remotetouch.network;
 
 import cz.zelenikr.remotetouch.Main;
+import cz.zelenikr.remotetouch.MainFX;
 import cz.zelenikr.remotetouch.Utils;
 import cz.zelenikr.remotetouch.data.JsonMapper;
 import cz.zelenikr.remotetouch.data.event.*;
@@ -8,6 +9,8 @@ import cz.zelenikr.remotetouch.data.message.MessageDTO;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
 import okhttp3.OkHttpClient;
 import org.json.JSONObject;
 import cz.zelenikr.remotetouch.security.AESCipher;
@@ -138,7 +141,7 @@ public class SocketIOClient {
 
     private void onCallReceived(CallEventContent content) {
         logInfo("call: " + content);
-
+        Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, "Call", content.toString()));
     }
 
     private void onEventReceived(Object data) {
@@ -173,12 +176,12 @@ public class SocketIOClient {
 
     private void onNotificationReceived(NotificationEventContent content) {
         logInfo("notification: " + content);
-
+        Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, "Notification", content.toString()));
     }
 
     private void onSmsReceived(SmsEventContent content) {
         logInfo("sms: " + content);
-
+        Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, "Sms", content.toString()));
     }
 
     private void sendIntro() {

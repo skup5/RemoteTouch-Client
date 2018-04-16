@@ -6,10 +6,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import org.controlsfx.control.MasterDetailPane?>
 <Tab xmlns="http://javafx.com/javafx"
      xmlns:fx="http://javafx.com/fxml"
-     text="%Navigation.Items.Settings">
+     closable="false"
+     text="%Navigation.Items.Notifications">
     <content>
-        <fx:include source="pair_device.fxml"/>
+        <MasterDetailPane />
     </content>
 </Tab>

@@ -35,7 +35,10 @@ public final class Resources {
                 NAVIGATION_ITEMS_PAIR = "Navigation.Items.Pair",
                 NAVIGATION_ITEMS_SETTINGS = "Navigation.Items.Settings",
                 NAVIGATION_ITEMS_MESSAGES = "Navigation.Items.Messages",
-                NAVIGATION_ITEMS_CALLS = "Navigation.Items.Calls";
+                NAVIGATION_ITEMS_CALLS = "Navigation.Items.Calls",
+                VALIDATION_DEVICE_NAME = "Validation.Device.Name",
+                VALIDATION_DEVICE_PAIR_KEY = "Validation.Device.PairKey";
+
     }
 
     private Resources() {
