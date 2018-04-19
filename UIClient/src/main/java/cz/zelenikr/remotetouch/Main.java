@@ -22,7 +22,7 @@ public class Main {
             PORT = 443;
     //                PORT = 8080;
 //        static String HOSTNAME = "http://localhost";
-    private static String HOSTNAME = "https://remotetouch-75ea3.appspot.com";
+    private static String HOSTNAME = "https://remotetouch.tk";
     //        static String SUB_DOMAIN = "";
     private static String SUB_DOMAIN = "/socket";
     private static String

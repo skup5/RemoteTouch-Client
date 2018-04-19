@@ -53,9 +53,9 @@ public class SocketIOClient {
         options.secure = true;
 
 //      Code for server self-signed certificate
-//        OkHttpClient okHttpClient = createSSL();
-//        options.callFactory = okHttpClient;
-//        options.webSocketFactory = okHttpClient;
+        OkHttpClient okHttpClient = createSSL();
+        options.callFactory = okHttpClient;
+        options.webSocketFactory = okHttpClient;
 
         this.serverUri = uri;
         this.socket = IO.socket(uri, options);
