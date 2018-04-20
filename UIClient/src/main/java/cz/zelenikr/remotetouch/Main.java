@@ -1,5 +1,7 @@
 package cz.zelenikr.remotetouch;
 
+import cz.zelenikr.remotetouch.manager.ConnectionManager;
+import cz.zelenikr.remotetouch.network.Client;
 import cz.zelenikr.remotetouch.network.SocketIOClient;
 import org.apache.commons.cli.*;
 import cz.zelenikr.remotetouch.security.AESCipher;
@@ -10,6 +12,8 @@ import cz.zelenikr.remotetouch.security.SymmetricCipher;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Scanner;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -18,14 +22,15 @@ import java.util.logging.Logger;
 public class Main {
 
     private static Logger logger = Logger.getLogger("Main");
-    private static int
-            PORT = 443;
-    //                PORT = 8080;
-//        static String HOSTNAME = "http://localhost";
-    private static String HOSTNAME = "https://remotetouch.tk";
+
+    public static int
+//            PORT = 443;
+            PORT = 8080;
+    static String HOSTNAME = "http://localhost";
+    //    public static String HOSTNAME = "https://remotetouch.tk";
     //        static String SUB_DOMAIN = "";
     private static String SUB_DOMAIN = "/socket";
-    private static String
+    public static String
             SECURE_KEY = "",
             DEVICE = "";
 
@@ -80,23 +85,27 @@ public class Main {
 
     private static void run() throws URISyntaxException {
 
-        URI uri = new URI(HOSTNAME + ":" + PORT + SUB_DOMAIN);
-//        URI uri = new URI(HOSTNAME );
-//        URI uri = new URI("http://remote-touch.azurewebsites.net");
-
-        String token = createToken(DEVICE, SECURE_KEY);
-
-        SocketIOClient client = new SocketIOClient(token, uri, SECURE_KEY);
-        client.run();
-
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        connectionManager.registerConnectionStateChangedListener(status -> {
+            System.out.println(status);
+            return null;
+        });
+        connectionManager.connect();
         System.out.println("Stop client by pressing any character key and enter...");
         new Scanner(System.in).hasNext();
 
         System.out.println("Stopping...");
-        client.close();
+        connectionManager.disconnect();
     }
 
-    private static String createToken(String device, String pairKey) {
+    public static URI getServerURI() throws URISyntaxException {
+//        URI uri = new URI(HOSTNAME );
+//        URI uri = new URI("http://remote-touch.azurewebsites.net");
+
+        return new URI(HOSTNAME + ":" + PORT + SUB_DOMAIN);
+    }
+
+    public static String createToken(String device, String pairKey) {
         Hash hash = new SHAHash();
         return hash.hash(device + pairKey);
     }
