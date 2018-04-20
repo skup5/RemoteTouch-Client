@@ -15,12 +15,14 @@ import java.util.prefs.Preferences;
 public final class Settings {
 
     public static final String
-            KEY_LOCALE = "locale",
+            KEY_LOCALE_LANG = "locale_lang",
+            KEY_LOCAL_COUNTRY = "locale_country",
             KEY_DEVICE_NAME = "device_name",
             KEY_PAIR_KEY = "pair_key";
 
     private static final String
-            DEF_LOCALE = "cs",
+            DEF_LOCALE_LANG = "cs",
+            DEF_LOCALE_COUNTRY = "CZ",
             DEF_DEVICE_NAME = "",
             DEF_PAIR_KEY = "";
 
@@ -72,12 +74,14 @@ public final class Settings {
     }
 
     public Locale getLocale() {
-        String lang = preferences.get(KEY_LOCALE, DEF_LOCALE);
-        return new Locale(lang);
+        String lang = preferences.get(KEY_LOCALE_LANG, DEF_LOCALE_LANG);
+        String country = preferences.get(KEY_LOCAL_COUNTRY, DEF_LOCALE_COUNTRY);
+        return new Locale(lang, country);
     }
 
     public void setLocale(@NotNull Locale locale) {
-        preferences.put(KEY_LOCALE, locale.getLanguage());
+        preferences.put(KEY_LOCALE_LANG, locale.getLanguage());
+        preferences.put(KEY_LOCAL_COUNTRY, locale.getCountry());
     }
 
     private Settings() {

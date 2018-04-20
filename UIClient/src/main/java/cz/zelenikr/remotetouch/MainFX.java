@@ -2,6 +2,8 @@ package cz.zelenikr.remotetouch;
 
 import com.sun.istack.internal.NotNull;
 import cz.zelenikr.remotetouch.controller.PairDeviceController;
+import impl.org.controlsfx.i18n.Localization;
+import impl.org.controlsfx.skin.DecorationPane;
 import javafx.application.Application;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXMLLoader;
@@ -16,17 +18,25 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.util.Callback;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import org.controlsfx.control.Notifications;
+import org.controlsfx.dialog.LoginDialog;
 import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
+import sun.font.Decoration;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainFX extends Application {
+
+    // to debugging
+    private static final boolean START_CLI = false;
 
     private static final Settings SETTINGS = Settings.getInstance();
     private Stage stage;
@@ -36,33 +46,28 @@ public class MainFX extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
-//        stage.setScene(new Scene(new Group(), 1, 1));
+        stage.setScene(new Scene(new Group(), 1, 1));
+        stage.getScene().getStylesheets().addAll(Resources.getStyleSheets());
 //        stage.show();
 
         boolean startMain = true;
 
+//        showLogin();
+
         if (shouldShowWizard()) {
-            //startMain = showWizard();
+            startMain = showWizard();
         }
 
         if (startMain) {
             showMainWindow();
-            Thread t = new Thread(()-> {
-                try {
-                    Main.main(ARGS);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-            });
-            t.setDaemon(true);
-            t.start();
+            if (START_CLI) startConsole();
         } else {
             stage.close();
         }
     }
 
     private boolean shouldShowWizard() {
-        return !SETTINGS.containsDeviceName() || !SETTINGS.containsPairKey();
+        return true || !SETTINGS.containsDeviceName() || !SETTINGS.containsPairKey();
     }
 
     private void showMainWindow() throws IOException {
@@ -84,37 +89,64 @@ public class MainFX extends Application {
         AtomicBoolean success = new AtomicBoolean(false);
         ResourceBundle strings = getStrings();
 
-        Stage owner = new Stage();
-        Scene scene = new Scene(new Pane());
-        owner.setScene(scene);
-        owner.initOwner(stage);
-        owner.initModality(Modality.WINDOW_MODAL);
-        owner = null;
+        Window owner = stage;
 
         // create wizard
         Wizard wizard = new Wizard(owner, strings.getString(Resources.Strings.APPLICATION_TITLE));
 
         // create pages
-        WizardPane page1 = new WizardPane();
+        PairDeviceController pairDeviceController = new PairDeviceController();
 
-        page1.setHeaderText("Please Enter Your Details");
-//        page1.setContent(new Group(new PairDeviceController()));
-        page1.setContent(new Group(loadView("view/pair_device.fxml")));
-//        page1.setContent(new Group(new GridPane()));
+        DecorationPane content = new DecorationPane();
+        content.getChildren().add(pairDeviceController);
+
+        WizardPane page1 = new WizardPane() {
+            @Override
+            public void onEnteringPage(Wizard wizard) {
+                wizard.invalidProperty().unbind();
+                wizard.invalidProperty().bind(pairDeviceController.getValidationSupport().invalidProperty());
+            }
+        };
+        page1.setHeaderText(strings.getString(Resources.Strings.WIZARD_PAIR_DEVICE_HEADER));
+        page1.setContent(content);
 
         wizard.setFlow(new Wizard.LinearFlow(page1));
 
-        System.out.println("page1: " + page1);
+//        System.out.println("page1: " + page1);
 
         // show wizard and wait for response
         wizard.showAndWait().ifPresent(result -> {
             if (result == ButtonType.FINISH) {
-                System.out.println("Wizard finished, settings: " + wizard.getSettings());
+                //System.out.println("Wizard finished, settings: " + wizard.getSettings());
                 success.set(true);
             }
         });
 
         return success.get();
+    }
+
+    /**
+     * Shows login dialog to unlock application.
+     */
+    private void showLogin() {
+        LoginDialog loginDialog = new LoginDialog(new Pair<>("", ""), param -> {
+            return null;
+        });
+        loginDialog.getDialogPane().getStylesheets().addAll(Resources.getStyleSheets());
+        loginDialog.showAndWait();
+
+    }
+
+    private void startConsole() {
+        Thread t = new Thread(() -> {
+            try {
+                Main.main(ARGS);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        });
+        t.setDaemon(true);
+        t.start();
     }
 
     public static void notification(Pos pos, String title, String text) {
@@ -141,18 +173,16 @@ public class MainFX extends Application {
         return root;
     }
 
-//    private void replaceContent(Pane pane){
-//        // replace the content
-//        StackPane content = (StackPane) ((VBox) stage.getScene().getRoot()).getChildren().get(1);
-//        content.getChildren().clear();
-//        content.getChildren().add(pane);
-//    }
-
     public static ResourceBundle getStrings() {
         return Resources.getStrings(SETTINGS.getLocale());
     }
 
     public static void main(String[] args) {
+        System.out.println("Clearing Settings");
+        SETTINGS.setDeviceName("");
+        SETTINGS.setPairKey("");
+
+        Locale.setDefault(SETTINGS.getLocale());
         ARGS = args;
         launch(args);
     }

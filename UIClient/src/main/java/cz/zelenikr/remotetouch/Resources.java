@@ -26,19 +26,29 @@ public final class Resources {
         return ResourceBundle.getBundle("values/strings", locale, new UTF8Control());
     }
 
+    public static String[] getStyleSheets() {
+        return new String[]{"css/style.css"};
+    }
+
     /**
      * Contains keys of string resources.
      */
     public static final class Strings {
         public static final String
                 APPLICATION_TITLE = "Application.Title",
+
                 NAVIGATION_ITEMS_PAIR = "Navigation.Items.Pair",
                 NAVIGATION_ITEMS_SETTINGS = "Navigation.Items.Settings",
                 NAVIGATION_ITEMS_MESSAGES = "Navigation.Items.Messages",
                 NAVIGATION_ITEMS_CALLS = "Navigation.Items.Calls",
-                VALIDATION_DEVICE_NAME = "Validation.Device.Name",
-                VALIDATION_DEVICE_PAIR_KEY = "Validation.Device.PairKey";
 
+                VALIDATION_DEVICE_NAME = "Validation.Device.Name",
+                VALIDATION_DEVICE_PAIR_KEY = "Validation.Device.PairKey",
+
+                SETTINGS_DEVICE_NAME = "Settings.Device.Name",
+                SETTINGS_DEVICE_PAIR_KEY = "Settings.Device.PairKey",
+
+                WIZARD_PAIR_DEVICE_HEADER = "Wizard.PairDevice.Header";
     }
 
     private Resources() {

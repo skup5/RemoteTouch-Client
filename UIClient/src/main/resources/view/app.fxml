@@ -13,7 +13,6 @@
 <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
         <URL value="@../css/style.css" />
-        <URL value="@../css/pair_device.css" />
     </stylesheets>
     <children>
         <!--<MenuBar styleClass="bg-primary" VBox.vgrow="NEVER">-->

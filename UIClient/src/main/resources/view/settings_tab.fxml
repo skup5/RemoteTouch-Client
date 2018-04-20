@@ -6,10 +6,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import cz.zelenikr.remotetouch.controller.PairDeviceController?>
 <Tab xmlns="http://javafx.com/javafx"
      xmlns:fx="http://javafx.com/fxml"
      text="%Navigation.Items.Settings">
     <content>
-        <fx:include source="pair_device.fxml"/>
+        <!--<PairDeviceController/>-->
     </content>
 </Tab>
