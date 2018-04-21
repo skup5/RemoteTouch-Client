@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import org.controlsfx.control.MasterDetailPane?>
+<Tab xmlns="http://javafx.com/javafx"
+     xmlns:fx="http://javafx.com/fxml"
+     closable="false"
+     text="%Navigation.Items.Calls">
+    <content>
+        <MasterDetailPane fx:id="masterDetailPane">
+        <masterNode>
+            <ListView fx:id="callsList"/>
+        </masterNode>
+        </MasterDetailPane>
+    </content>
+
+</Tab>

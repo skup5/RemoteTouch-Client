@@ -49,6 +49,13 @@
             <version>1.0.0</version>
         </dependency>
 
+        <!--UI lib-->
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.14</version>
+        </dependency>
+
     </dependencies>
 
 

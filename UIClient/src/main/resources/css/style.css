@@ -33,3 +33,20 @@
     -fx-font-weight: bold;
     /*-fx-text-fill: #333333;*/
 }
+
+.dialog-pane {
+    -fx-background-color: -fx-color-primary-light;
+}
+
+.dialog-pane .label {
+    -fx-text-fill: white;
+}
+
+.dialog-pane:header .header-panel {
+    -fx-background-color: -fx-color-primary;
+}
+
+/*.dialog-pane:header .header-panel .label {
+    -fx-font-style: italic;
+    -fx-font-size: 2em;
+}*/

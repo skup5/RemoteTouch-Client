@@ -1,6 +1,7 @@
 package cz.zelenikr.remotetouch.network;
 
 import cz.zelenikr.remotetouch.Main;
+import cz.zelenikr.remotetouch.MainFX;
 import cz.zelenikr.remotetouch.Utils;
 import cz.zelenikr.remotetouch.data.JsonMapper;
 import cz.zelenikr.remotetouch.data.event.*;
@@ -8,6 +9,8 @@ import cz.zelenikr.remotetouch.data.message.MessageDTO;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.util.Callback;
 import okhttp3.OkHttpClient;
 import org.json.JSONObject;
