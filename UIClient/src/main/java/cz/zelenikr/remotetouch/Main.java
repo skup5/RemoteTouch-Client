@@ -11,8 +11,10 @@ import cz.zelenikr.remotetouch.security.Hash;
 import cz.zelenikr.remotetouch.security.SHAHash;
 import cz.zelenikr.remotetouch.security.SymmetricCipher;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Scanner;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
@@ -42,17 +44,31 @@ public class Main {
     public static void main(String[] args) throws URISyntaxException {
         Options options = setOptions();
 
-        try {
+        /*try {
             processArgs(options, args);
         } catch (ParseException e) {
             System.out.println(e.getMessage());
             printHelp(options);
             System.exit(1);
-        }
+        }*/
 
-        run();
+//        run();
 
 //        cipherTest();
+
+        test();
+    }
+
+    private static void test() {
+        try {
+//            URL url = new URL("https://remotetouch.tk/socket");
+            URL url = new URL("http://localhost:8080/socket");
+            System.out.println("URL = " + url.toExternalForm());
+            URI uri = url.toURI();
+            System.out.println("URI = " + uri.toString());
+        } catch (MalformedURLException | URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void cipherTest() {
@@ -85,7 +101,7 @@ public class Main {
         }*/
     }
 
-    private static void run() throws URISyntaxException {
+    private static void run() {
 
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         connectionManager.registerConnectionStateChangedListener(status -> {

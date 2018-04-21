@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class PairDeviceController extends GridPane implements Initializable, Validateable {
+public class PairDeviceController extends GridPane implements Controller, Initializable, Validateable {
 
     private static final Settings SETTINGS = Settings.getInstance();
     private final ValidationSupport validationSupport = new ValidationSupport();

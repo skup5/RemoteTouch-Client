@@ -1,31 +1,26 @@
 package cz.zelenikr.remotetouch;
 
 import com.sun.istack.internal.NotNull;
+import cz.zelenikr.remotetouch.controller.AppController;
+import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.controller.PairDeviceController;
-import impl.org.controlsfx.i18n.Localization;
 import impl.org.controlsfx.skin.DecorationPane;
 import javafx.application.Application;
-import javafx.collections.ObservableMap;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.dialog.LoginDialog;
 import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
-import sun.font.Decoration;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -67,15 +62,17 @@ public class MainFX extends Application {
     }
 
     private boolean shouldShowWizard() {
-        return true || !SETTINGS.containsDeviceName() || !SETTINGS.containsPairKey();
+        return !SETTINGS.containsDeviceName() || !SETTINGS.containsPairKey();
     }
 
     private void showMainWindow() throws IOException {
-        Parent root = loadView("view/app.fxml");
+        Pair<Parent, Controller> pair = loadView("view/app.fxml");
         ResourceBundle strings = getStrings();
+        AppController controller = (AppController) pair.getValue();
 
+        stage.setOnHidden(event -> controller.onClose());
         stage.setTitle(strings.getString(Resources.Strings.APPLICATION_TITLE));
-        stage.setScene(new Scene(root));
+        stage.setScene(new Scene(pair.getKey()));
         stage.show();
     }
 
@@ -166,11 +163,13 @@ public class MainFX extends Application {
 
     /**
      * @param name view resource name
-     * @return view for the given resource name
+     * @return view for the given resource name and his {@link Controller}
      */
-    private Parent loadView(@NotNull String name) throws IOException {
-        Parent root = FXMLLoader.load(ClassLoader.getSystemResource(name), getStrings());
-        return root;
+    private Pair<Parent, Controller> loadView(@NotNull String name) throws IOException {
+        FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource(name), getStrings());
+        Parent view = loader.load();
+        Controller controller = loader.getController();
+        return new Pair<>(view, controller);
     }
 
     public static ResourceBundle getStrings() {
@@ -179,8 +178,8 @@ public class MainFX extends Application {
 
     public static void main(String[] args) {
         System.out.println("Clearing Settings");
-        SETTINGS.setDeviceName("");
-        SETTINGS.setPairKey("");
+        SETTINGS.setDeviceName(null);
+        SETTINGS.setPairKey(null);
 
         Locale.setDefault(SETTINGS.getLocale());
         ARGS = args;

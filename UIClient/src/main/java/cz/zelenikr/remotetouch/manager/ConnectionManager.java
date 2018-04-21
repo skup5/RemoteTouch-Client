@@ -2,6 +2,7 @@ package cz.zelenikr.remotetouch.manager;
 
 import com.sun.istack.internal.NotNull;
 import cz.zelenikr.remotetouch.Main;
+import cz.zelenikr.remotetouch.Settings;
 import cz.zelenikr.remotetouch.data.event.CallEventContent;
 import cz.zelenikr.remotetouch.data.event.NotificationEventContent;
 import cz.zelenikr.remotetouch.data.event.SmsEventContent;
@@ -9,6 +10,8 @@ import cz.zelenikr.remotetouch.network.Client;
 import cz.zelenikr.remotetouch.network.ConnectionStatus;
 import cz.zelenikr.remotetouch.network.ContentRecivedListener;
 import cz.zelenikr.remotetouch.network.SocketIOClient;
+import cz.zelenikr.remotetouch.security.Hash;
+import cz.zelenikr.remotetouch.security.SHAHash;
 import javafx.util.Callback;
 
 import java.net.URI;
@@ -17,13 +20,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Manages connection and communication with mobile device via {@link Client}.
+ *
  * @author Roman Zelenik
  */
-public class ConnectionManager {
-    private static ConnectionManager ourInstance = new ConnectionManager();
+public final class ConnectionManager {
+    private static final Settings SETTINGS = Settings.getInstance();
+    private static final ConnectionManager INSTANCE = new ConnectionManager();
 
     public static ConnectionManager getInstance() {
-        return ourInstance;
+        return INSTANCE;
     }
 
     private Client client;
@@ -36,30 +42,44 @@ public class ConnectionManager {
     // Connection state changed listeners
     private Set<Callback<ConnectionStatus, Void>> connectionStateChangedListeners = new HashSet<>();
 
+    /**
+     * Connects to a device. Client is initialized just once when this method is called.
+     */
     public void connect() {
         if (client == null) {
-            try {
-                client = initClient();
-            } catch (URISyntaxException e) {
-                throw new RuntimeException(e);
-            }
+            client = initClient();
         }
         if (!client.isConnected()) {
             client.connect();
         }
-
     }
 
+    /**
+     * Disconnects a device.
+     */
     public void disconnect() {
         if (client != null) {
             client.disconnect();
         }
     }
 
+    /**
+     * Disconnects and then connects to a device.
+     */
     public void reconnect() {
         if (client != null && client.isConnected()) {
             client.disconnect();
         }
+        connect();
+    }
+
+    /**
+     * Disconnects client then reloads all required attributes from Settings,
+     * initializes client and creates new connection.
+     */
+    public void updateAndReconnect() {
+        disconnect();
+        client = null;
         connect();
     }
 
@@ -95,8 +115,8 @@ public class ConnectionManager {
         smsReceivedListeners.remove(listener);
     }
 
-    private Client initClient() throws URISyntaxException {
-        SocketIOClient client = new SocketIOClient(loadClientToken(), loadServerURL(), loadPairKey());
+    private Client initClient() {
+        SocketIOClient client = new SocketIOClient(loadClientToken(), loadServerAddress(), loadPairKey());
         client.setOnCallReceived(contents -> notifyCallReceived(contents));
         client.setOnNotificationReceived(contents -> notifyNotificationReceived(contents));
         client.setOnSMSReceived(contents -> notifySmsReceived(contents));
@@ -125,12 +145,22 @@ public class ConnectionManager {
         return Main.SECURE_KEY;
     }
 
-    private URI loadServerURL() throws URISyntaxException {
-        return Main.getServerURI();
+    private URI loadServerAddress() {
+        try {
+            return SETTINGS.getServerAddress().toURI();
+        } catch (URISyntaxException e) {
+            //
+            return null;
+        }
     }
 
     private String loadClientToken() {
-        return Main.createToken(Main.DEVICE, Main.SECURE_KEY);
+        return createToken(SETTINGS.getDeviceName(), loadPairKey());
+    }
+
+    private static String createToken(String device, String pairKey) {
+        Hash hash = new SHAHash();
+        return hash.hash(device + pairKey);
     }
 
     private ConnectionManager() {
