@@ -28,6 +28,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * JavaFX application class. This is the entry point of program.
+ *
+ * @author Roman Zelenik
+ */
 public class MainFX extends Application {
 
     // to debugging
@@ -80,9 +85,8 @@ public class MainFX extends Application {
      * Shows to the user an app initialization wizard.
      *
      * @return true if wizard was successfully completed
-     * @throws IOException
      */
-    private boolean showWizard() throws IOException {
+    private boolean showWizard() {
         AtomicBoolean success = new AtomicBoolean(false);
         ResourceBundle strings = getStrings();
 
@@ -177,9 +181,9 @@ public class MainFX extends Application {
     }
 
     public static void main(String[] args) {
-        System.out.println("Clearing Settings");
-        SETTINGS.setDeviceName(null);
-        SETTINGS.setPairKey(null);
+//        System.out.println("Clearing Settings");
+//        SETTINGS.setDeviceName(null);
+//        SETTINGS.setPairKey(null);
 
         Locale.setDefault(SETTINGS.getLocale());
         ARGS = args;

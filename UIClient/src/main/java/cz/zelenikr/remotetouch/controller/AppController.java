@@ -1,14 +1,16 @@
 package cz.zelenikr.remotetouch.controller;
 
-import com.sun.javafx.PlatformUtil;
-import com.sun.javafx.util.Logging;
+import cz.zelenikr.remotetouch.MainFX;
+import cz.zelenikr.remotetouch.data.event.CallEventContent;
+import cz.zelenikr.remotetouch.data.event.NotificationEventContent;
+import cz.zelenikr.remotetouch.data.event.SmsEventContent;
 import cz.zelenikr.remotetouch.manager.ConnectionManager;
 import cz.zelenikr.remotetouch.network.ConnectionStatus;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -28,6 +30,9 @@ public class AppController implements Controller, Initializable {
 
     public AppController() {
         connectionManager.registerConnectionStateChangedListener(this::onConnectionStateChanged);
+        connectionManager.registerCallReceivedListener(this::onNewCalls);
+        connectionManager.registerNotificationReceivedListener(this::onNewNotifications);
+        connectionManager.registerSmsReceivedListener(this::onNewSms);
         connectionManager.connect();
     }
 
@@ -41,10 +46,23 @@ public class AppController implements Controller, Initializable {
         connectionManager.disconnect();
     }
 
-    private Void onConnectionStateChanged(ConnectionStatus status) {
+    private void onConnectionStateChanged(ConnectionStatus status) {
 //        LOGGER.info(status.toString());
         Platform.runLater(() -> connectionStatus.setText(status.toString()));
-        return null;
     }
 
+    private void onNewCalls(CallEventContent... calls) {
+        for (CallEventContent content : calls)
+            Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, "Nový hovor", content.toString()));
+    }
+
+    private void onNewNotifications(NotificationEventContent... notifications) {
+        for (NotificationEventContent content : notifications)
+            Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, content.getLabel(), content.getTitle()));
+    }
+
+    private void onNewSms(SmsEventContent... sms) {
+        for (SmsEventContent content : sms)
+            Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, "Nová sms", content.toString()));
+    }
 }

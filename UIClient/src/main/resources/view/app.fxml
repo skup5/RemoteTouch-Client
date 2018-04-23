@@ -10,11 +10,9 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0"
-      fx:controller="cz.zelenikr.remotetouch.controller.AppController"
-      xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zelenikr.remotetouch.controller.AppController">
     <stylesheets>
-        <URL value="@../css/style.css"/>
+        <URL value="@../css/style.css" />
     </stylesheets>
     <children>
         <!--<MenuBar styleClass="bg-primary" VBox.vgrow="NEVER">-->
@@ -58,28 +56,27 @@
         <!--</MenuBar>-->
         <TabPane prefHeight="-1" prefWidth="-1" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
             <tabs>
-                <fx:include source="calls_tab.fxml"/>
-                <fx:include source="messages_tab.fxml"/>
-                <fx:include source="notifications_tab.fxml"/>
-                <fx:include source="settings_tab.fxml"/>
+                <fx:include source="notification/notifications_tab.fxml" />
+                <fx:include source="calls_tab.fxml" />
+                <fx:include source="messages_tab.fxml" />
+                <fx:include source="settings_tab.fxml" />
             </tabs>
         </TabPane>
-        <HBox id="HBox" prefWidth="900.0" spacing="5.0" styleClass="bg-primary" VBox.vgrow="NEVER">
+        <HBox id="HBox" prefWidth="900.0" spacing="5.0" styleClass="bg-primary-dark" VBox.vgrow="NEVER">
             <children>
                 <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
                     <font>
-                        <Font size="11.0" fx:id="x3"/>
+                        <Font size="11.0" fx:id="x3" />
                     </font>
                     <textFill>
-                        <Color blue="0.625" green="0.625" red="0.625" fx:id="x4"/>
+                        <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
                     </textFill>
                 </Label>
-                <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS"/>
-                <Label fx:id="connectionStatus" font="$x3" maxWidth="-1.0" text="Connection status" textAlignment="RIGHT" textFill="$x4"
-                       HBox.hgrow="NEVER"/>
+                <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+                <Label fx:id="connectionStatus" font="$x3" maxWidth="-1.0" text="Connection status" textAlignment="RIGHT" textFill="$x4" HBox.hgrow="NEVER" />
             </children>
             <padding>
-                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
+                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
             </padding>
         </HBox>
     </children>

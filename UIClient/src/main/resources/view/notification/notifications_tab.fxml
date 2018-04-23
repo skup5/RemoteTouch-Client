@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import org.controlsfx.control.MasterDetailPane?>
+<?import javafx.scene.control.Tab?>
 <Tab xmlns="http://javafx.com/javafx"
      xmlns:fx="http://javafx.com/fxml"
+     fx:controller="cz.zelenikr.remotetouch.controller.NotificationsTabController"
      closable="false"
      text="%Navigation.Items.Notifications">
+
     <content>
-        <MasterDetailPane />
+            <fx:include source="notifications_list.fxml"/>
     </content>
 </Tab>

@@ -1,26 +1,49 @@
 * {
- -fx-color-primary: #1976d2;
- -fx-color-primary-dark: #004ba0;
- -fx-color-primary-light: #63a4ff;
+ -fx-color-primary: #1e88e5;
+ -fx-color-primary-dark: #005cb2;
+ -fx-color-primary-light: #6ab7ff;
+ -fx-color-text: #263238;
+ -fx-color-text-dark: white;
 }
 
-.bg-primary, .bg-primary .label {
-    -fx-text-fill: white;
+.bg-primary,
+.bg-primary .label,
+.bg-primary Text,
+.bg-primary .glyph-icon
+/*.bg-primary .tab,*/
+/*.bg-primary .tab .tab-label*/ {
+    -fx-text-fill: -fx-color-text;
+    -fx-fill: -fx-color-text;
     -fx-background-color: -fx-color-primary;
 }
 
-.bg-primary-dark, .bg-primary-dark .label {
-    -fx-text-fill: white;
-    -fx-background-color: -fx-color-primary-dark;
-}
-
-.bg-primary-accent, .bg-primary-accent .label {
-    -fx-text-fill: white;
+.bg-primary .tab:selected .tab-label {
     -fx-background-color: -fx-color-primary-light;
 }
 
+.bg-primary .list-cell:even {
+     -fx-background-color: -fx-color-primary;
+}
+
+.bg-primary .list-cell:odd {
+     -fx-background-color: -fx-color-primary;
+}
+
+.bg-primary-dark, .bg-primary-dark .label, .bg-primary-dark Text, .bg-primary-dark .glyph-icon {
+    -fx-text-fill: -fx-color-text-dark;
+    -fx-fill: -fx-color-text-dark;
+    -fx-background-color: -fx-color-primary-dark;
+}
+
+.bg-primary-accent, .bg-primary-accent .label, .bg-primary-accent Text, .bg-primary-accent .glyph-icon {
+    -fx-text-fill: -fx-color-text;
+    -fx-fill: -fx-color-text;
+    -fx-background-color: -fx-color-primary-light;
+
+}
+
 .button {
-    -fx-text-fill: white;
+    -fx-text-fill: -fx-color-text;
     /*-fx-font-family: "Arial Narrow";*/
     -fx-font-weight: bold;
     /*-fx-background-color: linear-gradient(#61a2b1, #2A5058);*/
@@ -39,7 +62,7 @@
 }
 
 .dialog-pane .label {
-    -fx-text-fill: white;
+    -fx-text-fill: -fx-color-text;
 }
 
 .dialog-pane:header .header-panel {
@@ -50,3 +73,7 @@
     -fx-font-style: italic;
     -fx-font-size: 2em;
 }*/
+
+.tab-content-area {
+    -fx-padding: 10
+}

@@ -106,7 +106,6 @@ public class Main {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         connectionManager.registerConnectionStateChangedListener(status -> {
             System.out.println(status);
-            return null;
         });
         connectionManager.connect();
         System.out.println("Stop client by pressing any character key and enter...");

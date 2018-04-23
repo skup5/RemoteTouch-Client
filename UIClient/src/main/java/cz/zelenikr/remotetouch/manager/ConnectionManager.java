@@ -1,7 +1,7 @@
 package cz.zelenikr.remotetouch.manager;
 
 import com.sun.istack.internal.NotNull;
-import cz.zelenikr.remotetouch.Main;
+import cz.zelenikr.remotetouch.Callback;
 import cz.zelenikr.remotetouch.Settings;
 import cz.zelenikr.remotetouch.data.event.CallEventContent;
 import cz.zelenikr.remotetouch.data.event.NotificationEventContent;
@@ -12,7 +12,6 @@ import cz.zelenikr.remotetouch.network.ContentRecivedListener;
 import cz.zelenikr.remotetouch.network.SocketIOClient;
 import cz.zelenikr.remotetouch.security.Hash;
 import cz.zelenikr.remotetouch.security.SHAHash;
-import javafx.util.Callback;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,10 +39,11 @@ public final class ConnectionManager {
             notificationReceivedListeners = new HashSet<>(),
             smsReceivedListeners = new HashSet<>();
     // Connection state changed listeners
-    private Set<Callback<ConnectionStatus, Void>> connectionStateChangedListeners = new HashSet<>();
+    private Set<Callback<ConnectionStatus>> connectionStateChangedListeners = new HashSet<>();
 
     /**
      * Connects to a device. Client is initialized just once when this method is called.
+     * If client is already connected, nothing happen.
      */
     public void connect() {
         if (client == null) {
@@ -83,7 +83,7 @@ public final class ConnectionManager {
         connect();
     }
 
-    public void registerConnectionStateChangedListener(@NotNull Callback<ConnectionStatus, Void> listener) {
+    public void registerConnectionStateChangedListener(@NotNull Callback<ConnectionStatus> listener) {
         connectionStateChangedListeners.add(listener);
     }
 
@@ -99,7 +99,7 @@ public final class ConnectionManager {
         smsReceivedListeners.add(listener);
     }
 
-    public void removeConnectionStateChangedListener(@NotNull Callback<ConnectionStatus, Void> listener) {
+    public void removeConnectionStateChangedListener(@NotNull Callback<ConnectionStatus> listener) {
         connectionStateChangedListeners.remove(listener);
     }
 
@@ -142,7 +142,7 @@ public final class ConnectionManager {
     }
 
     private String loadPairKey() {
-        return Main.SECURE_KEY;
+        return SETTINGS.getPairKey();
     }
 
     private URI loadServerAddress() {

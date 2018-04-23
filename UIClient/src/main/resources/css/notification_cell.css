@@ -1,0 +1,21 @@
+.notification-cell {
+   -fx-background-color: white;
+   -fx-padding: 10;
+}
+
+.notification-cell-app-name .glyph-icon {
+    -glyph-size: 16;
+}
+
+.notification-cell .notification-cell-app-name {
+    -fx-font-size: 16;
+    -fx-background-color: white;
+}
+
+.notification-cell .notification-cell-datetime {
+    -fx-background-color: white;
+}
+
+.notification-cell .notification-cell-title {
+    -fx-background-color: white;
+}
