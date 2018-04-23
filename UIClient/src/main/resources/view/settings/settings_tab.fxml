@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Accordion?>
+<Tab xmlns="http://javafx.com/javafx"
+     xmlns:fx="http://javafx.com/fxml"
+     text="%Navigation.Items.Settings">
+    <content>
+        <Accordion>
+            <panes>
+                <TitledPane text="%Settings.Device.Title">
+                    <content>
+                        <fx:include source="pair_device.fxml" />
+                    </content>
+                </TitledPane>
+                <TitledPane text="%Settings.Connection.Title">
+                    <content>
+                        <fx:include source="connection.fxml" />
+                    </content>
+                </TitledPane>
+            </panes>
+        </Accordion>
+    </content>
+</Tab>

@@ -29,6 +29,7 @@ public final class Settings {
             DEF_DEVICE_NAME = "",
             DEF_PAIR_KEY = "",
             DEF_SERVER_ADDRESS = "http://localhost:8080/socket";
+//            DEF_SERVER_ADDRESS = "http://10.0.0.18:8080/socket";
 //            DEF_SERVER_ADDRESS = "https://remotetouch.tk/socket";
 
     private static final Logger LOGGER = Logger.getLogger(Settings.class.getSimpleName());
@@ -126,6 +127,7 @@ public final class Settings {
     }
 
     public void setServerAddress(@NotNull URL address) {
+        LOGGER.info("store " + address.toExternalForm());
         preferences.put(KEY_SERVER_ADDRESS, address.toExternalForm());
     }
 

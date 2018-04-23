@@ -3,10 +3,9 @@ package cz.zelenikr.remotetouch;
 import com.sun.istack.internal.NotNull;
 import cz.zelenikr.remotetouch.controller.AppController;
 import cz.zelenikr.remotetouch.controller.Controller;
-import cz.zelenikr.remotetouch.controller.PairDeviceController;
+import cz.zelenikr.remotetouch.controller.settings.PairDeviceController;
 import impl.org.controlsfx.skin.DecorationPane;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -67,7 +66,7 @@ public class MainFX extends Application {
     }
 
     private boolean shouldShowWizard() {
-        return !SETTINGS.containsDeviceName() || !SETTINGS.containsPairKey();
+        return true || !SETTINGS.containsDeviceName() || !SETTINGS.containsPairKey();
     }
 
     private void showMainWindow() throws IOException {
@@ -86,7 +85,7 @@ public class MainFX extends Application {
      *
      * @return true if wizard was successfully completed
      */
-    private boolean showWizard() {
+    private boolean showWizard() throws IOException {
         AtomicBoolean success = new AtomicBoolean(false);
         ResourceBundle strings = getStrings();
 
@@ -96,10 +95,11 @@ public class MainFX extends Application {
         Wizard wizard = new Wizard(owner, strings.getString(Resources.Strings.APPLICATION_TITLE));
 
         // create pages
-        PairDeviceController pairDeviceController = new PairDeviceController();
+        Pair<Parent,Controller> pairDeviceView = loadView("view/settings/pair_device.fxml");
+        PairDeviceController pairDeviceController = (PairDeviceController) pairDeviceView.getValue();
 
         DecorationPane content = new DecorationPane();
-        content.getChildren().add(pairDeviceController);
+        content.getChildren().add(pairDeviceView.getKey());
 
         WizardPane page1 = new WizardPane() {
             @Override

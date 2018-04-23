@@ -44,6 +44,7 @@ public final class Resources {
 
                 VALIDATION_DEVICE_NAME = "Validation.Device.Name",
                 VALIDATION_DEVICE_PAIR_KEY = "Validation.Device.PairKey",
+                VALIDATION_CONNECTION_ADDRESS = "Validation.Connection.Address",
 
                 SETTINGS_DEVICE_NAME = "Settings.Device.Name",
                 SETTINGS_DEVICE_PAIR_KEY = "Settings.Device.PairKey",

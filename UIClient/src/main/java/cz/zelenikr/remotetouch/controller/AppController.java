@@ -58,7 +58,7 @@ public class AppController implements Controller, Initializable {
 
     private void onNewNotifications(NotificationEventContent... notifications) {
         for (NotificationEventContent content : notifications)
-            Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, content.getLabel(), content.getTitle()));
+            Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, content.getLabel() + ": " + content.getTitle(), content.getText()));
     }
 
     private void onNewSms(SmsEventContent... sms) {

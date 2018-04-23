@@ -2,8 +2,11 @@
 
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
@@ -59,7 +62,12 @@
                 <fx:include source="notification/notifications_tab.fxml" />
                 <fx:include source="calls_tab.fxml" />
                 <fx:include source="messages_tab.fxml" />
-                <fx:include source="settings_tab.fxml" />
+                <fx:include source="settings/settings_tab.fxml" />
+                <!--<Tab text="%Navigation.Items.Settings">-->
+                    <!--<content>-->
+                        <!---->
+                    <!--</content>-->
+                <!--</Tab>-->
             </tabs>
         </TabPane>
         <HBox id="HBox" prefWidth="900.0" spacing="5.0" styleClass="bg-primary-dark" VBox.vgrow="NEVER">

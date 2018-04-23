@@ -7,18 +7,18 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<fx:root alignment="center" hgap="10" type="GridPane" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zelenikr.remotetouch.controller.settings.PairDeviceController">
 
     <padding>
         <Insets bottom="25" left="25" right="25" top="25" />
     </padding>
     <Label text="%Settings.Device.Name" wrapText="true" GridPane.columnIndex="0" />
 
-    <TextField fx:id="deviceName" GridPane.columnIndex="1" />
+    <TextField fx:id="deviceName" GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES" />
 
     <Label text="%Settings.Device.PairKey" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
-    <TextField fx:id="pairKey" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <TextField fx:id="pairKey" GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" />
 
     <columnConstraints>
         <ColumnConstraints />
@@ -31,4 +31,4 @@
     <styleClass>
         <!--<String fx:value="bg-primary"/>-->
     </styleClass>
-</fx:root>
+</GridPane>
