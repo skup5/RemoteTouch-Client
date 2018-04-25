@@ -34,9 +34,7 @@ public class NotificationsListController implements Controller, Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         loadData();
         list.setItems(data);
-        list.setCellFactory(listView -> {
-            return new NotificationListCell();
-        });
+        list.setCellFactory(listView -> new NotificationListCell());
     }
 
     private void loadData() {

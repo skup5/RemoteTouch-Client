@@ -1,7 +1,6 @@
 package cz.zelenikr.remotetouch.network;
 
 import cz.zelenikr.remotetouch.data.event.CallEventContent;
-import cz.zelenikr.remotetouch.data.event.EventContent;
 import cz.zelenikr.remotetouch.data.event.NotificationEventContent;
 import cz.zelenikr.remotetouch.data.event.SmsEventContent;
 import javafx.util.Callback;

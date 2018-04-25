@@ -65,14 +65,14 @@
         <!--UI icons lib-->
         <dependency>
             <groupId>de.jensd</groupId>
-            <artifactId>fontawesomefx-controls</artifactId>
-            <version>9.1.2</version>
+            <artifactId>fontawesomefx-fontawesome</artifactId>
+            <version>4.7.0-9.1.2</version>
         </dependency>
 
         <dependency>
             <groupId>de.jensd</groupId>
-            <artifactId>fontawesomefx-fontawesome</artifactId>
-            <version>4.7.0-9.1.2</version>
+            <artifactId>fontawesomefx-materialicons</artifactId>
+            <version>2.2.0-9.1.2</version>
         </dependency>
 
     </dependencies>
