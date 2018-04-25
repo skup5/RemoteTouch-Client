@@ -1,9 +1,7 @@
 package cz.zelenikr.remotetouch.security;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 import cz.zelenikr.remotetouch.security.exception.UnsupportedCipherException;
+import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
@@ -13,6 +11,7 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Base64;
 
 public final class AESCipher implements SymmetricCipher<String> {
 
@@ -29,7 +28,7 @@ public final class AESCipher implements SymmetricCipher<String> {
      * @param plainKey the given key like a plain text
      * @throws UnsupportedCipherException
      */
-    public AESCipher(@NotNull String plainKey)throws UnsupportedCipherException {
+    public AESCipher(@NotNull String plainKey) throws UnsupportedCipherException {
         this(toSecretKey(plainKey));
     }
 
@@ -106,7 +105,8 @@ public final class AESCipher implements SymmetricCipher<String> {
     @Override
     public String encrypt(String plainData) {
         try {
-            return Base64.encode(encrypt(plainData.getBytes(charset)));
+//            return Base64.encode(encrypt(plainData.getBytes(charset)));
+            return new String(Base64.getMimeEncoder().encode(encrypt(plainData.getBytes(charset))), charset);
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         } catch (BadPaddingException e) {
@@ -120,9 +120,7 @@ public final class AESCipher implements SymmetricCipher<String> {
     @Override
     public String decrypt(String base64EncryptedMessage) {
         try {
-            return new String(decrypt(Base64.decode(base64EncryptedMessage)), charset);
-        } catch (Base64DecodingException e) {
-            e.printStackTrace();
+            return new String(decrypt(Base64.getMimeDecoder().decode(base64EncryptedMessage.getBytes(charset))), charset);
         } catch (BadPaddingException e) {
             e.printStackTrace();
         } catch (IllegalBlockSizeException e) {
@@ -134,7 +132,7 @@ public final class AESCipher implements SymmetricCipher<String> {
     }
 
     @Override
-    public boolean changeKey(@NotNull String plainKey){
+    public boolean changeKey(@NotNull String plainKey) {
         this.secretKey = toSecretKey(plainKey);
         return true;
     }

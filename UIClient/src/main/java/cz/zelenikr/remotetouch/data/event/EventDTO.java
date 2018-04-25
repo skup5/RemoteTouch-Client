@@ -1,7 +1,7 @@
 package cz.zelenikr.remotetouch.data.event;
 
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 import cz.zelenikr.remotetouch.data.message.MessageContent;
 
 /**

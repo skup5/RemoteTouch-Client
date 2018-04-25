@@ -1,7 +1,7 @@
 package cz.zelenikr.remotetouch.data.event;
 
-import com.sun.istack.internal.NotNull;
 import cz.zelenikr.remotetouch.data.CallType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a call.

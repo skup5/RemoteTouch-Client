@@ -1,6 +1,5 @@
 package cz.zelenikr.remotetouch.manager;
 
-import com.sun.istack.internal.NotNull;
 import cz.zelenikr.remotetouch.Callback;
 import cz.zelenikr.remotetouch.Settings;
 import cz.zelenikr.remotetouch.data.event.CallEventContent;
@@ -12,6 +11,7 @@ import cz.zelenikr.remotetouch.network.ContentRecivedListener;
 import cz.zelenikr.remotetouch.network.SocketIOClient;
 import cz.zelenikr.remotetouch.security.Hash;
 import cz.zelenikr.remotetouch.security.SHAHash;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,10 +34,10 @@ public final class ConnectionManager {
     private Client client;
 
     // ContentRecivedListener sets
-    private Set<ContentRecivedListener>
-            callReceivedListeners = new HashSet<>(),
-            notificationReceivedListeners = new HashSet<>(),
-            smsReceivedListeners = new HashSet<>();
+    private Set<ContentRecivedListener<CallEventContent>> callReceivedListeners = new HashSet<>();
+    private Set<ContentRecivedListener<NotificationEventContent>> notificationReceivedListeners = new HashSet<>();
+    private Set<ContentRecivedListener<SmsEventContent>> smsReceivedListeners = new HashSet<>();
+
     // Connection state changed listeners
     private Set<Callback<ConnectionStatus>> connectionStateChangedListeners = new HashSet<>();
 

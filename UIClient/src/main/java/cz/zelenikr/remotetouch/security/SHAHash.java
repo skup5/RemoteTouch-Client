@@ -1,11 +1,9 @@
 package cz.zelenikr.remotetouch.security;
 
-
-import com.sun.org.apache.xml.internal.security.utils.Base64;
-
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 /**
  * @author Roman Zelenik
@@ -31,7 +29,7 @@ public class SHAHash implements Hash {
     @Override
     public String hash(String text) {
         byte[] hash = hash(text.getBytes(charset));
-        return Base64.encode(hash, 1);
+        return new String(Base64.getMimeEncoder().encode(hash), charset);
     }
 
     private byte[] hash(byte[] input) {

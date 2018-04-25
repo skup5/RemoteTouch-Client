@@ -1,6 +1,6 @@
 package cz.zelenikr.remotetouch.security;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Encoder / decoder to symmetric ciphering a small text data.

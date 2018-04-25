@@ -1,6 +1,6 @@
 package cz.zelenikr.remotetouch;
 
-import com.sun.istack.internal.NotNull;
+
 import cz.zelenikr.remotetouch.controller.AppController;
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.controller.settings.PairDeviceController;
@@ -20,6 +20,7 @@ import org.controlsfx.control.Notifications;
 import org.controlsfx.dialog.LoginDialog;
 import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

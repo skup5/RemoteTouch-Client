@@ -39,7 +39,7 @@ public class NavigationController implements Initializable {
     }
 
     private List<String> loadItems() {
-        ArrayList list = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
         list.add(getResources().getString(Resources.Strings.NAVIGATION_ITEMS_CALLS));
         list.add(getResources().getString(Resources.Strings.NAVIGATION_ITEMS_MESSAGES));
 

@@ -1,6 +1,6 @@
 package cz.zelenikr.remotetouch;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;

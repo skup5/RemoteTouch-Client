@@ -54,9 +54,9 @@ public class Main {
 
 //        run();
 
-//        cipherTest();
+        cipherTest();
 
-        test();
+//        test();
     }
 
     private static void test() {
@@ -80,14 +80,15 @@ public class Main {
 
         SymmetricCipher<String> symmetricCipher = new AESCipher(aesKey);
 
-        String message = "{'a':'Hello', 'b':'world', 'c':01210, 'd':{'a':'Hello', 'b':'world', 'c':01210}}";
+//        String message = "{'a':'Hello', 'b':'world', 'c':01210, 'd':{'a':'Hello', 'b':'world', 'c':01210}}";
+        String message = "{'a':'Příliš žluťoučký kůň', 'b':'pěl ďábelské ódy.', 'c':01210, 'd':{'a':':-)', 'b':'world', 'c':01210}}";
         System.out.println("Plain message: " + message);
 
         String encryptedMessage = symmetricCipher.encrypt(message);
         System.out.println("Encrypted message: \n" + encryptedMessage);
 
-        aesKey = "[B@6e3c1e69";
-        symmetricCipher.changeKey(aesKey);
+//        aesKey = "[B@6e3c1e69";
+//        symmetricCipher.changeKey(aesKey);
 
         String decryptedMessage = symmetricCipher.decrypt(encryptedMessage);
         System.out.println("Decrypted message: " + decryptedMessage);
