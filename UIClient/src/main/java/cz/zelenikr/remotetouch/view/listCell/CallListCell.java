@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -27,6 +28,7 @@ public class CallListCell extends ListCell<CallEventContent> {
 
     public CallListCell() {
         this.holder = new ViewHolder();
+        this.dateFormat = new SimpleDateFormat();
     }
 
     @Override
@@ -41,7 +43,7 @@ public class CallListCell extends ListCell<CallEventContent> {
             holder.setCaller(caller);
             holder.setCallerTooltip(callerTooltip);
             holder.setType(item.getType().toString());
-            holder.setDatetime("");
+            holder.setDatetime(formatDatetime(item.getWhen()));
             holder.setIcon(getIconByType(item.getType()));
             setGraphic(holder.getContent());
         }

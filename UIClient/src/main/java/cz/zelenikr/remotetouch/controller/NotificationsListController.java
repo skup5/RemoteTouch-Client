@@ -1,5 +1,6 @@
 package cz.zelenikr.remotetouch.controller;
 
+import cz.zelenikr.remotetouch.data.comparator.NotificationByDatetimeComparator;
 import cz.zelenikr.remotetouch.data.dao.NotificationEventContentDAO;
 import cz.zelenikr.remotetouch.data.dao.NotificationEventContentDAOMobile;
 import cz.zelenikr.remotetouch.data.event.NotificationEventContent;
@@ -7,6 +8,7 @@ import cz.zelenikr.remotetouch.view.listCell.NotificationListCell;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
@@ -33,7 +35,7 @@ public class NotificationsListController implements Controller, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadData();
-        list.setItems(data);
+        list.setItems(new SortedList<>(data, new NotificationByDatetimeComparator()));
         list.setCellFactory(listView -> new NotificationListCell());
     }
 
