@@ -1,22 +1,18 @@
-.call-cell {
+.message-cell {
    -fx-background-color: white;
    -fx-padding: 10;
    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.5) , 10, 0.0 , 0 , 4 );
 }
 
-.call-cell-caller .glyph-icon {
+.message-cell-sender .glyph-icon {
     -glyph-size: 16;
 }
 
-.call-cell .call-cell-caller {
+.message-cell .message-cell-sender {
     -fx-font-size: 16;
     -fx-background-color: white;
 }
 
-.call-cell .call-cell-datetime {
-    -fx-background-color: white;
-}
-
-.call-cell .call-cell-type {
+.message-cell .message-cell-datetime {
     -fx-background-color: white;
 }

@@ -17,7 +17,6 @@
     <columnConstraints>
         <ColumnConstraints />
         <ColumnConstraints />
-      <ColumnConstraints />
     </columnConstraints>
     <rowConstraints>
         <RowConstraints />

@@ -67,7 +67,7 @@ public class MainFX extends Application {
     }
 
     private boolean shouldShowWizard() {
-        return true || !SETTINGS.containsDeviceName() || !SETTINGS.containsPairKey();
+        return !SETTINGS.containsDeviceName() || !SETTINGS.containsPairKey();
     }
 
     private void showMainWindow() throws IOException {
@@ -162,6 +162,7 @@ public class MainFX extends Application {
 //            notificationBuilder.owner(stage);
 //            notificationBuilder.hideCloseButton();
 //         notificationBuilder.darkStyle();
+
 
         notificationBuilder.showInformation();
     }

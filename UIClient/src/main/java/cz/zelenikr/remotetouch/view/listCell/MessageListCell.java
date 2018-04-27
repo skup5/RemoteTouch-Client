@@ -1,7 +1,6 @@
 package cz.zelenikr.remotetouch.view.listCell;
 
-import cz.zelenikr.remotetouch.data.dto.CallType;
-import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
+import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
 import de.jensd.fx.glyphs.GlyphIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
@@ -12,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -21,57 +21,32 @@ import java.util.Date;
 /**
  * @author Roman Zelenik
  */
-public class CallListCell extends ListCell<CallEventContent> {
+public class MessageListCell extends ListCell<SmsEventContent> {
 
     private ViewHolder holder;
     private DateFormat dateFormat;
 
-    public CallListCell() {
+    public MessageListCell() {
         this.holder = new ViewHolder();
         this.dateFormat = new SimpleDateFormat();
     }
 
     @Override
-    protected void updateItem(CallEventContent item, boolean empty) {
+    protected void updateItem(SmsEventContent item, boolean empty) {
         super.updateItem(item, empty);
         if (empty || item == null) {
             setGraphic(null);
         } else {
             boolean containsName = item.getName() != null && !item.getName().isEmpty();
-            String caller = containsName ? item.getName() : item.getNumber();
-            String callerTooltip = containsName ? item.getNumber() : "";
-            holder.setCaller(caller);
-            holder.setCallerTooltip(callerTooltip);
-            holder.setType(item.getType().toString());
+            String sender = containsName ? item.getName() : item.getNumber();
+            String senderTooltip = containsName ? item.getNumber() : "";
+            holder.setSender(sender);
+            holder.setSenderTooltip(senderTooltip);
+            holder.setText(item.getContent());
             holder.setDatetime(formatDatetime(item.getWhen()));
-            holder.setIcon(getIconByType(item.getType()));
+            holder.setIcon(new MaterialIconView(MaterialIcon.TEXTSMS));
             setGraphic(holder.getContent());
         }
-    }
-
-    private GlyphIcon getIconByType(CallType type) {
-        MaterialIcon glyph;
-        switch (type) {
-            case ENDED:
-                glyph = MaterialIcon.CALL_END;
-                break;
-            case INCOMING:
-                glyph = MaterialIcon.RING_VOLUME;
-                break;
-            case MISSED:
-                glyph = MaterialIcon.PHONE_MISSED;
-                break;
-            case ONGOING:
-                glyph = MaterialIcon.PHONE_IN_TALK;
-                break;
-            case OUTGOING:
-                glyph = MaterialIcon.PHONE_FORWARDED;
-                break;
-            default:
-                glyph = MaterialIcon.PHONE;
-                break;
-        }
-        return new MaterialIconView(glyph);
     }
 
     private String formatDatetime(long timestamp) {
@@ -86,12 +61,14 @@ public class CallListCell extends ListCell<CallEventContent> {
         @FXML
         private GridPane rootPane;
         @FXML
-        private Label caller, type, datetime;
+        private Label sender, datetime;
+        @FXML
+        private Text text;
 
-        private Tooltip callerTooltip;
+        private Tooltip senderTooltip;
 
         public ViewHolder() {
-            FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("view/call/call_cell.fxml"));
+            FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("view/message/message_cell.fxml"));
             loader.setController(this);
             try {
                 loader.load();
@@ -107,20 +84,20 @@ public class CallListCell extends ListCell<CallEventContent> {
 
         public void setIcon(GlyphIcon glyph) {
             if (glyph == null) {
-                caller.setGraphic(null);
+                sender.setGraphic(null);
             } else {
-                caller.setGraphic(glyph);
+                sender.setGraphic(glyph);
             }
         }
 
-        public void setCaller(String value) {
+        public void setSender(String value) {
             if (value == null) value = "";
-            caller.setText(value);
+            sender.setText(value);
         }
 
-        public void setType(String value) {
+        public void setText(String value) {
             if (value == null) value = "";
-            type.setText(value);
+            text.setText(value);
         }
 
         public void setDatetime(String value) {
@@ -128,12 +105,12 @@ public class CallListCell extends ListCell<CallEventContent> {
             datetime.setText(value);
         }
 
-        public void setCallerTooltip(String value) {
+        public void setSenderTooltip(String value) {
             Tooltip tooltip = null;
             if (value != null && !value.isEmpty()) {
                 tooltip = new Tooltip(value);
             }
-            caller.setTooltip(tooltip);
+            sender.setTooltip(tooltip);
         }
     }
 }

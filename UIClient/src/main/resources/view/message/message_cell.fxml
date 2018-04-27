@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Text?>
+
+<GridPane fx:id="rootPane" hgap="10" styleClass="message-cell" vgap="10"
+          xmlns="http://javafx.com/javafx/8.0.121"
+          xmlns:fx="http://javafx.com/fxml/1">
+
+    <Label fx:id="sender" styleClass="message-cell-sender" text="name or phone number" wrapText="true" />
+    <Label fx:id="datetime" styleClass="message-cell-datetime" text="datetime" GridPane.columnIndex="1" />
+    <Text fx:id="text" text="content" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+
+    <columnConstraints>
+        <ColumnConstraints />
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+        <RowConstraints />
+    </rowConstraints>
+    <stylesheets>
+        <URL value="@../../css/message_cell.css" />
+        <URL value="@../../css/style.css" />
+    </stylesheets>
+</GridPane>

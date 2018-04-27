@@ -60,8 +60,8 @@
         <TabPane prefHeight="-1" prefWidth="-1" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
             <tabs>
                 <fx:include source="notification/notifications_tab.fxml" />
-                <fx:include source="calls/calls_tab.fxml" />
-                <fx:include source="messages_tab.fxml" />
+                <fx:include source="call/calls_tab.fxml" />
+                <fx:include source="message/messages_tab.fxml" />
                 <fx:include source="settings/settings_tab.fxml" />
                 <!--<Tab text="%Navigation.Items.Settings">-->
                     <!--<content>-->
