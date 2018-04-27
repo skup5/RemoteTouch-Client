@@ -3,7 +3,7 @@ package cz.zelenikr.remotetouch.controller;
 import cz.zelenikr.remotetouch.data.comparator.NotificationByDatetimeComparator;
 import cz.zelenikr.remotetouch.data.dao.NotificationEventContentDAO;
 import cz.zelenikr.remotetouch.data.dao.NotificationEventContentDAOMobile;
-import cz.zelenikr.remotetouch.data.event.NotificationEventContent;
+import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
 import cz.zelenikr.remotetouch.view.listCell.NotificationListCell;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

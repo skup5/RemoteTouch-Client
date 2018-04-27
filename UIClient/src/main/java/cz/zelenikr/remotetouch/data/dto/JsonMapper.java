@@ -1,8 +1,8 @@
-package cz.zelenikr.remotetouch.data;
+package cz.zelenikr.remotetouch.data.dto;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import cz.zelenikr.remotetouch.data.event.*;
+import cz.zelenikr.remotetouch.data.dto.event.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 

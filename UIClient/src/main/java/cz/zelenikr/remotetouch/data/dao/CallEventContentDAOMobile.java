@@ -1,8 +1,8 @@
 package cz.zelenikr.remotetouch.data.dao;
 
 import cz.zelenikr.remotetouch.Callback;
-import cz.zelenikr.remotetouch.data.CallType;
-import cz.zelenikr.remotetouch.data.event.CallEventContent;
+import cz.zelenikr.remotetouch.data.dto.CallType;
+import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
 
 /**
  * @author Roman Zelenik

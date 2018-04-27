@@ -1,6 +1,6 @@
 package cz.zelenikr.remotetouch.view.listCell;
 
-import cz.zelenikr.remotetouch.data.event.NotificationEventContent;
+import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;

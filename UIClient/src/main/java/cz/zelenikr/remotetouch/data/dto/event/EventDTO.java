@@ -1,8 +1,8 @@
-package cz.zelenikr.remotetouch.data.event;
+package cz.zelenikr.remotetouch.data.dto.event;
 
 
 import org.jetbrains.annotations.NotNull;
-import cz.zelenikr.remotetouch.data.message.MessageContent;
+import cz.zelenikr.remotetouch.data.dto.message.MessageContent;
 
 /**
  * Represents some new event (like sms or call) on mobile phone.

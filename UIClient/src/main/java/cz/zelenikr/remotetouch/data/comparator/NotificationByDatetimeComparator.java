@@ -1,6 +1,6 @@
 package cz.zelenikr.remotetouch.data.comparator;
 
-import cz.zelenikr.remotetouch.data.event.NotificationEventContent;
+import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
 
 import java.util.Comparator;
 

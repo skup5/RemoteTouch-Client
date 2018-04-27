@@ -1,4 +1,4 @@
-package cz.zelenikr.remotetouch.data;
+package cz.zelenikr.remotetouch.data.dto;
 
 /**
  * @author Roman Zelenik

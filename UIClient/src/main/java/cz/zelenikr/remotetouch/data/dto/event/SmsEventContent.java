@@ -1,33 +1,32 @@
-package cz.zelenikr.remotetouch.data.event;
+package cz.zelenikr.remotetouch.data.dto.event;
 
-import cz.zelenikr.remotetouch.data.CallType;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents a call.
+ * Represents SMS.
  *
  * @author Roman Zelenik
  */
-public class CallEventContent implements EventContent {
+public class SmsEventContent implements EventContent {
 
     private final String name;
 
     private final String number;
 
-    private final CallType type;
+    private final String content;
 
     private final long when;
 
     /**
-     * @param name
-     * @param number
-     * @param type
-     * @param when
+     * @param name    Name of sender/receiver.
+     * @param number  Number of sender/receiver.
+     * @param content Content of SMS.
+     * @param when    Timestamp of sending/receiving in milliseconds since the epoch.
      */
-    public CallEventContent(@NotNull String name, @NotNull String number, @NotNull CallType type, long when) {
+    public SmsEventContent(@NotNull String name, @NotNull String number, @NotNull String content, long when) {
         this.name = name;
         this.number = number;
-        this.type = type;
+        this.content = content;
         this.when = when;
     }
 
@@ -39,8 +38,8 @@ public class CallEventContent implements EventContent {
         return number;
     }
 
-    public CallType getType() {
-        return type;
+    public String getContent() {
+        return content;
     }
 
     public long getWhen() {
@@ -49,10 +48,10 @@ public class CallEventContent implements EventContent {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("CallEventContent{");
+        final StringBuilder sb = new StringBuilder("SmsEventContent{");
         sb.append("name='").append(name).append('\'');
         sb.append(", number='").append(number).append('\'');
-        sb.append(", type=").append(type);
+        sb.append(", content='").append(content).append('\'');
         sb.append(", when=").append(when);
         sb.append('}');
         return sb.toString();

@@ -2,9 +2,9 @@ package cz.zelenikr.remotetouch.network;
 
 import cz.zelenikr.remotetouch.Main;
 import cz.zelenikr.remotetouch.Utils;
-import cz.zelenikr.remotetouch.data.JsonMapper;
-import cz.zelenikr.remotetouch.data.event.*;
-import cz.zelenikr.remotetouch.data.message.MessageDTO;
+import cz.zelenikr.remotetouch.data.dto.JsonMapper;
+import cz.zelenikr.remotetouch.data.dto.event.*;
+import cz.zelenikr.remotetouch.data.dto.message.MessageDTO;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import javafx.util.Callback;

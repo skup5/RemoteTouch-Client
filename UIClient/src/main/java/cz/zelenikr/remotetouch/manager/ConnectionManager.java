@@ -2,9 +2,9 @@ package cz.zelenikr.remotetouch.manager;
 
 import cz.zelenikr.remotetouch.Callback;
 import cz.zelenikr.remotetouch.Settings;
-import cz.zelenikr.remotetouch.data.event.CallEventContent;
-import cz.zelenikr.remotetouch.data.event.NotificationEventContent;
-import cz.zelenikr.remotetouch.data.event.SmsEventContent;
+import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
+import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
+import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
 import cz.zelenikr.remotetouch.network.Client;
 import cz.zelenikr.remotetouch.network.ConnectionStatus;
 import cz.zelenikr.remotetouch.network.ContentRecivedListener;

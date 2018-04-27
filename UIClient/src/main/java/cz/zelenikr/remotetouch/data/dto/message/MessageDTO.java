@@ -1,4 +1,4 @@
-package cz.zelenikr.remotetouch.data.message;
+package cz.zelenikr.remotetouch.data.dto.message;
 
 import org.jetbrains.annotations.NotNull;
 

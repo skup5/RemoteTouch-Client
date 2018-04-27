@@ -1,6 +1,6 @@
 package cz.zelenikr.remotetouch.data.dao;
 
-import cz.zelenikr.remotetouch.data.event.EventContent;
+import cz.zelenikr.remotetouch.data.dto.event.EventContent;
 import cz.zelenikr.remotetouch.manager.ConnectionManager;
 
 /**

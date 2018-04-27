@@ -1,7 +1,7 @@
 package cz.zelenikr.remotetouch.view.listCell;
 
-import cz.zelenikr.remotetouch.data.CallType;
-import cz.zelenikr.remotetouch.data.event.CallEventContent;
+import cz.zelenikr.remotetouch.data.dto.CallType;
+import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
 import de.jensd.fx.glyphs.GlyphIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;

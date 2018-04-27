@@ -3,7 +3,6 @@
 <?import javafx.scene.control.Tab?>
 <Tab xmlns="http://javafx.com/javafx"
      xmlns:fx="http://javafx.com/fxml"
-     fx:controller="cz.zelenikr.remotetouch.controller.NotificationsTabController"
      closable="false"
      text="%Navigation.Items.Notifications">
 

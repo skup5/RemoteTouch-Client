@@ -3,7 +3,7 @@ package cz.zelenikr.remotetouch.controller;
 import cz.zelenikr.remotetouch.data.comparator.CallByDatetimeComparator;
 import cz.zelenikr.remotetouch.data.dao.CallEventContentDAO;
 import cz.zelenikr.remotetouch.data.dao.CallEventContentDAOMobile;
-import cz.zelenikr.remotetouch.data.event.CallEventContent;
+import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
 import cz.zelenikr.remotetouch.view.listCell.CallListCell;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -14,7 +14,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**

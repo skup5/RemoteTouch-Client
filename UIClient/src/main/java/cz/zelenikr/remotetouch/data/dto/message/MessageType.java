@@ -1,13 +1,13 @@
-package cz.zelenikr.remotetouch.data.event;
+package cz.zelenikr.remotetouch.data.dto.message;
 
 /**
  * @author Roman Zelenik
  */
-public enum EventType {
-    CALL, SMS, NOTIFICATION;
+public enum MessageType {
+    EVENT, FIREBASE, NONE;
 
-    @Override
     public String toString() {
         return super.toString().toLowerCase();
     }
+
 }

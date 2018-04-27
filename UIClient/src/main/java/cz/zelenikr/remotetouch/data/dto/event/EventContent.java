@@ -1,4 +1,4 @@
-package cz.zelenikr.remotetouch.data.event;
+package cz.zelenikr.remotetouch.data.dto.event;
 
 import java.io.Serializable;
 

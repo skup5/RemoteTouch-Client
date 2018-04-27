@@ -1,6 +1,6 @@
 package cz.zelenikr.remotetouch.network;
 
-import cz.zelenikr.remotetouch.data.event.EventContent;
+import cz.zelenikr.remotetouch.data.dto.event.EventContent;
 
 /**
  * A class that implements this interface can be informed when {@link Client} received new content from mobile device.
