@@ -1,13 +1,10 @@
 package cz.zelenikr.remotetouch.controller;
 
-import cz.zelenikr.remotetouch.data.comparator.NotificationByDatetimeComparator;
 import cz.zelenikr.remotetouch.data.comparator.SmsByDatetimeComparator;
 import cz.zelenikr.remotetouch.data.dao.SmsEventContentDAO;
 import cz.zelenikr.remotetouch.data.dao.SmsEventContentDAOMobile;
-import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
 import cz.zelenikr.remotetouch.view.listCell.MessageListCell;
-import cz.zelenikr.remotetouch.view.listCell.NotificationListCell;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

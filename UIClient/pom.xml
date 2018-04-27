@@ -59,7 +59,7 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>9.0.0</version>
+            <version>LATEST</version>
         </dependency>
 
         <!--UI icons lib-->

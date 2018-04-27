@@ -6,14 +6,17 @@ import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.controller.settings.PairDeviceController;
 import impl.org.controlsfx.skin.DecorationPane;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
-import javafx.stage.Stage;
-import javafx.stage.Window;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.stage.*;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import org.controlsfx.control.Notifications;
@@ -39,9 +42,11 @@ public class MainFX extends Application {
     private static final boolean START_CLI = false;
 
     private static final Settings SETTINGS = Settings.getInstance();
+    private static final double MIN_WIDTH = 500, MIN_HEIGHT=500;
     private Stage stage;
 
     private static String[] ARGS;
+    private static Stage dummyStage;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -75,9 +80,14 @@ public class MainFX extends Application {
         ResourceBundle strings = getStrings();
         AppController controller = (AppController) pair.getValue();
 
-        stage.setOnHidden(event -> controller.onClose());
+        stage.setOnHidden(event -> {
+            controller.onClose();
+            if (dummyStage != null) dummyStage.close();
+        });
         stage.setTitle(strings.getString(Resources.Strings.APPLICATION_TITLE));
-        stage.setScene(new Scene(pair.getKey()));
+        stage.setScene(new Scene(pair.getKey(), MIN_WIDTH, MIN_HEIGHT));
+        stage.setMinHeight(MIN_HEIGHT);
+        stage.setMinWidth(MIN_WIDTH);
         stage.show();
     }
 
@@ -96,7 +106,7 @@ public class MainFX extends Application {
         Wizard wizard = new Wizard(owner, strings.getString(Resources.Strings.APPLICATION_TITLE));
 
         // create pages
-        Pair<Parent,Controller> pairDeviceView = loadView("view/settings/pair_device.fxml");
+        Pair<Parent, Controller> pairDeviceView = loadView("view/settings/pair_device.fxml");
         PairDeviceController pairDeviceController = (PairDeviceController) pairDeviceView.getValue();
 
         DecorationPane content = new DecorationPane();
@@ -159,10 +169,9 @@ public class MainFX extends Application {
                 .position(pos)
                 .onAction(e -> System.out.println("Notification clicked on!"));
 
-//            notificationBuilder.owner(stage);
+        notificationBuilder.owner(getNotificationOwner());
 //            notificationBuilder.hideCloseButton();
 //         notificationBuilder.darkStyle();
-
 
         notificationBuilder.showInformation();
     }
@@ -176,6 +185,33 @@ public class MainFX extends Application {
         Parent view = loader.load();
         Controller controller = loader.getController();
         return new Pair<>(view, controller);
+    }
+
+    private static Stage createDummyStage() {
+        Stage dummyPopup = new Stage();
+        dummyPopup.initModality(Modality.NONE);
+        // set as utility so no iconification occurs
+        dummyPopup.initStyle(StageStyle.UTILITY);
+        // set opacity so the window cannot be seen
+        dummyPopup.setOpacity(0d);
+        // not necessary, but this will move the dummy stage off the screen
+        final Screen screen = Screen.getPrimary();
+        final Rectangle2D bounds = screen.getVisualBounds();
+        dummyPopup.setX(bounds.getMaxX()-25);
+        dummyPopup.setY(bounds.getMaxY()-40);
+        // create/add a transparent scene
+        final Group root = new Group();
+        dummyPopup.setScene(new Scene(root, 1d, 1d, Color.TRANSPARENT));
+        // show the dummy stage
+        dummyPopup.show();
+        return dummyPopup;
+    }
+
+    private static Stage getNotificationOwner() {
+        if (dummyStage == null) {
+            dummyStage = createDummyStage();
+        }
+        return dummyStage;
     }
 
     public static ResourceBundle getStrings() {
