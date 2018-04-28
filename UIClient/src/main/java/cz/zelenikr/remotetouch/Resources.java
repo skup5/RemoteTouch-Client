@@ -37,6 +37,20 @@ public final class Resources {
         public static final String
                 APPLICATION_TITLE = "Application.Title",
 
+                CALLTYPE_ENDED = "CallType.Ended",
+                CALLTYPE_MISSED = "CallType.Missed",
+                CALLTYPE_ONGOING = "CallType.Ongoing",
+                CALLTYPE_INCOMING = "CallType.Incoming",
+                CALLTYPE_OUTGOING = "CallType.Outgoing",
+
+                CONNECTSTATUS_CONNECTED = "ConnectionStatus.Connected",
+                CONNECTSTATUS_CONNECTING = "ConnectionStatus.Connecting",
+                CONNECTSTATUS_DISCONNECTED = "ConnectionStatus.Disconnected",
+                CONNECTSTATUS_RECONNECTED = "ConnectionStatus.Reconnected",
+                CONNECTSTATUS_RECONNECTING = "ConnectionStatus.Reconnecting",
+                CONNECTSTATUS_CONNECT_ERROR = "ConnectionStatus.Connect.Error",
+                CONNECTSTATUS_RECONNECT_ERROR = "ConnectionStatus.Reconnect.Error",
+
                 NAVIGATION_ITEMS_PAIR = "Navigation.Items.Pair",
                 NAVIGATION_ITEMS_SETTINGS = "Navigation.Items.Settings",
                 NAVIGATION_ITEMS_MESSAGES = "Navigation.Items.Messages",

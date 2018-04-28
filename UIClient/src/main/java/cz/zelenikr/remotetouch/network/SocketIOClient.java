@@ -2,7 +2,7 @@ package cz.zelenikr.remotetouch.network;
 
 import cz.zelenikr.remotetouch.Main;
 import cz.zelenikr.remotetouch.Utils;
-import cz.zelenikr.remotetouch.data.dto.JsonMapper;
+import cz.zelenikr.remotetouch.data.mapper.JsonMapper;
 import cz.zelenikr.remotetouch.data.dto.event.*;
 import cz.zelenikr.remotetouch.data.dto.message.MessageDTO;
 import io.socket.client.IO;

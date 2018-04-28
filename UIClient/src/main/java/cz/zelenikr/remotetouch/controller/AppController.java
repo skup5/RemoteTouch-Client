@@ -4,6 +4,7 @@ import cz.zelenikr.remotetouch.MainFX;
 import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
+import cz.zelenikr.remotetouch.data.mapper.ConnectionStatusToLocaleStringMapper;
 import cz.zelenikr.remotetouch.manager.ConnectionManager;
 import cz.zelenikr.remotetouch.network.ConnectionStatus;
 import javafx.application.Platform;
@@ -48,7 +49,7 @@ public class AppController implements Controller, Initializable {
 
     private void onConnectionStateChanged(ConnectionStatus status) {
 //        LOGGER.info(status.toString());
-        Platform.runLater(() -> connectionStatus.setText(status.toString()));
+        Platform.runLater(() -> connectionStatus.setText(ConnectionStatusToLocaleStringMapper.toString(status)));
     }
 
     private void onNewCalls(CallEventContent... calls) {

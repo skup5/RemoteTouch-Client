@@ -2,6 +2,7 @@ package cz.zelenikr.remotetouch.view.listCell;
 
 import cz.zelenikr.remotetouch.data.dto.CallType;
 import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
+import cz.zelenikr.remotetouch.data.mapper.CallTypeToLocalStringMapper;
 import de.jensd.fx.glyphs.GlyphIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
@@ -42,7 +43,7 @@ public class CallListCell extends ListCell<CallEventContent> {
             String callerTooltip = containsName ? item.getNumber() : "";
             holder.setCaller(caller);
             holder.setCallerTooltip(callerTooltip);
-            holder.setType(item.getType().toString());
+            holder.setType(CallTypeToLocalStringMapper.toString(item.getType()));
             holder.setDatetime(formatDatetime(item.getWhen()));
             holder.setIcon(getIconByType(item.getType()));
             setGraphic(holder.getContent());
