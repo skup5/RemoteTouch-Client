@@ -9,8 +9,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
@@ -26,9 +29,10 @@ public class MessageListCell extends ListCell<SmsEventContent> {
     private ViewHolder holder;
     private DateFormat dateFormat;
 
-    public MessageListCell() {
-        this.holder = new ViewHolder();
+    public MessageListCell(ListView<SmsEventContent> listView) {
         this.dateFormat = new SimpleDateFormat();
+        this.holder = new ViewHolder();
+        this.holder.getTextControl().wrappingWidthProperty().bind(listView.widthProperty().subtract(30));
     }
 
     @Override
@@ -80,6 +84,10 @@ public class MessageListCell extends ListCell<SmsEventContent> {
 
         public Node getContent() {
             return rootPane;
+        }
+
+        public Text getTextControl() {
+            return text;
         }
 
         public void setIcon(GlyphIcon glyph) {

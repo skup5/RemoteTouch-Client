@@ -36,7 +36,7 @@ public class NotificationsListController implements Controller, Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         loadData();
         list.setItems(new SortedList<>(data, new NotificationByDatetimeComparator()));
-        list.setCellFactory(listView -> new NotificationListCell());
+        list.setCellFactory(listView -> new NotificationListCell(listView));
     }
 
     private void loadData() {

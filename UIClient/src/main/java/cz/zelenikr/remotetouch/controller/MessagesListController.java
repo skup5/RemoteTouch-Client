@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 
 import java.net.URL;
@@ -36,7 +37,7 @@ public class MessagesListController implements Controller, Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         loadData();
         list.setItems(new SortedList<>(data, new SmsByDatetimeComparator()));
-        list.setCellFactory(listView -> new MessageListCell());
+        list.setCellFactory(listView -> new MessageListCell(listView));
     }
 
     private void loadData() {

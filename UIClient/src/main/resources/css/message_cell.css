@@ -16,3 +16,9 @@
 .message-cell .message-cell-datetime {
     -fx-background-color: white;
 }
+
+.message-cell .message-cell-text {
+    -fx-font-weight: normal;
+    -fx-text-fill: -fx-color-text;
+    -fx-background-color: white;
+}

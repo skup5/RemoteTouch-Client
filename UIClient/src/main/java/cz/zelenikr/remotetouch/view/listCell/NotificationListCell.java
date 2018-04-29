@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
@@ -24,9 +25,10 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
     private ViewHolder holder;
     private DateFormat dateFormat;
 
-    public NotificationListCell() {
-        this.holder = new ViewHolder();
+    public NotificationListCell(ListView<NotificationEventContent> listView) {
         this.dateFormat = new SimpleDateFormat();
+        this.holder = new ViewHolder();
+        this.holder.getTextControl().wrappingWidthProperty().bind(listView.widthProperty().subtract(30));
     }
 
     @Override
@@ -79,6 +81,10 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
 
         public Node getContent() {
             return rootPane;
+        }
+
+        public Text getTextControl() {
+            return text;
         }
 
         public void setIcon(FontAwesomeIcon glyph) {

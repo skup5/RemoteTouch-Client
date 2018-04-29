@@ -30,16 +30,16 @@ public class AppController implements Controller, Initializable {
     private Label connectionStatus;
 
     public AppController() {
-        connectionManager.registerConnectionStateChangedListener(this::onConnectionStateChanged);
-        connectionManager.registerCallReceivedListener(this::onNewCalls);
-        connectionManager.registerNotificationReceivedListener(this::onNewNotifications);
-        connectionManager.registerSmsReceivedListener(this::onNewSms);
+        connectionManager.registerConnectionStateChangedListener(this::onConnectionStateChangedAsync);
+        connectionManager.registerCallReceivedListener(this::onNewCallsAsync);
+        connectionManager.registerNotificationReceivedListener(this::onNewNotificationsAsync);
+        connectionManager.registerSmsReceivedListener(this::onNewSmsAsync);
         connectionManager.connect();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        onConnectionStateChanged(ConnectionStatus.DISCONNECTED);
     }
 
     public void onClose() {
@@ -48,21 +48,25 @@ public class AppController implements Controller, Initializable {
     }
 
     private void onConnectionStateChanged(ConnectionStatus status) {
-//        LOGGER.info(status.toString());
-        Platform.runLater(() -> connectionStatus.setText(ConnectionStatusToLocaleStringMapper.toString(status)));
+        connectionStatus.setText(ConnectionStatusToLocaleStringMapper.toString(status));
     }
 
-    private void onNewCalls(CallEventContent... calls) {
+    private void onConnectionStateChangedAsync(ConnectionStatus status) {
+//        LOGGER.info(status.toString());
+        Platform.runLater(() -> onConnectionStateChanged(status));
+    }
+
+    private void onNewCallsAsync(CallEventContent... calls) {
         for (CallEventContent content : calls)
             Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, "Nový hovor", content.toString()));
     }
 
-    private void onNewNotifications(NotificationEventContent... notifications) {
+    private void onNewNotificationsAsync(NotificationEventContent... notifications) {
         for (NotificationEventContent content : notifications)
             Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, content.getLabel() + ": " + content.getTitle(), content.getText()));
     }
 
-    private void onNewSms(SmsEventContent... sms) {
+    private void onNewSmsAsync(SmsEventContent... sms) {
         for (SmsEventContent content : sms)
             Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, "Nová sms", content.toString()));
     }

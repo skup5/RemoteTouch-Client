@@ -20,3 +20,9 @@
 .notification-cell .notification-cell-title {
     -fx-background-color: white;
 }
+
+.notification-cell .notification-cell-text {
+    -fx-font-weight: normal;
+    -fx-text-fill: -fx-color-text;
+    -fx-background-color: white;
+}

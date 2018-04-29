@@ -17,10 +17,6 @@
     -fx-background-color: -fx-color-primary;
 }
 
-.bg-primary .tab:selected .tab-label {
-    -fx-background-color: -fx-color-primary-light;
-}
-
 .bg-primary .list-cell:even {
      -fx-background-color: -fx-color-primary;
 }
@@ -74,8 +70,41 @@
     -fx-font-size: 2em;
 }*/
 
+.list-view {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.list-cell {
+    -fx-padding: 5;
+}
+
+.tab {
+    -fx-background-color: -fx-color-primary-dark;
+}
+
+.tab .tab-label {
+    -fx-text-fill: -fx-color-text-dark;
+}
+
+.tab:selected {
+    -fx-background-color: linear-gradient(-fx-color-primary-dark, -fx-color-primary);
+}
+
+.tab:selected .tab-label{
+    -fx-text-fill: -fx-color-text-dark;
+}
+
+.tab-pane *.tab-header-background
+{
+/*-fx-background-color: -fx-outer-border, -fx-inner-border, derive(-fx-color, -20%);
+-fx-effect: innershadow(two-pass-box , rgba(0,0,0,0.6) , 4, 0.0 , 0 , 0);*/
+    -fx-background-color: -fx-color-primary;
+}
+
 .tab-content-area {
-    -fx-padding: 10
+    -fx-background-color: -fx-color-primary;
+    -fx-padding: 10;
 }
 
 .tooltip {
