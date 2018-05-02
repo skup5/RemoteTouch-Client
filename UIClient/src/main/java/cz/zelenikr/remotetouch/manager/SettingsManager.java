@@ -1,5 +1,6 @@
-package cz.zelenikr.remotetouch;
+package cz.zelenikr.remotetouch.manager;
 
+import cz.zelenikr.remotetouch.preferences.EncryptedPreferences;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
@@ -14,9 +15,9 @@ import java.util.prefs.Preferences;
  *
  * @author Roman Zelenik
  */
-public final class Settings {
+public final class SettingsManager {
 
-    public static final String
+    private static final String
             KEY_LOCALE_LANG = "locale_lang",
             KEY_LOCALE_COUNTRY = "locale_country",
             KEY_DEVICE_NAME = "device_name",
@@ -32,12 +33,43 @@ public final class Settings {
 //            DEF_SERVER_ADDRESS = "http://10.0.0.18:8080/socket";
 //            DEF_SERVER_ADDRESS = "https://remotetouch.tk/socket";
 
-    private static final Logger LOGGER = Logger.getLogger(Settings.class.getSimpleName());
+    private static final Logger LOGGER = Logger.getLogger(SettingsManager.class.getSimpleName());
 
-    private static final Settings INSTANCE = new Settings();
+    private static SettingsManager INSTANCE = null;
 
-    public static Settings getInstance() {
+    private static final Preferences PLAIN_PREFERENCES = Preferences.userNodeForPackage(SettingsManager.class);
+
+    /**
+     * Ensure that {@link #unlockInstance(String)} was called before using this method. If it wasn't called this method
+     * will return {@code null}.
+     *
+     * @return unlocked manager or {@code null}
+     */
+    public static SettingsManager getInstance() {
         return INSTANCE;
+    }
+
+    /**
+     * This method should be called on application start to access application settings. Should be called just once at start.
+     * Every calling this method replace previous created instance. Returns new unlocked instance.
+     *
+     * @param key a key used to encryption settings
+     * @return unlocked instance of this manager
+     */
+    public static SettingsManager unlockInstance(@NotNull String key) {
+        INSTANCE = new SettingsManager(key);
+        return getInstance();
+    }
+
+    public static Locale getLocale() {
+        String lang = PLAIN_PREFERENCES.get(KEY_LOCALE_LANG, DEF_LOCALE_LANG);
+        String country = PLAIN_PREFERENCES.get(KEY_LOCALE_COUNTRY, DEF_LOCALE_COUNTRY);
+        return new Locale(lang, country);
+    }
+
+    public static void setLocale(@NotNull Locale locale) {
+        PLAIN_PREFERENCES.put(KEY_LOCALE_LANG, locale.getLanguage());
+        PLAIN_PREFERENCES.put(KEY_LOCALE_COUNTRY, locale.getCountry());
     }
 
     private final Preferences preferences;
@@ -90,32 +122,6 @@ public final class Settings {
         }
     }
 
-    /**
-     * @param key the given key
-     * @return true if preferences contains value with the specific key
-     */
-    private boolean contains(@NotNull String key) {
-        try {
-            for (String prefKey : preferences.keys()) {
-                if (prefKey.equals(key)) return true;
-            }
-        } catch (BackingStoreException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public Locale getLocale() {
-        String lang = preferences.get(KEY_LOCALE_LANG, DEF_LOCALE_LANG);
-        String country = preferences.get(KEY_LOCALE_COUNTRY, DEF_LOCALE_COUNTRY);
-        return new Locale(lang, country);
-    }
-
-    public void setLocale(@NotNull Locale locale) {
-        preferences.put(KEY_LOCALE_LANG, locale.getLanguage());
-        preferences.put(KEY_LOCALE_COUNTRY, locale.getCountry());
-    }
-
     public URL getServerAddress() {
         try {
             return new URL(preferences.get(KEY_SERVER_ADDRESS, DEF_SERVER_ADDRESS));
@@ -131,7 +137,23 @@ public final class Settings {
         preferences.put(KEY_SERVER_ADDRESS, address.toExternalForm());
     }
 
-    private Settings() {
-        this.preferences = Preferences.userRoot();
+    /**
+     * @param key the given key
+     * @return true if preferences contains value with the specific key
+     */
+    private boolean contains(@NotNull String key) {
+        try {
+            for (String prefKey : preferences.keys()) {
+                if (prefKey.equals(key)) return true;
+            }
+        } catch (BackingStoreException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private SettingsManager(String key) {
+//        this.preferences = Preferences.userNodeForPackage(SettingsManager.class);
+        this.preferences = EncryptedPreferences.userNodeForPackage(SettingsManager.class, key);
     }
 }

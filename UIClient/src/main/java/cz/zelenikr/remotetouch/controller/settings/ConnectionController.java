@@ -1,7 +1,7 @@
 package cz.zelenikr.remotetouch.controller.settings;
 
 import cz.zelenikr.remotetouch.Resources;
-import cz.zelenikr.remotetouch.Settings;
+import cz.zelenikr.remotetouch.manager.SettingsManager;
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.controller.Validateable;
 import javafx.fxml.FXML;
@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
  */
 public class ConnectionController implements Controller, Initializable, Validateable {
 
-    private static final Settings SETTINGS = Settings.getInstance();
+    private static final SettingsManager SETTINGS = SettingsManager.getInstance();
     private final ValidationSupport validationSupport = new ValidationSupport();
 
     @FXML

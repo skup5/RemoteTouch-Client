@@ -4,9 +4,9 @@ package cz.zelenikr.remotetouch;
 import cz.zelenikr.remotetouch.controller.AppController;
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.controller.settings.PairDeviceController;
+import cz.zelenikr.remotetouch.manager.SettingsManager;
 import impl.org.controlsfx.skin.DecorationPane;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -14,7 +14,6 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.*;
 import javafx.util.Duration;
@@ -41,8 +40,8 @@ public class MainFX extends Application {
     // to debugging
     private static final boolean START_CLI = false;
 
-    private static final Settings SETTINGS = Settings.getInstance();
-    private static final double MIN_WIDTH = 500, MIN_HEIGHT=500;
+    private SettingsManager settingsManager;
+    private static final double MIN_WIDTH = 500, MIN_HEIGHT = 500;
     private Stage stage;
 
     private static String[] ARGS;
@@ -57,7 +56,12 @@ public class MainFX extends Application {
 
         boolean startMain = true;
 
-//        showLogin();
+        String password = showLogin();
+        if (password == null || password.isEmpty()) {
+            close();
+        } else {
+            settingsManager = SettingsManager.unlockInstance(password);
+        }
 
         if (shouldShowWizard()) {
             startMain = showWizard();
@@ -67,12 +71,20 @@ public class MainFX extends Application {
             showMainWindow();
             if (START_CLI) startConsole();
         } else {
-            stage.close();
+            close();
         }
     }
 
+    private void close() {
+        stage.close();
+    }
+
+    private SettingsManager getSettings() {
+        return settingsManager;
+    }
+
     private boolean shouldShowWizard() {
-        return !SETTINGS.containsDeviceName() || !SETTINGS.containsPairKey();
+        return true || !getSettings().containsDeviceName() || !getSettings().containsPairKey();
     }
 
     private void showMainWindow() throws IOException {
@@ -97,6 +109,7 @@ public class MainFX extends Application {
      * @return true if wizard was successfully completed
      */
     private boolean showWizard() throws IOException {
+        //TODO: implement own wizard
         AtomicBoolean success = new AtomicBoolean(false);
         ResourceBundle strings = getStrings();
 
@@ -140,13 +153,14 @@ public class MainFX extends Application {
     /**
      * Shows login dialog to unlock application.
      */
-    private void showLogin() {
+    private String showLogin() {
+        //TODO: implement own Login dialog
         LoginDialog loginDialog = new LoginDialog(new Pair<>("", ""), param -> {
             return null;
         });
         loginDialog.getDialogPane().getStylesheets().addAll(Resources.getStyleSheets());
         loginDialog.showAndWait();
-
+        return "FakePassword";
     }
 
     private void startConsole() {
@@ -197,8 +211,8 @@ public class MainFX extends Application {
         // not necessary, but this will move the dummy stage off the screen
         final Screen screen = Screen.getPrimary();
         final Rectangle2D bounds = screen.getVisualBounds();
-        dummyPopup.setX(bounds.getMaxX()-25);
-        dummyPopup.setY(bounds.getMaxY()-40);
+        dummyPopup.setX(bounds.getMaxX() - 25);
+        dummyPopup.setY(bounds.getMaxY() - 40);
         // create/add a transparent scene
         final Group root = new Group();
         dummyPopup.setScene(new Scene(root, 1d, 1d, Color.TRANSPARENT));
@@ -215,15 +229,15 @@ public class MainFX extends Application {
     }
 
     public static ResourceBundle getStrings() {
-        return Resources.getStrings(SETTINGS.getLocale());
+        return Resources.getStrings(SettingsManager.getLocale());
     }
 
     public static void main(String[] args) {
-//        System.out.println("Clearing Settings");
+//        System.out.println("Clearing SettingsManager");
 //        SETTINGS.setDeviceName(null);
 //        SETTINGS.setPairKey(null);
 
-        Locale.setDefault(SETTINGS.getLocale());
+        Locale.setDefault(SettingsManager.getLocale());
         ARGS = args;
         launch(args);
     }

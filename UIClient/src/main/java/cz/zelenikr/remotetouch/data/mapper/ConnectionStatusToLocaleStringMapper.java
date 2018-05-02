@@ -1,7 +1,7 @@
 package cz.zelenikr.remotetouch.data.mapper;
 
 import cz.zelenikr.remotetouch.Resources;
-import cz.zelenikr.remotetouch.Settings;
+import cz.zelenikr.remotetouch.manager.SettingsManager;
 import cz.zelenikr.remotetouch.network.ConnectionStatus;
 
 import java.util.ResourceBundle;
@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
  */
 public class ConnectionStatusToLocaleStringMapper {
 
-    private static final ResourceBundle STRINGS = Resources.getStrings(Settings.getInstance().getLocale());
+    private static final ResourceBundle STRINGS = Resources.getStrings(SettingsManager.getLocale());
 
     public static String toString(ConnectionStatus value) {
         switch (value) {

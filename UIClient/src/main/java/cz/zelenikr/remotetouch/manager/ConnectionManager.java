@@ -1,7 +1,6 @@
 package cz.zelenikr.remotetouch.manager;
 
 import cz.zelenikr.remotetouch.Callback;
-import cz.zelenikr.remotetouch.Settings;
 import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
@@ -24,7 +23,7 @@ import java.util.Set;
  * @author Roman Zelenik
  */
 public final class ConnectionManager {
-    private static final Settings SETTINGS = Settings.getInstance();
+    private static final SettingsManager SETTINGS = SettingsManager.getInstance();
     private static final ConnectionManager INSTANCE = new ConnectionManager();
 
     public static ConnectionManager getInstance() {
@@ -74,7 +73,7 @@ public final class ConnectionManager {
     }
 
     /**
-     * Disconnects client then reloads all required attributes from Settings,
+     * Disconnects client then reloads all required attributes from SettingsManager,
      * initializes client and creates new connection.
      */
     public void updateAndReconnect() {
