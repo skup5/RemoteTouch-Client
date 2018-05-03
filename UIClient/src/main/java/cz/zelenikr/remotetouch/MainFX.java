@@ -4,6 +4,7 @@ package cz.zelenikr.remotetouch;
 import cz.zelenikr.remotetouch.controller.AppController;
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.controller.settings.PairDeviceController;
+import cz.zelenikr.remotetouch.dialog.LocalizedWizardPane;
 import cz.zelenikr.remotetouch.manager.SettingsManager;
 import impl.org.controlsfx.skin.DecorationPane;
 import javafx.application.Application;
@@ -13,6 +14,9 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.paint.Color;
 import javafx.stage.*;
@@ -26,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -109,7 +114,6 @@ public class MainFX extends Application {
      * @return true if wizard was successfully completed
      */
     private boolean showWizard() throws IOException {
-        //TODO: implement own wizard
         AtomicBoolean success = new AtomicBoolean(false);
         ResourceBundle strings = getStrings();
 
@@ -125,9 +129,15 @@ public class MainFX extends Application {
         DecorationPane content = new DecorationPane();
         content.getChildren().add(pairDeviceView.getKey());
 
-        WizardPane page1 = new WizardPane() {
+        WizardPane page1 = new LocalizedWizardPane() {
             @Override
             public void onEnteringPage(Wizard wizard) {
+                super.onEnteringPage(wizard);
+                List<ButtonType> buttons = getButtonTypes().filtered(buttonType -> buttonType.getButtonData().compareTo(ButtonBar.ButtonData.BACK_PREVIOUS) == 0);
+                if (!buttons.isEmpty()) {
+                    Button backButton = (Button) lookupButton(buttons.get(0));
+                    backButton.disabledProperty().addListener((observable, oldValue, newValue) -> backButton.setVisible(!newValue));
+                }
                 wizard.invalidProperty().unbind();
                 wizard.invalidProperty().bind(pairDeviceController.getValidationSupport().invalidProperty());
             }

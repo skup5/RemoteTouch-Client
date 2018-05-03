@@ -51,6 +51,9 @@ public final class Resources {
                 CONNECTSTATUS_CONNECT_ERROR = "ConnectionStatus.Connect.Error",
                 CONNECTSTATUS_RECONNECT_ERROR = "ConnectionStatus.Reconnect.Error",
 
+                DIALOG_BUTTON_CANCEL = "Dialog.Button.Cancel",
+                DIALOG_BUTTON_FINISH = "Dialog.Button.Finish",
+
                 NAVIGATION_ITEMS_PAIR = "Navigation.Items.Pair",
                 NAVIGATION_ITEMS_SETTINGS = "Navigation.Items.Settings",
                 NAVIGATION_ITEMS_MESSAGES = "Navigation.Items.Messages",
