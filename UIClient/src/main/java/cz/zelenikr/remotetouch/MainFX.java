@@ -5,6 +5,7 @@ import cz.zelenikr.remotetouch.controller.AppController;
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.controller.settings.PairDeviceController;
 import cz.zelenikr.remotetouch.dialog.LocalizedWizardPane;
+import cz.zelenikr.remotetouch.dialog.LoginDialog;
 import cz.zelenikr.remotetouch.manager.SettingsManager;
 import impl.org.controlsfx.skin.DecorationPane;
 import javafx.application.Application;
@@ -23,7 +24,6 @@ import javafx.stage.*;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import org.controlsfx.control.Notifications;
-import org.controlsfx.dialog.LoginDialog;
 import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -64,6 +65,7 @@ public class MainFX extends Application {
         String password = showLogin();
         if (password == null || password.isEmpty()) {
             close();
+            return;
         } else {
             settingsManager = SettingsManager.unlockInstance(password);
         }
@@ -164,13 +166,13 @@ public class MainFX extends Application {
      * Shows login dialog to unlock application.
      */
     private String showLogin() {
-        //TODO: implement own Login dialog
-        LoginDialog loginDialog = new LoginDialog(new Pair<>("", ""), param -> {
-            return null;
-        });
+        LoginDialog loginDialog = new LoginDialog(getStrings().getString(Resources.Strings.APPLICATION_TITLE));
         loginDialog.getDialogPane().getStylesheets().addAll(Resources.getStyleSheets());
-        loginDialog.showAndWait();
-        return "FakePassword";
+        Optional<ButtonType> result = loginDialog.showAndWait();
+        if (result.isPresent() && result.get() == LoginDialog.BUTTON_LOGIN) {
+            return loginDialog.getPassword();
+        }
+        return null;
     }
 
     private void startConsole() {

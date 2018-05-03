@@ -54,6 +54,9 @@ public final class Resources {
                 DIALOG_BUTTON_CANCEL = "Dialog.Button.Cancel",
                 DIALOG_BUTTON_FINISH = "Dialog.Button.Finish",
 
+                LOGIN_BUTTON_LOGIN = "Login.Button.Login",
+                LOGIN_HEADER = "Login.Header",
+
                 NAVIGATION_ITEMS_PAIR = "Navigation.Items.Pair",
                 NAVIGATION_ITEMS_SETTINGS = "Navigation.Items.Settings",
                 NAVIGATION_ITEMS_MESSAGES = "Navigation.Items.Messages",
@@ -62,6 +65,7 @@ public final class Resources {
                 VALIDATION_DEVICE_NAME = "Validation.Device.Name",
                 VALIDATION_DEVICE_PAIR_KEY = "Validation.Device.PairKey",
                 VALIDATION_CONNECTION_ADDRESS = "Validation.Connection.Address",
+                VALIDATION_LOGIN_PASSWORD = "Validation.Login.Password",
 
                 SETTINGS_DEVICE_NAME = "Settings.Device.Name",
                 SETTINGS_DEVICE_PAIR_KEY = "Settings.Device.PairKey",
