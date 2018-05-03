@@ -29,9 +29,9 @@ public final class SettingsManager {
             DEF_LOCALE_COUNTRY = "CZ",
             DEF_DEVICE_NAME = "",
             DEF_PAIR_KEY = "",
-            DEF_SERVER_ADDRESS = "http://localhost:8080/socket";
+//            DEF_SERVER_ADDRESS = "http://localhost:8080/socket";
 //            DEF_SERVER_ADDRESS = "http://10.0.0.18:8080/socket";
-//            DEF_SERVER_ADDRESS = "https://remotetouch.tk/socket";
+            DEF_SERVER_ADDRESS = "https://remotetouch.tk/socket";
 
     private static final Logger LOGGER = Logger.getLogger(SettingsManager.class.getSimpleName());
 

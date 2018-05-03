@@ -1,12 +1,19 @@
 package cz.zelenikr.remotetouch.controller;
 
 import cz.zelenikr.remotetouch.MainFX;
+import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
 import cz.zelenikr.remotetouch.data.mapper.ConnectionStatusToLocaleStringMapper;
 import cz.zelenikr.remotetouch.manager.ConnectionManager;
+import cz.zelenikr.remotetouch.manager.NotificationManager;
 import cz.zelenikr.remotetouch.network.ConnectionStatus;
+import de.jensd.fx.glyphs.GlyphIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import de.jensd.fx.glyphs.materialicons.MaterialIcon;
+import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,6 +32,7 @@ public class AppController implements Controller, Initializable {
     private static final Logger LOGGER = Logger.getLogger(AppController.class.getSimpleName());
 
     private final ConnectionManager connectionManager = ConnectionManager.getInstance();
+    private final NotificationManager notificationManager = NotificationManager.getInstance();
 
     @FXML
     private Label connectionStatus;
@@ -58,16 +66,28 @@ public class AppController implements Controller, Initializable {
 
     private void onNewCallsAsync(CallEventContent... calls) {
         for (CallEventContent content : calls)
-            Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, "Nový hovor", content.toString()));
+            Platform.runLater(() -> notificationManager.notify(
+                    Resources.Icons.getIconByCallType(content.getType()),
+                    "Nový hovor",
+                    content.toString(),
+                    null));
     }
 
     private void onNewNotificationsAsync(NotificationEventContent... notifications) {
         for (NotificationEventContent content : notifications)
-            Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, content.getLabel() + ": " + content.getTitle(), content.getText()));
+            Platform.runLater(() -> notificationManager.notify(
+                    Resources.Icons.getIconByApp(content.getApp()),
+                    content.getLabel() + ": " + content.getTitle(),
+                    content.getText(),
+                    null));
     }
 
     private void onNewSmsAsync(SmsEventContent... sms) {
         for (SmsEventContent content : sms)
-            Platform.runLater(() -> MainFX.notification(Pos.BOTTOM_RIGHT, "Nová sms", content.toString()));
+            Platform.runLater(() -> notificationManager.notify(
+                    Resources.Icons.getSmsIcon(),
+                    "Nová sms",
+                    content.toString(),
+                    null));
     }
 }

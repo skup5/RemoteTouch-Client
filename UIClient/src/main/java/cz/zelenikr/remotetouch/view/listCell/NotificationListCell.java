@@ -1,8 +1,8 @@
 package cz.zelenikr.remotetouch.view.listCell;
 
+import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import de.jensd.fx.glyphs.GlyphIcon;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -42,14 +42,9 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
             holder.setTitle(item.getTitle());
             holder.setText(item.getText());
             holder.setDatetime(formatDatetime(item.getWhen()));
-            holder.setIcon(getIconByApp(appName));
+            holder.setIcon(Resources.Icons.getIconByApp(appName));
             setGraphic(holder.getContent());
         }
-    }
-
-    private FontAwesomeIcon getIconByApp(String app) {
-        if (app.contains("messenger")) return FontAwesomeIcon.WHATSAPP;
-        return FontAwesomeIcon.TH_LARGE;
     }
 
     private String formatDatetime(long timestamp) {
@@ -87,11 +82,11 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
             return text;
         }
 
-        public void setIcon(FontAwesomeIcon glyph) {
+        public void setIcon(GlyphIcon glyph) {
             if (glyph == null) {
                 appName.setGraphic(null);
             } else {
-                appName.setGraphic(new FontAwesomeIconView(glyph));
+                appName.setGraphic(glyph);
             }
         }
 

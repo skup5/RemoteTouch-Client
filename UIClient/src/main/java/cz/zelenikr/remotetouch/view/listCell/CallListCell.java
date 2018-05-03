@@ -1,11 +1,9 @@
 package cz.zelenikr.remotetouch.view.listCell;
 
-import cz.zelenikr.remotetouch.data.dto.CallType;
+import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
 import cz.zelenikr.remotetouch.data.mapper.CallTypeToLocalStringMapper;
 import de.jensd.fx.glyphs.GlyphIcon;
-import de.jensd.fx.glyphs.materialicons.MaterialIcon;
-import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -45,34 +43,9 @@ public class CallListCell extends ListCell<CallEventContent> {
             holder.setCallerTooltip(callerTooltip);
             holder.setType(CallTypeToLocalStringMapper.toString(item.getType()));
             holder.setDatetime(formatDatetime(item.getWhen()));
-            holder.setIcon(getIconByType(item.getType()));
+            holder.setIcon(Resources.Icons.getIconByCallType(item.getType()));
             setGraphic(holder.getContent());
         }
-    }
-
-    private GlyphIcon getIconByType(CallType type) {
-        MaterialIcon glyph;
-        switch (type) {
-            case ENDED:
-                glyph = MaterialIcon.CALL_END;
-                break;
-            case INCOMING:
-                glyph = MaterialIcon.RING_VOLUME;
-                break;
-            case MISSED:
-                glyph = MaterialIcon.PHONE_MISSED;
-                break;
-            case ONGOING:
-                glyph = MaterialIcon.PHONE_IN_TALK;
-                break;
-            case OUTGOING:
-                glyph = MaterialIcon.PHONE_FORWARDED;
-                break;
-            default:
-                glyph = MaterialIcon.PHONE;
-                break;
-        }
-        return new MaterialIconView(glyph);
     }
 
     private String formatDatetime(long timestamp) {

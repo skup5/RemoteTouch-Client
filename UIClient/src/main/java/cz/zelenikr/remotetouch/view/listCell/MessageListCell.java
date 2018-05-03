@@ -1,9 +1,8 @@
 package cz.zelenikr.remotetouch.view.listCell;
 
+import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
 import de.jensd.fx.glyphs.GlyphIcon;
-import de.jensd.fx.glyphs.materialicons.MaterialIcon;
-import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -12,8 +11,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
@@ -25,6 +22,8 @@ import java.util.Date;
  * @author Roman Zelenik
  */
 public class MessageListCell extends ListCell<SmsEventContent> {
+
+    private static final GlyphIcon ICON = Resources.Icons.getSmsIcon();
 
     private ViewHolder holder;
     private DateFormat dateFormat;
@@ -48,7 +47,7 @@ public class MessageListCell extends ListCell<SmsEventContent> {
             holder.setSenderTooltip(senderTooltip);
             holder.setText(item.getContent());
             holder.setDatetime(formatDatetime(item.getWhen()));
-            holder.setIcon(new MaterialIconView(MaterialIcon.TEXTSMS));
+            holder.setIcon(ICON);
             setGraphic(holder.getContent());
         }
     }
