@@ -30,10 +30,10 @@ public final class NotificationManager {
     /**
      * Shows new notification on screen to the user.
      *
-     * @param icon
-     * @param title
-     * @param text
-     * @param onClickAction
+     * @param icon          a content icon
+     * @param title         a notification title
+     * @param text          a text content
+     * @param onClickAction handles a click on notification
      */
     public void notify(GlyphIcon icon, String title, String text, EventHandler<ActionEvent> onClickAction) {
         Notifications notification = Notifications.create()
@@ -47,6 +47,10 @@ public final class NotificationManager {
 
         if (onClickAction != null) {
             notification.onAction(onClickAction);
+        } else {
+            // notification will disappear after click
+            notification.onAction(event -> {
+            });
         }
 
         notify(notification);
@@ -63,6 +67,9 @@ public final class NotificationManager {
         builder.show();
     }
 
+    /**
+     * Creates and returns invisible stage that is used to showing notifications on desktop.
+     */
     private static Stage createDummyStage() {
         Stage dummyPopup = new Stage();
         dummyPopup.initModality(Modality.NONE);

@@ -5,6 +5,7 @@ import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
+import cz.zelenikr.remotetouch.data.mapper.CallTypeToLocalStringMapper;
 import cz.zelenikr.remotetouch.data.mapper.ConnectionStatusToLocaleStringMapper;
 import cz.zelenikr.remotetouch.manager.ConnectionManager;
 import cz.zelenikr.remotetouch.manager.NotificationManager;
@@ -15,10 +16,14 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,20 +39,40 @@ public class AppController implements Controller, Initializable {
     private final ConnectionManager connectionManager = ConnectionManager.getInstance();
     private final NotificationManager notificationManager = NotificationManager.getInstance();
 
+    private final EventHandler<ActionEvent> focusNotificationsTab, focusCallsTab, focusMessagesTab;
+
+    private Stage stage;
+
+    @FXML
+    private Tab callsTab, notificationsTab, messagesTab;
+
     @FXML
     private Label connectionStatus;
 
     public AppController() {
+        focusCallsTab = event -> {
+            notificationsTab.getTabPane().getSelectionModel().select(callsTab);
+            toFront();
+        };
+        focusNotificationsTab = event -> {
+            notificationsTab.getTabPane().getSelectionModel().select(notificationsTab);
+            toFront();
+        };
+        focusMessagesTab = event -> {
+            notificationsTab.getTabPane().getSelectionModel().select(messagesTab);
+            toFront();
+        };
         connectionManager.registerConnectionStateChangedListener(this::onConnectionStateChangedAsync);
         connectionManager.registerCallReceivedListener(this::onNewCallsAsync);
         connectionManager.registerNotificationReceivedListener(this::onNewNotificationsAsync);
         connectionManager.registerSmsReceivedListener(this::onNewSmsAsync);
-        connectionManager.connect();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         onConnectionStateChanged(ConnectionStatus.DISCONNECTED);
+        stage = (Stage) notificationsTab.getTabPane().getScene().getWindow();
+        connectionManager.connect();
     }
 
     public void onClose() {
@@ -66,28 +91,41 @@ public class AppController implements Controller, Initializable {
 
     private void onNewCallsAsync(CallEventContent... calls) {
         for (CallEventContent content : calls)
-            Platform.runLater(() -> notificationManager.notify(
-                    Resources.Icons.getIconByCallType(content.getType()),
-                    "Nový hovor",
-                    content.toString(),
-                    null));
+            Platform.runLater(() -> {
+                final String title = content.getName() == null || content.getName().isEmpty() ? content.getNumber() : content.getName();
+                notificationManager.notify(
+                        Resources.Icons.getIconByCallType(content.getType()),
+                        title,
+                        CallTypeToLocalStringMapper.toString(content.getType()),
+                        focusCallsTab);
+            });
     }
 
     private void onNewNotificationsAsync(NotificationEventContent... notifications) {
         for (NotificationEventContent content : notifications)
             Platform.runLater(() -> notificationManager.notify(
                     Resources.Icons.getIconByApp(content.getApp()),
-                    content.getLabel() + ": " + content.getTitle(),
+                    content.getLabel() + " - " + content.getTitle(),
                     content.getText(),
-                    null));
+                    focusNotificationsTab));
     }
 
     private void onNewSmsAsync(SmsEventContent... sms) {
         for (SmsEventContent content : sms)
-            Platform.runLater(() -> notificationManager.notify(
-                    Resources.Icons.getSmsIcon(),
-                    "Nová sms",
-                    content.toString(),
-                    null));
+            Platform.runLater(() -> {
+                final String title = content.getName() == null || content.getName().isEmpty() ? content.getNumber() : content.getName();
+                notificationManager.notify(
+                        Resources.Icons.getSmsIcon(),
+                        title,
+                        content.getContent(),
+                        focusMessagesTab);
+            });
+    }
+
+    private void toFront() {
+        if (stage != null) {
+            stage.setIconified(false);
+            stage.toFront();
+        }
     }
 }

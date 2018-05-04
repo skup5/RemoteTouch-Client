@@ -1,6 +1,8 @@
 package cz.zelenikr.remotetouch.preferences;
 
 import cz.zelenikr.remotetouch.security.AESCipher;
+import cz.zelenikr.remotetouch.security.Hash;
+import cz.zelenikr.remotetouch.security.SHAHash;
 import cz.zelenikr.remotetouch.security.SymmetricCipher;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +23,7 @@ public final class EncryptedPreferences extends Preferences {
 
     private final Preferences preferences;
     private final SymmetricCipher<String> cipher;
+    private static final Hash HASH = new SHAHash(false);
 
     /**
      * See {@link Preferences#userRoot()}.
@@ -29,7 +32,8 @@ public final class EncryptedPreferences extends Preferences {
      * @return the root preference node for the calling user
      */
     public static EncryptedPreferences userRoot(@NotNull String key) {
-        return new EncryptedPreferences(Preferences.userRoot(), key);
+        // create sub node and use key hash like a sub node name
+        return new EncryptedPreferences(Preferences.userRoot().node(HASH.hash(key)), key);
     }
 
     /**
@@ -41,7 +45,8 @@ public final class EncryptedPreferences extends Preferences {
      * @throws NullPointerException if {@code c} is null
      */
     public static EncryptedPreferences userNodeForPackage(Class<?> c, @NotNull String key) throws NullPointerException {
-        return new EncryptedPreferences(Preferences.userNodeForPackage(c), key);
+        // create sub node and use key hash like a sub node name
+        return new EncryptedPreferences(Preferences.userNodeForPackage(c).node(HASH.hash(key)), key);
     }
 
     @Deprecated
@@ -248,10 +253,18 @@ public final class EncryptedPreferences extends Preferences {
         this.cipher = new AESCipher(key);
     }
 
+    /**
+     * @param plain the specific text to encryption
+     * @return the given encrypted text
+     */
     private String encrypt(String plain) {
         return cipher.encrypt(plain);
     }
 
+    /**
+     * @param encrypted the specific text to decryption
+     * @return the given decrypted text or null on some error
+     */
     private String decrypt(String encrypted) {
         return cipher.decrypt(encrypted);
     }

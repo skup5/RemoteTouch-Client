@@ -57,9 +57,9 @@
         <!--</MenuBar>-->
         <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="SOMETIMES">
             <tabs>
-                <fx:include source="notification/notifications_tab.fxml" />
-                <fx:include source="call/calls_tab.fxml" />
-                <fx:include source="message/messages_tab.fxml" />
+                <fx:include fx:id="callsTab" source="call/calls_tab.fxml" />
+                <fx:include fx:id="messagesTab" source="message/messages_tab.fxml" />
+                <fx:include fx:id="notificationsTab" source="notification/notifications_tab.fxml" />
                 <fx:include source="settings/settings_tab.fxml" />
                 <!--<Tab closable="false" text="%Navigation.Items.Settings">-->
                     <!--<content>-->
