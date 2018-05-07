@@ -63,7 +63,6 @@ public class MainFX extends Application {
         boolean startMain = true;
 
         String password = showLogin();
-        System.out.println("Password:"+password);
         if (password == null || password.isEmpty()) {
             close();
             return;
@@ -92,7 +91,7 @@ public class MainFX extends Application {
     }
 
     private boolean shouldShowWizard() {
-        return  !getSettings().containsDeviceName() || !getSettings().containsPairKey();
+        return !getSettings().containsDeviceName() || !getSettings().containsPairKey();
     }
 
     private void showMainWindow() throws IOException {

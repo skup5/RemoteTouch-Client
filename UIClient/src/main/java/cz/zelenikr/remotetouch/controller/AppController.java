@@ -21,8 +21,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -71,13 +73,21 @@ public class AppController implements Controller, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         onConnectionStateChanged(ConnectionStatus.DISCONNECTED);
-        stage = (Stage) notificationsTab.getTabPane().getScene().getWindow();
         connectionManager.connect();
     }
 
     public void onClose() {
         LOGGER.info("close called");
         connectionManager.disconnect();
+    }
+
+    private Stage getStage() {
+        try {
+            if (stage == null)
+                stage = (Stage) notificationsTab.getTabPane().getScene().getWindow();
+        } catch (NullPointerException e) {
+        }
+        return stage;
     }
 
     private void onConnectionStateChanged(ConnectionStatus status) {
@@ -105,8 +115,8 @@ public class AppController implements Controller, Initializable {
         for (NotificationEventContent content : notifications)
             Platform.runLater(() -> notificationManager.notify(
                     Resources.Icons.getIconByApp(content.getApp()),
-                    content.getLabel() + " - " + content.getTitle(),
-                    content.getText(),
+                    content.getLabel(),
+                    content.getTitle(),
                     focusNotificationsTab));
     }
 
@@ -117,12 +127,13 @@ public class AppController implements Controller, Initializable {
                 notificationManager.notify(
                         Resources.Icons.getSmsIcon(),
                         title,
-                        content.getContent(),
+                        "",
                         focusMessagesTab);
             });
     }
 
     private void toFront() {
+        Stage stage = getStage();
         if (stage != null) {
             stage.setIconified(false);
             stage.toFront();
