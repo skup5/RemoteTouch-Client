@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -106,6 +107,7 @@ public class CallListCell extends ListCell<CallEventContent> {
             Tooltip tooltip = null;
             if (value != null && !value.isEmpty()) {
                 tooltip = new Tooltip(value);
+                tooltip.setShowDuration(Duration.INDEFINITE);
             }
             caller.setTooltip(tooltip);
         }

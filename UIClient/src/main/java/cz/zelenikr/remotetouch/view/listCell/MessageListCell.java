@@ -12,6 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -23,7 +24,7 @@ import java.util.Date;
  */
 public class MessageListCell extends ListCell<SmsEventContent> {
 
-    private static final GlyphIcon ICON = Resources.Icons.getSmsIcon();
+    private final GlyphIcon icon = Resources.Icons.getSmsIcon();
 
     private ViewHolder holder;
     private DateFormat dateFormat;
@@ -47,7 +48,7 @@ public class MessageListCell extends ListCell<SmsEventContent> {
             holder.setSenderTooltip(senderTooltip);
             holder.setText(item.getContent());
             holder.setDatetime(formatDatetime(item.getWhen()));
-            holder.setIcon(ICON);
+            holder.setIcon(icon);
             setGraphic(holder.getContent());
         }
     }
@@ -116,6 +117,7 @@ public class MessageListCell extends ListCell<SmsEventContent> {
             Tooltip tooltip = null;
             if (value != null && !value.isEmpty()) {
                 tooltip = new Tooltip(value);
+                tooltip.setShowDuration(Duration.INDEFINITE);
             }
             sender.setTooltip(tooltip);
         }

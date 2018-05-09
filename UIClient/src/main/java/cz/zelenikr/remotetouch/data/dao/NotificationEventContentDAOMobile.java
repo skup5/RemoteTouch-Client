@@ -10,7 +10,7 @@ public class NotificationEventContentDAOMobile extends GenericMobileContentDAO<N
 
     private static NotificationEventContent[] mockData = {
             new NotificationEventContent("com.fake.app", "Mock application", "Mock app title", "lorem ipsum etcetera", System.currentTimeMillis() - 2000 * 60),
-            new NotificationEventContent("com.fake.app2", "Fake messenger", "New message", "Santa wrote: Ho, ho, ho! Merry Christmas!", System.currentTimeMillis() - 3000 * 60),
+            new NotificationEventContent("com.fake.app2", "Fake messenger", "New message", "Santa wrote: Ho, ho, ho! Merry Christmas! Ho, ho, ho! Merry Christmas! Ho, ho, ho! Merry Christmas!", System.currentTimeMillis() - 3000 * 60),
             new NotificationEventContent("com.fake.app3", "", "com.fake.app3 title", "lorem ipsum etcetera", System.currentTimeMillis() - 5000)
     };
 

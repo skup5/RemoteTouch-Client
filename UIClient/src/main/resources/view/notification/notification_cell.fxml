@@ -11,7 +11,7 @@
     
     <Label fx:id="appName" styleClass="notification-cell-app-name" text="app name" wrapText="true" />
     <Label fx:id="datetime" styleClass="notification-cell-datetime" text="datetime" GridPane.columnIndex="1" />
-    <Label fx:id="title" styleClass="notification-cell-title" text="title" wrapText="true" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+    <Label fx:id="title" styleClass="notification-cell-title" text="title" GridPane.columnSpan="2" GridPane.rowIndex="1" />
     <Text fx:id="text" text="content" GridPane.columnSpan="2" GridPane.rowIndex="2" />
 
     <columnConstraints>

@@ -69,6 +69,10 @@ public final class Resources {
                 NAVIGATION_ITEMS_MESSAGES = "Navigation.Items.Messages",
                 NAVIGATION_ITEMS_CALLS = "Navigation.Items.Calls",
 
+        NOTIFICATION_TITLE_CALL = "Notification.Title.Call",
+        NOTIFICATION_TITLE_NOTIFICATION = "Notification.Title.Notification",
+        NOTIFICATION_TITLE_SMS = "Notification.Title.Sms",
+
         VALIDATION_DEVICE_NAME = "Validation.Device.Name",
                 VALIDATION_DEVICE_PAIR_KEY = "Validation.Device.PairKey",
                 VALIDATION_CONNECTION_ADDRESS = "Validation.Connection.Address",

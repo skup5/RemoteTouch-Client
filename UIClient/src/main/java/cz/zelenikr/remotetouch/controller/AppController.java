@@ -45,6 +45,8 @@ public class AppController implements Controller, Initializable {
 
     private Stage stage;
 
+    private String callNtfTitle, notificationNtfTitle, smsNtfTitle;
+
     @FXML
     private Tab callsTab, notificationsTab, messagesTab;
 
@@ -72,6 +74,10 @@ public class AppController implements Controller, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        callNtfTitle = resources.getString(Resources.Strings.NOTIFICATION_TITLE_CALL);
+        notificationNtfTitle = resources.getString(Resources.Strings.NOTIFICATION_TITLE_NOTIFICATION);
+        smsNtfTitle = resources.getString(Resources.Strings.NOTIFICATION_TITLE_SMS);
+
         onConnectionStateChanged(ConnectionStatus.DISCONNECTED);
         connectionManager.connect();
     }
@@ -102,10 +108,10 @@ public class AppController implements Controller, Initializable {
     private void onNewCallsAsync(CallEventContent... calls) {
         for (CallEventContent content : calls)
             Platform.runLater(() -> {
-                final String title = content.getName() == null || content.getName().isEmpty() ? content.getNumber() : content.getName();
+//                final String title = content.getName() == null || content.getName().isEmpty() ? content.getNumber() : content.getName();
                 notificationManager.notify(
                         Resources.Icons.getIconByCallType(content.getType()),
-                        title,
+                        callNtfTitle,
                         CallTypeToLocalStringMapper.toString(content.getType()),
                         focusCallsTab);
             });
@@ -115,19 +121,19 @@ public class AppController implements Controller, Initializable {
         for (NotificationEventContent content : notifications)
             Platform.runLater(() -> notificationManager.notify(
                     Resources.Icons.getIconByApp(content.getApp()),
-                    content.getLabel(),
-                    content.getTitle(),
+                    notificationNtfTitle,
+                    content.getLabel() + "\n" + content.getTitle(),
                     focusNotificationsTab));
     }
 
     private void onNewSmsAsync(SmsEventContent... sms) {
         for (SmsEventContent content : sms)
             Platform.runLater(() -> {
-                final String title = content.getName() == null || content.getName().isEmpty() ? content.getNumber() : content.getName();
+//                final String title = content.getName() == null || content.getName().isEmpty() ? content.getNumber() : content.getName();
                 notificationManager.notify(
                         Resources.Icons.getSmsIcon(),
-                        title,
-                        "",
+                        smsNtfTitle,
+                        "Sms",
                         focusMessagesTab);
             });
     }
