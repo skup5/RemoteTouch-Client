@@ -9,6 +9,7 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import javafx.util.Callback;
 import okhttp3.OkHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import cz.zelenikr.remotetouch.security.AESCipher;
 import cz.zelenikr.remotetouch.security.SymmetricCipher;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,10 +48,6 @@ public class SocketIOClient implements Client {
         }
     }
 
-    /**
-     * Log message prefix
-     */
-    private final String tag;
     private final String clientToken;
     private final Socket socket;
     private final URI serverUri;
@@ -72,7 +70,6 @@ public class SocketIOClient implements Client {
         this.serverUri = uri;
         this.socket = IO.socket(uri, options);
         this.clientToken = clientToken;
-        this.tag = "";
         this.symmetricCipher = new AESCipher(secureKey);
 
         initSocket();
@@ -118,35 +115,35 @@ public class SocketIOClient implements Client {
      */
     private void initSocket() {
         socket.on(Socket.EVENT_CONNECTING, args -> {
-            logDebug("connecting to " + serverUri);
+            clientLogger.fine("connecting to " + serverUri);
             notifyConnectionStatusChanged(ConnectionStatus.CONNECTING);
         }).on(Socket.EVENT_CONNECT, args -> {
-            logDebug("connected to " + serverUri);
+            clientLogger.fine("connected to " + serverUri);
             notifyConnectionStatusChanged(ConnectionStatus.CONNECTED);
             sendIntro();
         }).on(Socket.EVENT_CONNECT_ERROR, args -> {
-            logDebug("connection error");
+            clientLogger.fine("connection error");
             notifyConnectionStatusChanged(ConnectionStatus.CONNECT_ERROR);
         }).on(Socket.EVENT_DISCONNECT, args -> {
-            logDebug("disconnected from " + serverUri);
+            clientLogger.fine("disconnected from " + serverUri);
             notifyConnectionStatusChanged(ConnectionStatus.DISCONNECTED);
         }).on(Socket.EVENT_RECONNECTING, args -> {
-            logDebug("reconnecting to " + serverUri);
+            clientLogger.fine("reconnecting to " + serverUri);
             notifyConnectionStatusChanged(ConnectionStatus.RECONNECTING);
         }).on(Socket.EVENT_RECONNECT, args -> {
-            logDebug("reconnected to " + serverUri);
+            clientLogger.fine("reconnected to " + serverUri);
             notifyConnectionStatusChanged(ConnectionStatus.RECONNECTED);
         }).on(Socket.EVENT_RECONNECT_ERROR, args -> {
-            logDebug("reconnection error");
+            clientLogger.fine("reconnection error");
             notifyConnectionStatusChanged(ConnectionStatus.RECONNECT_ERROR);
         }).on(EVENT_EVENT, args -> {
-            logInfo("received 'event'");
+            clientLogger.info("received 'event'");
             if (args.length > 0) {
                 Object data = args[0];
                 //logFine(data.toString());
                 onEventReceived(data);
             }
-        }).on(Socket.EVENT_MESSAGE, args -> logInfo(args[0].toString())
+        }).on(Socket.EVENT_MESSAGE, args -> clientLogger.info(args[0].toString())
         );
     }
 
@@ -181,7 +178,7 @@ public class SocketIOClient implements Client {
             HostnameVerifier myHostnameVerifier = new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession sslSession) {
-                    //logInfo("HostnameVerifier for " + hostname);
+                    //clientLogger.info("HostnameVerifier for " + hostname);
                     return serverUri.getHost().equals(hostname);
                 }
             };
@@ -197,75 +194,135 @@ public class SocketIOClient implements Client {
         return null;
     }
 
+    /**
+     * Notifies registered listener of change of {@link ConnectionStatus}.
+     *
+     * @param newStatus the current status value
+     */
     private void notifyConnectionStatusChanged(ConnectionStatus newStatus) {
         if (connectionStatusChangedListener != null) connectionStatusChangedListener.call(newStatus);
     }
 
+    /**
+     * Notifies registered {@link ContentRecivedListener ContentRecivedListener&lt;CallEventContent&gt;} of new call events.
+     *
+     * @param content the new call events
+     */
     private void onCallReceived(CallEventContent... content) {
-        logInfo("call: " + Arrays.toString(content));
+        clientLogger.info("call: " + Arrays.toString(content));
         if (callContentReceivedListener != null) callContentReceivedListener.onReceived(content);
     }
 
+    /**
+     * Processes received 'event' type {@link MessageDTO} from server. The message is expected in {@link JSONObject} format.
+     *
+     * @param data the received message like a JSON
+     */
     private void onEventReceived(Object data) {
-        if (data instanceof String) {
+        if (data instanceof JSONObject) {
+            // Read content from message
+            JSONArray jsonArray = parseMessageContent((JSONObject) data);
 
-        } else if (data instanceof JSONObject) {
-            JSONObject json = (JSONObject) data;
-            if (json.length() > 0) {
-                String content = json.optString("content");
-                if (content.isEmpty()) {
-                    logInfo("Empty content");
-                } else {
-                    content = decryptMessage(content);
-                    EventDTO eventDTO = JsonMapper.eventFromJsonString(content);
-                    switch (eventDTO.getType()) {
-                        case CALL:
-                            onCallReceived((CallEventContent) eventDTO.getContent());
-                            break;
-                        case NOTIFICATION:
-                            onNotificationReceived((NotificationEventContent) eventDTO.getContent());
-                            break;
-                        case SMS:
-                            onSmsReceived((SmsEventContent) eventDTO.getContent());
-                            break;
-                        default:
-                            logError("Unknown EventType: " + eventDTO.getType());
-                    }
+            // Process array items
+            for (Object jsonArrayItem : jsonArray) {
+
+                // We expect only JSON objects
+                if (!(jsonArrayItem instanceof JSONObject)) {
+                    continue;
+                }
+
+                // Try parse EventDTO object from current array item
+                EventDTO eventDTO = JsonMapper.eventFromJson((JSONObject) jsonArrayItem);
+                if (eventDTO == null) {
+                    continue;
+                }
+
+                // Select listener by EventType
+                switch (eventDTO.getType()) {
+                    case CALL:
+                        onCallReceived((CallEventContent) eventDTO.getContent());
+                        break;
+                    case NOTIFICATION:
+                        onNotificationReceived((NotificationEventContent) eventDTO.getContent());
+                        break;
+                    case SMS:
+                        onSmsReceived((SmsEventContent) eventDTO.getContent());
+                        break;
+                    default:
+                        clientLogger.severe("Unknown EventType: " + eventDTO.getType());
                 }
             }
         }
     }
 
+    /**
+     * Notifies registered {@link ContentRecivedListener ContentRecivedListener&lt;NotificationEventContent&gt;} of new notifications.
+     *
+     * @param content the  new notifications
+     */
     private void onNotificationReceived(NotificationEventContent... content) {
-        logInfo("notification: " + Arrays.toString(content));
+        clientLogger.info("notification: " + Arrays.toString(content));
         if (notificationContentReceivedListener != null) notificationContentReceivedListener.onReceived(content);
     }
 
+    /**
+     * Notifies registered {@link ContentRecivedListener ContentRecivedListener&lt;SmsEventContent&gt;} of new sms events.
+     *
+     * @param content the new sms events
+     */
     private void onSmsReceived(SmsEventContent... content) {
-        logInfo("sms: " + Arrays.toString(content));
+        clientLogger.info("sms: " + Arrays.toString(content));
         if (smsContentReceivedListener != null) smsContentReceivedListener.onReceived(content);
     }
 
+    /**
+     * Reads and decrypts 'content' in the specific {@link JSONObject}. Returns decrypted 'content' like {@link JSONArray}.
+     * If {@code json} doesn't contain 'content' or it's empty, this method returns empty {@link JSONArray}.
+     *
+     * @param json the given object to parsing
+     * @return 'content' value of {@code json} like {@link JSONArray}
+     */
+    private JSONArray parseMessageContent(JSONObject json) {
+        JSONArray contentArray = new JSONArray();
+
+        // JSON is empty or doesn't contain 'content'
+        if (json.length() == 0 || !json.has("content")) {
+            return contentArray;
+        }
+
+        try {
+            // Get 'content' (JSONArray) from JSON
+            contentArray = json.optJSONArray("content");
+
+            // Get encrypted text content
+            String content = contentArray.optString(0);
+            if (content.isEmpty()) {
+                return new JSONArray();
+            }
+
+            // Decrypt text content
+            content = decryptMessage(content);
+
+            // Parse decrypted text to JSONArray of JSON objects
+            contentArray = new JSONArray(content);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+
+        return contentArray;
+    }
+
+    /**
+     * Sends special ("pair") message to the server.
+     */
     private void sendIntro() {
         JSONObject json = JsonMapper.toJSONObject(new MessageDTO(clientToken, ""));
-        logInfo("sendIntro " + json.toString());
+        clientLogger.info("sendIntro " + json.toString());
         socket.emit("intro", json);
     }
 
     private String decryptMessage(String encrypted) {
         return symmetricCipher.decrypt(encrypted);
-    }
-
-    private void logInfo(String msg) {
-        clientLogger.info(tag + msg);
-    }
-
-    private void logDebug(String msg) {
-        clientLogger.fine(tag + msg);
-    }
-
-    private void logError(String error) {
-        clientLogger.severe(tag + error);
     }
 
 }

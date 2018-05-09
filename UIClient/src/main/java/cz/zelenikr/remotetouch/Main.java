@@ -1,10 +1,12 @@
 package cz.zelenikr.remotetouch;
 
+import com.google.gson.Gson;
+import cz.zelenikr.remotetouch.data.dto.CallType;
+import cz.zelenikr.remotetouch.data.dto.event.*;
+import cz.zelenikr.remotetouch.data.dto.message.MessageContent;
+import cz.zelenikr.remotetouch.data.dto.message.MessageDTO;
 import cz.zelenikr.remotetouch.manager.ConnectionManager;
-import cz.zelenikr.remotetouch.network.Client;
 import cz.zelenikr.remotetouch.network.SocketIOClient;
-import javafx.application.Platform;
-import javafx.geometry.Pos;
 import org.apache.commons.cli.*;
 import cz.zelenikr.remotetouch.security.AESCipher;
 import cz.zelenikr.remotetouch.security.Hash;
@@ -15,9 +17,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Scanner;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -54,12 +55,16 @@ public class Main {
 
 //        run();
 
-        cipherTest();
-
-//        test();
+        test();
     }
 
     private static void test() {
+//        urlTest();
+//        cipherTest();
+//        jsonTest();
+    }
+
+    private static void urlTest() {
         try {
 //            URL url = new URL("https://remotetouch.tk/socket");
             URL url = new URL("http://localhost:8080/socket");
@@ -100,6 +105,46 @@ public class Main {
             byte[] key  = CipherHelper.AESCipher.generateAESKey();
             System.out.println(key+" ["+key.length+"]");
         }*/
+    }
+
+    private static void jsonTest() {
+        //TODO: test MultipleMessageContent
+        Gson prettyGson = new Gson();
+        prettyGson = prettyGson.newBuilder().setPrettyPrinting().create();
+
+        MessageDTO messageDTO = new MessageDTO("asdf789", new EventDTO(EventType.CALL,
+                new CallEventContent("Jane Doe", "+420 777 666 555", CallType.INCOMING, System.currentTimeMillis() - 60 * 5000)));
+//        System.out.println(gson.toJson(messageDTO));
+
+        MessageContent[] contents = {
+                new EventDTO(EventType.CALL, new CallEventContent("John Doe", "666 666 666", CallType.MISSED, System.currentTimeMillis() - 60 * 10000)),
+                new EventDTO(EventType.NOTIFICATION, new NotificationEventContent("com.fake.app", "Mock application", "Mock app title", "lorem ipsum etcetera", System.currentTimeMillis() - 2000 * 60)),
+                new EventDTO(EventType.SMS, new SmsEventContent("John Doe", "666 666 666", "Sorry, i'm late.", System.currentTimeMillis() - 60 * 5000))
+        };
+        messageDTO = new MessageDTO("qwert12345", contents);
+//        System.out.println(gson.toJson(messageDTO));
+//        System.out.println(gson.toJson(messageDTO.getContent()));
+
+        try {
+            SocketIOClient client = new SocketIOClient("token", new URI("http://localhost"), "key");
+            client.setOnSMSReceived(contents1 -> System.out.println(Arrays.toString(contents1)));
+            client.setOnNotificationReceived(contents1 -> System.out.println(Arrays.toString(contents1)));
+            client.setOnCallReceived(contents1 -> System.out.println(Arrays.toString(contents1)));
+
+            String strContent = new Gson().toJson(messageDTO.getContent());
+//            System.out.println("Plain content: "+strContent);
+            AESCipher cipher = new AESCipher("key");
+            strContent = cipher.encrypt(strContent);
+//            System.out.println("Encrypted content: "+strContent);
+
+            messageDTO = new MessageDTO(messageDTO.getId(), messageDTO.getType(), strContent);
+            String messageJson = new Gson().toJson(messageDTO);
+//            System.out.println("Message JSON: "+messageJson);
+//            client.onEventReceived(new JSONObject(messageJson));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static void run() {
