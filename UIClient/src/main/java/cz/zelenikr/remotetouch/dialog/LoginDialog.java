@@ -13,6 +13,7 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.ButtonType;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
@@ -27,8 +28,7 @@ public class LoginDialog extends Dialog<ButtonType> {
     private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
 
     public static final ButtonType
-            BUTTON_LOGIN = new ButtonType(STRINGS.getString(Resources.Strings.LOGIN_BUTTON_LOGIN), ButtonBar.ButtonData.OK_DONE),
-            BUTTON_CANCEL = new ButtonType(STRINGS.getString(Resources.Strings.DIALOG_BUTTON_CANCEL), ButtonBar.ButtonData.CANCEL_CLOSE);
+            BUTTON_LOGIN = new ButtonType(STRINGS.getString(Resources.Strings.LOGIN_BUTTON_LOGIN), ButtonBar.ButtonData.OK_DONE);
 
     private final ValidationSupport validationSupport = new ValidationSupport();
     private final BooleanProperty invalidProperty = new SimpleBooleanProperty(false);
@@ -40,7 +40,7 @@ public class LoginDialog extends Dialog<ButtonType> {
         setHeaderText(STRINGS.getString(Resources.Strings.LOGIN_HEADER));
         setGraphic(new FontAwesomeIconView(FontAwesomeIcon.LOCK,"30"));
         getDialogPane().setContent(createContent());
-        getDialogPane().getButtonTypes().addAll(BUTTON_LOGIN, BUTTON_CANCEL);
+        getDialogPane().getButtonTypes().addAll(BUTTON_LOGIN, ButtonTypes.CANCEL);
         prepareContentControls();
         Button loginBt = (Button) getDialogPane().lookupButton(BUTTON_LOGIN);
         if (loginBt != null) {

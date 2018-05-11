@@ -3,7 +3,6 @@ package cz.zelenikr.remotetouch.dialog;
 import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.manager.SettingsManager;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 
 import java.util.ResourceBundle;
 
@@ -17,7 +16,7 @@ public class AboutDialog {
     private final Alert dialog;
 
     public AboutDialog(String title) {
-        dialog = new Alert(Alert.AlertType.INFORMATION, STRINGS.getString(Resources.Strings.ABOUT_CONTENT), ButtonType.CLOSE);
+        dialog = new Alert(Alert.AlertType.INFORMATION, STRINGS.getString(Resources.Strings.ABOUT_CONTENT), ButtonTypes.CLOSE);
         dialog.setHeaderText(STRINGS.getString(Resources.Strings.ABOUT_HEADER));
         setTitle(title);
     }

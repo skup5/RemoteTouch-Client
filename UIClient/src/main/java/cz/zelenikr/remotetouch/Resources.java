@@ -69,7 +69,7 @@ public final class Resources {
                 ABOUT_CONTENT = "About.Content",
                 ABOUT_HEADER = "About.Header",
 
-                APPLICATION_TITLE = "Application.Title",
+        APPLICATION_TITLE = "Application.Title",
 
         CALLTYPE_ENDED = "CallType.Ended",
                 CALLTYPE_MISSED = "CallType.Missed",
@@ -86,6 +86,7 @@ public final class Resources {
                 CONNECTSTATUS_RECONNECT_ERROR = "ConnectionStatus.Reconnect.Error",
 
         DIALOG_BUTTON_CANCEL = "Dialog.Button.Cancel",
+                DIALOG_BUTTON_CLOSE = "Dialog.Button.Close",
                 DIALOG_BUTTON_FINISH = "Dialog.Button.Finish",
 
         LOGIN_BUTTON_LOGIN = "Login.Button.Login",
