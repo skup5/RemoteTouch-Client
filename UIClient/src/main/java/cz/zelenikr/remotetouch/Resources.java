@@ -2,6 +2,7 @@ package cz.zelenikr.remotetouch;
 
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.data.dto.CallType;
+import cz.zelenikr.remotetouch.network.ConnectionStatus;
 import de.jensd.fx.glyphs.GlyphIcon;
 import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -9,6 +10,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -117,10 +119,59 @@ public final class Resources {
      */
     public static final class Icons {
 
+        /**
+         * Selects icon for the specific mobile app or returns default app icon.<p/>
+         * For Android applications, use the app package name.
+         *
+         * @param app the given name of application
+         * @return
+         */
         public static GlyphIcon getIconByApp(String app) {
-            FontAwesomeIcon glyph = FontAwesomeIcon.TH_LARGE;
-            if (app.contains("messenger")) glyph = FontAwesomeIcon.WHATSAPP;
-            return new FontAwesomeIconView(glyph);
+            FontAwesomeIcon glyph = null;
+            if (app.contains("whatsapp")) glyph = FontAwesomeIcon.WHATSAPP;
+
+            else if (app.contains("youtube")) glyph = FontAwesomeIcon.YOUTUBE;
+            else if (app.contains("spotify")) glyph = FontAwesomeIcon.SPOTIFY;
+            else if (app.contains("soundcloud")) glyph = FontAwesomeIcon.SOUNDCLOUD;
+
+            else if (app.contains("facebook")) glyph = FontAwesomeIcon.FACEBOOK_OFFICIAL;
+            else if (app.contains("instagram")) glyph = FontAwesomeIcon.INSTAGRAM;
+            else if (app.contains("snapchat")) glyph = FontAwesomeIcon.SNAPCHAT;
+            else if (app.contains("twitter")) glyph = FontAwesomeIcon.TWITTER;
+            else if (app.contains("linkedin")) glyph = FontAwesomeIcon.LINKEDIN;
+
+            else if (app.contains("amazon")) glyph = FontAwesomeIcon.AMAZON;
+
+            else if (app.contains("dropbox")) glyph = FontAwesomeIcon.DROPBOX;
+            else if (app.contains("flickr")) glyph = FontAwesomeIcon.FLICKR;
+
+            else if (app.contains("wikipedia")) glyph = FontAwesomeIcon.WIKIPEDIA_W;
+            else if (app.contains("reddit")) glyph = FontAwesomeIcon.REDDIT;
+            else if (app.contains("stackexchange ")) glyph = FontAwesomeIcon.STACK_OVERFLOW;
+            else if (app.contains("stackoverflow")) glyph = FontAwesomeIcon.STACK_OVERFLOW;
+
+            else if (app.contains("github")) glyph = FontAwesomeIcon.GITHUB;
+            else if (app.contains("bitbucket")) glyph = FontAwesomeIcon.BITBUCKET;
+            else if (app.contains("gitlab")) glyph = FontAwesomeIcon.GITLAB;
+            else if (app.contains("git")) glyph = FontAwesomeIcon.GIT;
+            else if (app.contains("slack")) glyph = FontAwesomeIcon.SLACK;
+
+            else if (app.contains("chrome")) glyph = FontAwesomeIcon.CHROME;
+            else if (app.contains("firefox")) glyph = FontAwesomeIcon.FIREFOX;
+            else if (app.contains("opera")) glyph = FontAwesomeIcon.OPERA;
+            else if (app.contains("yahoo")) glyph = FontAwesomeIcon.YAHOO;
+
+            else if (app.contains("microsoft")) glyph = FontAwesomeIcon.WINDOWS;
+            else if (app.contains("windows")) glyph = FontAwesomeIcon.WINDOWS;
+            else if (app.contains("bluetooth")) glyph = FontAwesomeIcon.BLUETOOTH;
+            else if (app.contains("google")) glyph = FontAwesomeIcon.GOOGLE;
+
+
+            else if (app.contains("mail")) glyph = FontAwesomeIcon.ENVELOPE;
+            else if (app.contains("calendar")) glyph = FontAwesomeIcon.CALENDAR;
+            else if (app.contains("com.android")) glyph = FontAwesomeIcon.ANDROID;
+
+            return glyph == null ? new MaterialIconView(MaterialIcon.APPS) : new FontAwesomeIconView(glyph);
         }
 
         public static GlyphIcon getIconByCallType(CallType type) {
@@ -150,6 +201,35 @@ public final class Resources {
 
         public static GlyphIcon getSmsIcon() {
             return new MaterialIconView(MaterialIcon.TEXTSMS);
+        }
+
+        public static GlyphIcon getIconByConnectionStatus(ConnectionStatus status) {
+            MaterialIcon glyph;
+            switch (status) {
+                case CONNECTING:
+                case RECONNECTING:
+                    glyph = MaterialIcon.SWAP_HORIZ;
+                    break;
+
+                case CONNECTED:
+                case RECONNECTED:
+                    glyph = MaterialIcon.SYNC;
+                    break;
+
+                case CONNECT_ERROR:
+                case RECONNECT_ERROR:
+                    glyph = MaterialIcon.SYNC_PROBLEM;
+                    break;
+
+                case DISCONNECTED:
+                    glyph = MaterialIcon.SYNC_DISABLED;
+                    break;
+
+                default:
+                    glyph = MaterialIcon.SYNC_PROBLEM;
+
+            }
+            return new MaterialIconView(glyph);
         }
     }
 

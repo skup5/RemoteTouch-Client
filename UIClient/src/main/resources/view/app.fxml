@@ -15,6 +15,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
 <VBox xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="cz.zelenikr.remotetouch.controller.AppController">
     <stylesheets>
@@ -26,29 +27,37 @@
                 <Menu mnemonicParsing="false" text="%Menu.App">
                     <items>
                         <MenuItem mnemonicParsing="false" text="%Menu.App.Lock" disable="true"/>
-                        <!--<MenuItem mnemonicParsing="false" text="Open…" />-->
-                        <!--<Menu mnemonicParsing="false" text="Open Recent" />-->
-                        <!--<SeparatorMenuItem mnemonicParsing="false" />-->
-                        <!--<MenuItem mnemonicParsing="false" text="Close" />-->
-                        <!--<MenuItem mnemonicParsing="false" text="Save" />-->
-                        <!--<MenuItem mnemonicParsing="false" text="Save As…" />-->
-                        <!--<MenuItem mnemonicParsing="false" text="Revert" />-->
                         <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="false" text="%Menu.App.Preferences" onAction="#onPrefsMenuItemClick" />
+                        <MenuItem mnemonicParsing="false" text="%Menu.App.Preferences" onAction="#onPrefsMenuItemClick">
+                            <graphic>
+                                <MaterialIconView glyphName="SETTINGS"/>
+                            </graphic>
+                        </MenuItem>
                         <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="false" text="%Menu.App.Quit" onAction="#onQuitMenuItemClick"/>
+                        <MenuItem mnemonicParsing="false" text="%Menu.App.Quit" onAction="#onQuitMenuItemClick">
+                            <graphic>
+                                <MaterialIconView glyphName="CLOSE"/>
+                            </graphic>
+                        </MenuItem>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="%Menu.Connection">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="%Menu.Connection.Connect" onAction="#onConnectMenuItemClick"/>
-                        <MenuItem mnemonicParsing="false" text="%Menu.Connection.Disconnect" onAction="#onDisconnectMenuItemClick"/>
-                        <MenuItem mnemonicParsing="false" text="%Menu.Connection.Reconnect" onAction="#onReconnectMenuItemClick"/>
+                        <MenuItem mnemonicParsing="false" text="%Menu.Connection.Connect"
+                                  onAction="#onConnectMenuItemClick"/>
+                        <MenuItem mnemonicParsing="false" text="%Menu.Connection.Disconnect"
+                                  onAction="#onDisconnectMenuItemClick"/>
+                        <MenuItem mnemonicParsing="false" text="%Menu.Connection.Reconnect"
+                                  onAction="#onReconnectMenuItemClick"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="%Menu.Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="%Menu.Help.About" onAction="#onAboutMenuItemClick"/>
+                        <MenuItem mnemonicParsing="false" text="%Menu.Help.About" onAction="#onAboutMenuItemClick">
+                            <graphic>
+                                <MaterialIconView glyphName="INFO"/>
+                            </graphic>
+                        </MenuItem>
                     </items>
                 </Menu>
             </menus>
@@ -68,6 +77,7 @@
         </TabPane>
         <HBox id="HBox" spacing="5.0" styleClass="bg-primary-dark" VBox.vgrow="NEVER">
             <children>
+                <Label fx:id="connectionStatusIcon"/>
                 <Label fx:id="connectionStatus" HBox.hgrow="ALWAYS">
                 </Label>
                 <Pane HBox.hgrow="ALWAYS"/>

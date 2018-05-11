@@ -3,20 +3,24 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.Accordion?>
+<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
 <Tab xmlns="http://javafx.com/javafx"
      xmlns:fx="http://javafx.com/fxml"
      text="%Navigation.Items.Settings">
+    <graphic>
+        <MaterialIconView glyphName="SETTINGS"/>
+    </graphic>
     <content>
         <Accordion>
             <panes>
                 <TitledPane alignment="TOP_LEFT" text="%Settings.Device.Title">
                     <content>
-                        <fx:include source="pair_device.fxml" />
+                        <fx:include source="pair_device.fxml"/>
                     </content>
                 </TitledPane>
                 <TitledPane alignment="TOP_LEFT" text="%Settings.Connection.Title">
                     <content>
-                        <fx:include source="connection.fxml" />
+                        <fx:include source="connection.fxml"/>
                     </content>
                 </TitledPane>
             </panes>

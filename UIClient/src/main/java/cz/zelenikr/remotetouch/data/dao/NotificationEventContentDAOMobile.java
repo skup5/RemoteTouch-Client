@@ -9,9 +9,9 @@ import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
 public class NotificationEventContentDAOMobile extends GenericMobileContentDAO<NotificationEventContent> implements NotificationEventContentDAO {
 
     private static NotificationEventContent[] mockData = {
-            new NotificationEventContent("com.fake.app", "Mock application", "Mock app title", "lorem ipsum etcetera", System.currentTimeMillis() - 2000 * 60),
-            new NotificationEventContent("com.fake.app2", "Fake messenger", "New message", "Santa wrote: Ho, ho, ho! Merry Christmas! Ho, ho, ho! Merry Christmas! Ho, ho, ho! Merry Christmas!", System.currentTimeMillis() - 3000 * 60),
-            new NotificationEventContent("com.fake.app3", "", "com.fake.app3 title", "lorem ipsum etcetera", System.currentTimeMillis() - 5000)
+            new NotificationEventContent("com.fake.facebook", "Fake Facebook", "Mock app title", "lorem ipsum etcetera", System.currentTimeMillis() - 2000 * 60),
+            new NotificationEventContent("com.fake.whatsapp", "Fake WhatsApp", "New message", "Santa wrote: Ho, ho, ho! Merry Christmas! Ho, ho, ho! Merry Christmas! Ho, ho, ho! Merry Christmas!", System.currentTimeMillis() - 3000 * 60),
+            new NotificationEventContent("com.fake.app", "", "com.fake.app3 title", "lorem ipsum etcetera", System.currentTimeMillis() - 5000)
     };
 
     private Callback<NotificationEventContent> newItemCallback;

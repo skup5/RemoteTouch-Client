@@ -53,6 +53,10 @@
     /*-fx-text-fill: #333333;*/
 }
 
+.label .glyph-icon {
+     -glyph-size: 14;
+}
+
 .dialog-pane {
     -fx-background-color: -fx-color-primary-light;
 }
@@ -79,7 +83,7 @@
     -fx-padding: 5;
 }
 
-.menu-bar{
+.menu-bar {
     -fx-background-color: -fx-color-primary-dark;
 }
 
@@ -96,16 +100,26 @@
     -fx-background-color: -fx-color-primary;
 }
 
-.menu-item:hover .label{
+.menu-item:hover .label, .menu-item:hover .glyph-icon {
     -fx-text-fill: -fx-color-text-dark;
+    -fx-fill: -fx-color-text-dark;
 }
 
-.menu-item .label{
+.menu-item .label {
     -fx-text-fill: -fx-color-text;
+}
+
+.menu-item .glyph-icon {
+    -glyph-size: 14;
 }
 
 .tab {
     -fx-background-color: -fx-color-primary-dark;
+}
+
+.tab .tab-close-button {
+     -fx-background-color: -fx-color-text-dark;
+     /*-fx-text-fill: -fx-color-text-dark;*/
 }
 
 .tab .tab-label {
@@ -122,6 +136,10 @@
 
 .tab:selected .tab-label{
     -fx-text-fill: -fx-color-text-dark;
+}
+
+.tab .glyph-icon {
+    -fx-fill: -fx-color-text-dark;
 }
 
 .tab-pane *.tab-header-background

@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Tab?>
+<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
 <Tab xmlns="http://javafx.com/javafx"
      xmlns:fx="http://javafx.com/fxml"
      closable="false"
      text="%Navigation.Items.Calls">
+    <graphic>
+        <MaterialIconView glyphName="PHONE"/>
+    </graphic>
     <content>
         <fx:include source="calls_list.fxml"/>
     </content>

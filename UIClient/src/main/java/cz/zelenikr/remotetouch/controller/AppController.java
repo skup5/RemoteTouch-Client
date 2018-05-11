@@ -50,7 +50,7 @@ public class AppController implements Controller, Initializable {
     private Tab callsTab, notificationsTab, messagesTab;
 
     @FXML
-    private Label connectionStatus;
+    private Label connectionStatus, connectionStatusIcon;
 
     /////////////////////////
     // App menu items actions
@@ -154,6 +154,7 @@ public class AppController implements Controller, Initializable {
 
     private void onConnectionStateChanged(ConnectionStatus status) {
         connectionStatus.setText(ConnectionStatusToLocaleStringMapper.toString(status));
+        connectionStatusIcon.setGraphic(Resources.Icons.getIconByConnectionStatus(status));
     }
 
     private void onConnectionStateChangedAsync(ConnectionStatus status) {
