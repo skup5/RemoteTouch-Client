@@ -79,12 +79,41 @@
     -fx-padding: 5;
 }
 
+.menu-bar{
+    -fx-background-color: -fx-color-primary-dark;
+}
+
+.menu-bar .label {
+    -fx-text-fill: -fx-color-text-dark;
+}
+
+.menu:hover, .menu:showing {
+    -fx-text-fill: -fx-color-text-dark;
+    -fx-background-color: -fx-color-primary;
+}
+
+.menu-item:hover {
+    -fx-background-color: -fx-color-primary;
+}
+
+.menu-item:hover .label{
+    -fx-text-fill: -fx-color-text-dark;
+}
+
+.menu-item .label{
+    -fx-text-fill: -fx-color-text;
+}
+
 .tab {
     -fx-background-color: -fx-color-primary-dark;
 }
 
 .tab .tab-label {
     -fx-text-fill: -fx-color-text-dark;
+}
+
+.tab:hover {
+    -fx-background-color: linear-gradient(-fx-color-primary-dark, -fx-color-primary);
 }
 
 .tab:selected {
