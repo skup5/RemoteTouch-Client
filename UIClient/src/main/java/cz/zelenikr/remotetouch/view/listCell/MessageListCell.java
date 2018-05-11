@@ -3,6 +3,7 @@ package cz.zelenikr.remotetouch.view.listCell;
 import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
 import de.jensd.fx.glyphs.GlyphIcon;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -28,6 +30,7 @@ public class MessageListCell extends ListCell<SmsEventContent> {
 
     private ViewHolder holder;
     private DateFormat dateFormat;
+    private EventHandler<MouseEvent> closeEventHandler;
 
     public MessageListCell(ListView<SmsEventContent> listView) {
         this.dateFormat = new SimpleDateFormat();
@@ -49,8 +52,15 @@ public class MessageListCell extends ListCell<SmsEventContent> {
             holder.setText(item.getContent());
             holder.setDatetime(formatDatetime(item.getWhen()));
             holder.setIcon(icon);
+
+            if (closeEventHandler != null) holder.setOnCloseClicked(closeEventHandler, item);
+
             setGraphic(holder.getContent());
         }
+    }
+
+    public void setCloseEventHandler(EventHandler<MouseEvent> closeEventHandler) {
+        this.closeEventHandler = closeEventHandler;
     }
 
     private String formatDatetime(long timestamp) {
@@ -65,7 +75,7 @@ public class MessageListCell extends ListCell<SmsEventContent> {
         @FXML
         private GridPane rootPane;
         @FXML
-        private Label sender, datetime;
+        private Label sender, datetime, close;
         @FXML
         private Text text;
 
@@ -76,10 +86,10 @@ public class MessageListCell extends ListCell<SmsEventContent> {
             loader.setController(this);
             try {
                 loader.load();
+                close.setGraphic(Resources.Icons.getRemoveEventIcon());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
         }
 
         public Node getContent() {
@@ -120,6 +130,11 @@ public class MessageListCell extends ListCell<SmsEventContent> {
                 tooltip.setShowDuration(Duration.INDEFINITE);
             }
             sender.setTooltip(tooltip);
+        }
+
+        public void setOnCloseClicked(EventHandler<MouseEvent> handler, Object userData) {
+            close.setOnMouseClicked(handler);
+            close.setUserData(userData);
         }
     }
 }

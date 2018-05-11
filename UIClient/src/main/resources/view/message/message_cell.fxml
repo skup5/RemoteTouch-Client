@@ -11,20 +11,24 @@
           xmlns="http://javafx.com/javafx/8.0.121"
           xmlns:fx="http://javafx.com/fxml/1">
 
-    <Label fx:id="sender" styleClass="message-cell-sender" text="name or phone number" wrapText="true" />
-    <Label fx:id="datetime" styleClass="message-cell-datetime" text="datetime" GridPane.columnIndex="1" />
-    <Text fx:id="text" text="content" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+    <Label fx:id="sender" styleClass="message-cell-sender" text="name or phone number" wrapText="true"/>
+    <Label fx:id="datetime" styleClass="message-cell-datetime" text="datetime" GridPane.columnIndex="1"/>
+    <Label fx:id="close" styleClass="message-close-button" alignment="CENTER_RIGHT" contentDisplay="GRAPHIC_ONLY"
+           GridPane.columnIndex="2"
+           GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS"/>
+    <Text fx:id="text" text="content" GridPane.columnSpan="3" GridPane.rowIndex="1"/>
 
     <columnConstraints>
-        <ColumnConstraints />
-        <ColumnConstraints />
+        <ColumnConstraints/>
+        <ColumnConstraints/>
+        <ColumnConstraints/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints />
-        <RowConstraints />
+        <RowConstraints/>
+        <RowConstraints/>
     </rowConstraints>
     <stylesheets>
-        <URL value="@../../css/message_cell.css" />
-        <URL value="@../../css/style.css" />
+        <URL value="@../../css/message_cell.css"/>
+        <URL value="@../../css/style.css"/>
     </stylesheets>
 </GridPane>

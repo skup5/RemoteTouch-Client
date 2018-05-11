@@ -22,3 +22,9 @@
     -fx-text-fill: -fx-color-text;
     -fx-background-color: white;
 }
+
+.message-cell .message-close-button, .message-cell .cell-close-button .glyph-icon {
+    -glyph-size: 14;
+    -fx-text-fill: -fx-color-text;
+    -fx-background-color: white;
+}

@@ -3,12 +3,14 @@ package cz.zelenikr.remotetouch.view.listCell;
 import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
 import de.jensd.fx.glyphs.GlyphIcon;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
@@ -24,6 +26,7 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
 
     private ViewHolder holder;
     private DateFormat dateFormat;
+    private EventHandler<MouseEvent> closeEventHandler;
 
     public NotificationListCell(ListView<NotificationEventContent> listView) {
         this.dateFormat = new SimpleDateFormat();
@@ -43,8 +46,15 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
             holder.setText(item.getText());
             holder.setDatetime(formatDatetime(item.getWhen()));
             holder.setIcon(Resources.Icons.getIconByApp(item.getApp()));
+
+            if (closeEventHandler != null) holder.setOnCloseClicked(closeEventHandler, item);
+
             setGraphic(holder.getContent());
         }
+    }
+
+    public void setCloseEventHandler(EventHandler<MouseEvent> closeEventHandler) {
+        this.closeEventHandler = closeEventHandler;
     }
 
     private String formatDatetime(long timestamp) {
@@ -54,12 +64,12 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
     /**
      * Represents view of list cell.
      */
-    private class ViewHolder  {
+    private class ViewHolder {
 
         @FXML
         private GridPane rootPane;
         @FXML
-        private Label appName, title, datetime;
+        private Label appName, title, datetime, close;
         @FXML
         private Text text;
 
@@ -68,10 +78,10 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
             loader.setController(this);
             try {
                 loader.load();
+                close.setGraphic(Resources.Icons.getRemoveEventIcon());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
         }
 
         public Node getContent() {
@@ -110,6 +120,9 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
             text.setText(value);
         }
 
-
+        public void setOnCloseClicked(EventHandler<MouseEvent> handler, Object userData) {
+            close.setOnMouseClicked(handler);
+            close.setUserData(userData);
+        }
     }
 }

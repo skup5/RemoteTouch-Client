@@ -26,3 +26,9 @@
     -fx-text-fill: -fx-color-text;
     -fx-background-color: white;
 }
+
+.notification-cell .notification-close-button, .notification-cell .cell-close-button .glyph-icon {
+    -glyph-size: 14;
+    -fx-text-fill: -fx-color-text;
+    -fx-background-color: white;
+}
