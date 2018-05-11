@@ -6,13 +6,15 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="rootPane" hgap="10" styleClass="call-cell" vgap="10"
-          xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="rootPane" hgap="10" styleClass="call-cell" vgap="10" xmlns="http://javafx.com/javafx/8.0.121"
+          xmlns:fx="http://javafx.com/fxml/1">
 
     <Label fx:id="caller" styleClass="call-cell-caller" text="name or number"/>
     <Label fx:id="datetime" styleClass="call-cell-datetime" text="datetime" GridPane.columnIndex="1"/>
     <Label fx:id="type" styleClass="call-cell-type" text="call type" wrapText="true" GridPane.columnSpan="2"
            GridPane.rowIndex="1"/>
+    <Label fx:id="close" styleClass="cell-close-button" alignment="CENTER_RIGHT" contentDisplay="GRAPHIC_ONLY" GridPane.columnIndex="2"
+           GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS"/>
 
     <columnConstraints>
         <ColumnConstraints/>

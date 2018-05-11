@@ -42,7 +42,7 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
             holder.setTitle(item.getTitle());
             holder.setText(item.getText());
             holder.setDatetime(formatDatetime(item.getWhen()));
-            holder.setIcon(Resources.Icons.getIconByApp(appName));
+            holder.setIcon(Resources.Icons.getIconByApp(item.getApp()));
             setGraphic(holder.getContent());
         }
     }

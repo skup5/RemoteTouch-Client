@@ -115,7 +115,7 @@ public final class Resources {
     }
 
     /**
-     * Contains all glyph icons that are used in application.
+     * Contains all glyph icons that are used (programmatically) in application.
      */
     public static final class Icons {
 
@@ -230,6 +230,10 @@ public final class Resources {
 
             }
             return new MaterialIconView(glyph);
+        }
+
+        public static GlyphIcon getRemoveEventIcon() {
+            return new MaterialIconView(MaterialIcon.CLOSE);
         }
     }
 

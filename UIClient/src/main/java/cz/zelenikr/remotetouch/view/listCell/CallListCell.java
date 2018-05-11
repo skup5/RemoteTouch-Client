@@ -4,12 +4,15 @@ import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
 import cz.zelenikr.remotetouch.data.mapper.CallTypeToLocalStringMapper;
 import de.jensd.fx.glyphs.GlyphIcon;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
@@ -25,6 +28,7 @@ public class CallListCell extends ListCell<CallEventContent> {
 
     private ViewHolder holder;
     private DateFormat dateFormat;
+    private EventHandler<MouseEvent> closeEventHandler;
 
     public CallListCell() {
         this.holder = new ViewHolder();
@@ -45,8 +49,15 @@ public class CallListCell extends ListCell<CallEventContent> {
             holder.setType(CallTypeToLocalStringMapper.toString(item.getType()));
             holder.setDatetime(formatDatetime(item.getWhen()));
             holder.setIcon(Resources.Icons.getIconByCallType(item.getType()));
+
+            if (closeEventHandler != null) holder.setOnCloseClicked(closeEventHandler, item);
+
             setGraphic(holder.getContent());
         }
+    }
+
+    public void setCloseEventHandler(EventHandler<MouseEvent> closeEventHandler) {
+        this.closeEventHandler = closeEventHandler;
     }
 
     private String formatDatetime(long timestamp) {
@@ -61,7 +72,7 @@ public class CallListCell extends ListCell<CallEventContent> {
         @FXML
         private GridPane rootPane;
         @FXML
-        private Label caller, type, datetime;
+        private Label caller, type, datetime, close;
 
         private Tooltip callerTooltip;
 
@@ -70,10 +81,10 @@ public class CallListCell extends ListCell<CallEventContent> {
             loader.setController(this);
             try {
                 loader.load();
+                close.setGraphic(Resources.Icons.getRemoveEventIcon());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
         }
 
         public Node getContent() {
@@ -110,6 +121,11 @@ public class CallListCell extends ListCell<CallEventContent> {
                 tooltip.setShowDuration(Duration.INDEFINITE);
             }
             caller.setTooltip(tooltip);
+        }
+
+        public void setOnCloseClicked(EventHandler<MouseEvent> handler, Object userData) {
+            close.setOnMouseClicked(handler);
+            close.setUserData(userData);
         }
     }
 }

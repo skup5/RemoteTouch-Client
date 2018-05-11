@@ -20,3 +20,10 @@
 .call-cell .call-cell-type {
     -fx-background-color: white;
 }
+
+
+.call-cell .cell-close-button, .call-cell .cell-close-button .glyph-icon {
+    -glyph-size: 14;
+    -fx-text-fill: -fx-color-text;
+    -fx-background-color: white;
+}
