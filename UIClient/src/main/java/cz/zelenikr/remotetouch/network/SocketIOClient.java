@@ -83,6 +83,7 @@ public class SocketIOClient implements Client {
     @Override
     public void disconnect() {
         socket.disconnect();
+        notifyConnectionStatusChanged(ConnectionStatus.DISCONNECTED);
     }
 
     @Override

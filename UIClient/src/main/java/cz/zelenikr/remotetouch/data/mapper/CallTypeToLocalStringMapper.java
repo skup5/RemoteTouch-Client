@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
  */
 public final class CallTypeToLocalStringMapper {
 
-    private static final ResourceBundle STRINGS = Resources.getStrings(SettingsManager.getLocale());
+    private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
 
     public static String toString(CallType value) {
         switch (value) {

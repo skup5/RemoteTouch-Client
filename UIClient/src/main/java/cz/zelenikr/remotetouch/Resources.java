@@ -1,5 +1,6 @@
 package cz.zelenikr.remotetouch;
 
+import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.data.dto.CallType;
 import de.jensd.fx.glyphs.GlyphIcon;
 import de.jensd.fx.glyphs.GlyphIcons;
@@ -7,7 +8,11 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,12 +29,12 @@ import java.util.ResourceBundle;
 public final class Resources {
 
     /**
-     * Returns a string resource bundle for the given Locale in locales.
+     * Loads and returns a string resource bundle for the given Locale in locales.
      *
      * @param locale the locale for which a resource bundle is desired
      * @return resource bundle with strings
      */
-    public static ResourceBundle getStrings(@NotNull Locale locale) {
+    public static ResourceBundle loadStrings(@NotNull Locale locale) {
         return ResourceBundle.getBundle("values/strings", locale, new UTF8Control());
     }
 
@@ -38,10 +43,32 @@ public final class Resources {
     }
 
     /**
+     * Loads and returns FXML view with the specific name. If some controller is specified,
+     * returns the controller associated with the root object too.
+     *
+     * @param name      view resource path
+     * @param resources the resources used to resolve resource key attribute values
+     * @return a view with the given resource name and its {@link Controller}
+     * @throws IOException if an error occurs during loading
+     */
+    public static Pair<Parent, Controller> loadView(@NotNull String name, @Nullable ResourceBundle resources) throws IOException {
+        FXMLLoader loader;
+        if (resources == null) loader = new FXMLLoader(ClassLoader.getSystemResource(name));
+        else loader = new FXMLLoader(ClassLoader.getSystemResource(name), resources);
+
+        Parent view = loader.load();
+        Controller controller = loader.getController();
+        return new Pair<>(view, controller);
+    }
+
+    /**
      * Contains keys of string resources.
      */
     public static final class Strings {
         public static final String
+                ABOUT_CONTENT = "About.Content",
+                ABOUT_HEADER = "About.Header",
+
                 APPLICATION_TITLE = "Application.Title",
 
         CALLTYPE_ENDED = "CallType.Ended",
@@ -70,8 +97,8 @@ public final class Resources {
                 NAVIGATION_ITEMS_CALLS = "Navigation.Items.Calls",
 
         NOTIFICATION_TITLE_CALL = "Notification.Title.Call",
-        NOTIFICATION_TITLE_NOTIFICATION = "Notification.Title.Notification",
-        NOTIFICATION_TITLE_SMS = "Notification.Title.Sms",
+                NOTIFICATION_TITLE_NOTIFICATION = "Notification.Title.Notification",
+                NOTIFICATION_TITLE_SMS = "Notification.Title.Sms",
 
         VALIDATION_DEVICE_NAME = "Validation.Device.Name",
                 VALIDATION_DEVICE_PAIR_KEY = "Validation.Device.PairKey",

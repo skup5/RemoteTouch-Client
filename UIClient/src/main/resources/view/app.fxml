@@ -11,60 +11,58 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zelenikr.remotetouch.controller.AppController">
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<VBox xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="cz.zelenikr.remotetouch.controller.AppController">
     <stylesheets>
-        <URL value="@../css/style.css" />
+        <URL value="@../css/style.css"/>
     </stylesheets>
     <children>
-        <!--<MenuBar styleClass="bg-primary" VBox.vgrow="NEVER">-->
-        <!--<menus>-->
-        <!--<Menu mnemonicParsing="false" text="File">-->
-        <!--<items>-->
-        <!--<MenuItem mnemonicParsing="false" text="New" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Open…" />-->
-        <!--<Menu mnemonicParsing="false" text="Open Recent" />-->
-        <!--<SeparatorMenuItem mnemonicParsing="false" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Close" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Save" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Save As…" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Revert" />-->
-        <!--<SeparatorMenuItem mnemonicParsing="false" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Preferences…" />-->
-        <!--<SeparatorMenuItem mnemonicParsing="false" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Quit" />-->
-        <!--</items>-->
-        <!--</Menu>-->
-        <!--<Menu mnemonicParsing="false" text="Edit" visible="false">-->
-        <!--<items>-->
-        <!--<MenuItem mnemonicParsing="false" text="Undo" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Redo" />-->
-        <!--<SeparatorMenuItem mnemonicParsing="false" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Cut" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Copy" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Paste" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Delete" />-->
-        <!--<SeparatorMenuItem mnemonicParsing="false" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Select All" />-->
-        <!--<MenuItem mnemonicParsing="false" text="Unselect All" />-->
-        <!--</items>-->
-        <!--</Menu>-->
-        <!--<Menu mnemonicParsing="false" text="Help">-->
-        <!--<items>-->
-        <!--<MenuItem mnemonicParsing="false" text="About MyHelloApp" />-->
-        <!--</items>-->
-        <!--</Menu>-->
-        <!--</menus>-->
-        <!--</MenuBar>-->
-        <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="SOMETIMES">
+        <MenuBar VBox.vgrow="NEVER">
+            <menus>
+                <Menu mnemonicParsing="false" text="%Menu.App">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="%Menu.App.Lock" disable="true"/>
+                        <!--<MenuItem mnemonicParsing="false" text="Open…" />-->
+                        <!--<Menu mnemonicParsing="false" text="Open Recent" />-->
+                        <!--<SeparatorMenuItem mnemonicParsing="false" />-->
+                        <!--<MenuItem mnemonicParsing="false" text="Close" />-->
+                        <!--<MenuItem mnemonicParsing="false" text="Save" />-->
+                        <!--<MenuItem mnemonicParsing="false" text="Save As…" />-->
+                        <!--<MenuItem mnemonicParsing="false" text="Revert" />-->
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" text="%Menu.App.Preferences" onAction="#onPrefsMenuItemClick" />
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" text="%Menu.App.Quit" onAction="#onQuitMenuItemClick"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="%Menu.Connection">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="%Menu.Connection.Connect" onAction="#onConnectMenuItemClick"/>
+                        <MenuItem mnemonicParsing="false" text="%Menu.Connection.Disconnect" onAction="#onDisconnectMenuItemClick"/>
+                        <MenuItem mnemonicParsing="false" text="%Menu.Connection.Reconnect" onAction="#onReconnectMenuItemClick"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="%Menu.Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="%Menu.Help.About" onAction="#onAboutMenuItemClick"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <TabPane fx:id="tabPane" tabClosingPolicy="SELECTED_TAB" VBox.vgrow="SOMETIMES">
             <tabs>
-                <fx:include fx:id="callsTab" source="call/calls_tab.fxml" />
-                <fx:include fx:id="messagesTab" source="message/messages_tab.fxml" />
-                <fx:include fx:id="notificationsTab" source="notification/notifications_tab.fxml" />
-                <fx:include source="settings/settings_tab.fxml" />
+                <fx:include fx:id="callsTab" source="call/calls_tab.fxml"/>
+                <fx:include fx:id="messagesTab" source="message/messages_tab.fxml"/>
+                <fx:include fx:id="notificationsTab" source="notification/notifications_tab.fxml"/>
+                <fx:include fx:id="settingsTab" source="settings/settings_tab.fxml"/>
                 <!--<Tab closable="false" text="%Navigation.Items.Settings">-->
-                    <!--<content>-->
-                       <!---->
-                    <!--</content>-->
+                <!--<content>-->
+                <!---->
+                <!--</content>-->
                 <!--</Tab>-->
             </tabs>
         </TabPane>
@@ -72,11 +70,11 @@
             <children>
                 <Label fx:id="connectionStatus" HBox.hgrow="ALWAYS">
                 </Label>
-                <Pane HBox.hgrow="ALWAYS" />
-                <Label text="Right status" textAlignment="RIGHT" HBox.hgrow="NEVER" />
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Label text="Right status" textAlignment="RIGHT" HBox.hgrow="NEVER"/>
             </children>
             <padding>
-                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
             </padding>
         </HBox>
     </children>

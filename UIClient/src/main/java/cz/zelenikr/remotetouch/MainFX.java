@@ -9,24 +9,17 @@ import cz.zelenikr.remotetouch.dialog.LoginDialog;
 import cz.zelenikr.remotetouch.manager.SettingsManager;
 import impl.org.controlsfx.skin.DecorationPane;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
-import javafx.scene.paint.Color;
 import javafx.stage.*;
-import javafx.util.Duration;
 import javafx.util.Pair;
-import org.controlsfx.control.Notifications;
 import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -45,13 +38,14 @@ public class MainFX extends Application {
 
     // to debugging
     private static final boolean START_CLI = false;
-
-    private SettingsManager settingsManager;
+    ////
     private static final double MIN_WIDTH = 500, MIN_HEIGHT = 500;
+
+    private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
+    private SettingsManager settingsManager;
     private Stage stage;
 
     private static String[] ARGS;
-    private static Stage dummyStage;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -95,15 +89,14 @@ public class MainFX extends Application {
     }
 
     private void showMainWindow() throws IOException {
-        Pair<Parent, Controller> pair = loadView("view/app.fxml");
-        ResourceBundle strings = getStrings();
+        Pair<Parent, Controller> pair = Resources.loadView("view/app.fxml", STRINGS);
         AppController controller = (AppController) pair.getValue();
 
         stage.setOnHidden(event -> {
             controller.onClose();
-            if (dummyStage != null) dummyStage.close();
+            Platform.exit();
         });
-        stage.setTitle(strings.getString(Resources.Strings.APPLICATION_TITLE));
+        stage.setTitle(STRINGS.getString(Resources.Strings.APPLICATION_TITLE));
         stage.setScene(new Scene(pair.getKey(), MIN_WIDTH, MIN_HEIGHT));
         stage.setMinHeight(MIN_HEIGHT);
         stage.setMinWidth(MIN_WIDTH);
@@ -117,15 +110,14 @@ public class MainFX extends Application {
      */
     private boolean showWizard() throws IOException {
         AtomicBoolean success = new AtomicBoolean(false);
-        ResourceBundle strings = getStrings();
 
         Window owner = stage;
 
         // create wizard
-        Wizard wizard = new Wizard(owner, strings.getString(Resources.Strings.APPLICATION_TITLE));
+        Wizard wizard = new Wizard(owner, STRINGS.getString(Resources.Strings.APPLICATION_TITLE));
 
         // create pages
-        Pair<Parent, Controller> pairDeviceView = loadView("view/settings/pair_device.fxml");
+        Pair<Parent, Controller> pairDeviceView = Resources.loadView("view/settings/pair_device.fxml", STRINGS);
         PairDeviceController pairDeviceController = (PairDeviceController) pairDeviceView.getValue();
 
         DecorationPane content = new DecorationPane();
@@ -144,7 +136,7 @@ public class MainFX extends Application {
                 wizard.invalidProperty().bind(pairDeviceController.getValidationSupport().invalidProperty());
             }
         };
-        page1.setHeaderText(strings.getString(Resources.Strings.WIZARD_PAIR_DEVICE_HEADER));
+        page1.setHeaderText(STRINGS.getString(Resources.Strings.WIZARD_PAIR_DEVICE_HEADER));
         page1.setContent(content);
 
         wizard.setFlow(new Wizard.LinearFlow(page1));
@@ -166,7 +158,8 @@ public class MainFX extends Application {
      * Shows login dialog to unlock application.
      */
     private String showLogin() {
-        LoginDialog loginDialog = new LoginDialog(getStrings().getString(Resources.Strings.APPLICATION_TITLE));
+       // if (0 < 1) return "heslo";
+        LoginDialog loginDialog = new LoginDialog(STRINGS.getString(Resources.Strings.APPLICATION_TITLE));
         loginDialog.getDialogPane().getStylesheets().addAll(Resources.getStyleSheets());
         Optional<ButtonType> result = loginDialog.showAndWait();
         if (result.isPresent() && result.get() == LoginDialog.BUTTON_LOGIN) {
@@ -185,21 +178,6 @@ public class MainFX extends Application {
         });
         t.setDaemon(true);
         t.start();
-    }
-
-    /**
-     * @param name view resource name
-     * @return view for the given resource name and his {@link Controller}
-     */
-    private Pair<Parent, Controller> loadView(@NotNull String name) throws IOException {
-        FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource(name), getStrings());
-        Parent view = loader.load();
-        Controller controller = loader.getController();
-        return new Pair<>(view, controller);
-    }
-
-    public static ResourceBundle getStrings() {
-        return Resources.getStrings(SettingsManager.getLocale());
     }
 
     public static void main(String[] args) {

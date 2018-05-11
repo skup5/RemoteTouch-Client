@@ -13,7 +13,6 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
@@ -25,7 +24,7 @@ import java.util.ResourceBundle;
  */
 public class LoginDialog extends Dialog<ButtonType> {
 
-    private static final ResourceBundle STRINGS = Resources.getStrings(SettingsManager.getLocale());
+    private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
 
     public static final ButtonType
             BUTTON_LOGIN = new ButtonType(STRINGS.getString(Resources.Strings.LOGIN_BUTTON_LOGIN), ButtonBar.ButtonData.OK_DONE),

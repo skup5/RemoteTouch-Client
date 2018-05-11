@@ -1,27 +1,20 @@
 package cz.zelenikr.remotetouch.controller;
 
-import cz.zelenikr.remotetouch.MainFX;
 import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
 import cz.zelenikr.remotetouch.data.mapper.CallTypeToLocalStringMapper;
 import cz.zelenikr.remotetouch.data.mapper.ConnectionStatusToLocaleStringMapper;
+import cz.zelenikr.remotetouch.dialog.AboutDialog;
 import cz.zelenikr.remotetouch.manager.ConnectionManager;
 import cz.zelenikr.remotetouch.manager.NotificationManager;
 import cz.zelenikr.remotetouch.network.ConnectionStatus;
-import de.jensd.fx.glyphs.GlyphIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import de.jensd.fx.glyphs.materialicons.MaterialIcon;
-import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -43,27 +36,72 @@ public class AppController implements Controller, Initializable {
 
     private final EventHandler<ActionEvent> focusNotificationsTab, focusCallsTab, focusMessagesTab;
 
+    private ResourceBundle resources;
     private Stage stage;
+
+    @FXML
+    private Tab settingsTab;
 
     private String callNtfTitle, notificationNtfTitle, smsNtfTitle;
 
+    @FXML
+    TabPane tabPane;
     @FXML
     private Tab callsTab, notificationsTab, messagesTab;
 
     @FXML
     private Label connectionStatus;
 
+    /////////////////////////
+    // App menu items actions
+    /////////////////////////
+    @FXML
+    private void onPrefsMenuItemClick(ActionEvent event) {
+        addTab(settingsTab);
+    }
+
+    @FXML
+    private void onQuitMenuItemClick(ActionEvent event) {
+        if (getStage() != null) getStage().close();
+    }
+
+    ////////////////////////////////
+    // Connection menu items actions
+    ////////////////////////////////
+    @FXML
+    private void onConnectMenuItemClick(ActionEvent event) {
+        connectionManager.connect();
+    }
+
+    @FXML
+    private void onDisconnectMenuItemClick(ActionEvent event) {
+        connectionManager.disconnect();
+    }
+
+    @FXML
+    private void onReconnectMenuItemClick(ActionEvent event) {
+        connectionManager.updateAndReconnect();
+    }
+
+    //////////////////////////
+    // Help menu items actions
+    //////////////////////////
+    @FXML
+    private void onAboutMenuItemClick(ActionEvent event) {
+        new AboutDialog(getString(Resources.Strings.APPLICATION_TITLE)).showAndWait();
+    }
+
     public AppController() {
         focusCallsTab = event -> {
-            notificationsTab.getTabPane().getSelectionModel().select(callsTab);
+            tabPane.getSelectionModel().select(callsTab);
             toFront();
         };
         focusNotificationsTab = event -> {
-            notificationsTab.getTabPane().getSelectionModel().select(notificationsTab);
+            tabPane.getSelectionModel().select(notificationsTab);
             toFront();
         };
         focusMessagesTab = event -> {
-            notificationsTab.getTabPane().getSelectionModel().select(messagesTab);
+            tabPane.getSelectionModel().select(messagesTab);
             toFront();
         };
         connectionManager.registerConnectionStateChangedListener(this::onConnectionStateChangedAsync);
@@ -74,17 +112,25 @@ public class AppController implements Controller, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        callNtfTitle = resources.getString(Resources.Strings.NOTIFICATION_TITLE_CALL);
-        notificationNtfTitle = resources.getString(Resources.Strings.NOTIFICATION_TITLE_NOTIFICATION);
-        smsNtfTitle = resources.getString(Resources.Strings.NOTIFICATION_TITLE_SMS);
+        this.resources = resources;
+
+        callNtfTitle = getString(Resources.Strings.NOTIFICATION_TITLE_CALL);
+        notificationNtfTitle = getString(Resources.Strings.NOTIFICATION_TITLE_NOTIFICATION);
+        smsNtfTitle = getString(Resources.Strings.NOTIFICATION_TITLE_SMS);
 
         onConnectionStateChanged(ConnectionStatus.DISCONNECTED);
-        connectionManager.connect();
+//        connectionManager.connect();
     }
 
     public void onClose() {
         LOGGER.info("close called");
         connectionManager.disconnect();
+    }
+
+    private void addTab(Tab tab) {
+        if (!tabPane.getTabs().contains(tab)) {
+            tabPane.getTabs().add(tab);
+        }
     }
 
     private Stage getStage() {
@@ -94,6 +140,16 @@ public class AppController implements Controller, Initializable {
         } catch (NullPointerException e) {
         }
         return stage;
+    }
+
+    /**
+     * Gets a string for the given key from this resource bundle or one of its parents.
+     *
+     * @param key – the key for the desired string
+     * @return the string for the given key
+     */
+    private String getString(String key) {
+        return resources.getString(key);
     }
 
     private void onConnectionStateChanged(ConnectionStatus status) {
@@ -106,36 +162,41 @@ public class AppController implements Controller, Initializable {
     }
 
     private void onNewCallsAsync(CallEventContent... calls) {
-        for (CallEventContent content : calls)
-            Platform.runLater(() -> {
-//                final String title = content.getName() == null || content.getName().isEmpty() ? content.getNumber() : content.getName();
+        Platform.runLater(() -> {
+            for (CallEventContent content : calls) {
+                //                final String title = content.getName() == null || content.getName().isEmpty() ? content.getNumber() : content.getName();
                 notificationManager.notify(
                         Resources.Icons.getIconByCallType(content.getType()),
                         callNtfTitle,
                         CallTypeToLocalStringMapper.toString(content.getType()),
                         focusCallsTab);
-            });
+            }
+        });
     }
 
     private void onNewNotificationsAsync(NotificationEventContent... notifications) {
-        for (NotificationEventContent content : notifications)
-            Platform.runLater(() -> notificationManager.notify(
-                    Resources.Icons.getIconByApp(content.getApp()),
-                    notificationNtfTitle,
-                    content.getLabel() + "\n" + content.getTitle(),
-                    focusNotificationsTab));
+        Platform.runLater(() -> {
+            for (NotificationEventContent content : notifications) {
+                notificationManager.notify(
+                        Resources.Icons.getIconByApp(content.getApp()),
+                        notificationNtfTitle,
+                        content.getLabel() + "\n" + content.getTitle(),
+                        focusNotificationsTab);
+            }
+        });
     }
 
     private void onNewSmsAsync(SmsEventContent... sms) {
-        for (SmsEventContent content : sms)
-            Platform.runLater(() -> {
+        Platform.runLater(() -> {
+            for (SmsEventContent content : sms) {
 //                final String title = content.getName() == null || content.getName().isEmpty() ? content.getNumber() : content.getName();
                 notificationManager.notify(
                         Resources.Icons.getSmsIcon(),
                         smsNtfTitle,
                         "Sms",
                         focusMessagesTab);
-            });
+            }
+        });
     }
 
     private void toFront() {
