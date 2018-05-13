@@ -4,15 +4,20 @@ package cz.zelenikr.remotetouch;
 import cz.zelenikr.remotetouch.controller.AppController;
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.controller.settings.PairDeviceController;
+import cz.zelenikr.remotetouch.data.dto.UserInfo;
 import cz.zelenikr.remotetouch.dialog.LocalizedWizardPane;
 import cz.zelenikr.remotetouch.dialog.LoginDialog;
+import cz.zelenikr.remotetouch.dialog.RegisterDialog;
+import cz.zelenikr.remotetouch.manager.SecurityManager;
 import cz.zelenikr.remotetouch.manager.SettingsManager;
 import impl.org.controlsfx.skin.DecorationPane;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -42,6 +47,9 @@ public class MainFX extends Application {
     private static final double MIN_WIDTH = 500, MIN_HEIGHT = 500;
 
     private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
+
+    private final SecurityManager securityManager = SecurityManager.getInstance();
+
     private SettingsManager settingsManager;
     private Stage stage;
 
@@ -49,19 +57,18 @@ public class MainFX extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        boolean startMain = true;
+
         stage = primaryStage;
         stage.setScene(new Scene(new Group(), 1, 1));
         stage.getScene().getStylesheets().addAll(Resources.getStyleSheets());
-//        stage.show();
 
-        boolean startMain = true;
-
-        String password = showLogin();
-        if (password == null || password.isEmpty()) {
+        UserInfo user = showLogin();
+        if (user == null || user.getPassword() == null) {
             close();
             return;
         } else {
-            settingsManager = SettingsManager.unlockInstance(password);
+            settingsManager = SettingsManager.unlockInstance(user.getPassword());
         }
 
         if (shouldShowWizard()) {
@@ -89,7 +96,7 @@ public class MainFX extends Application {
     }
 
     private void showMainWindow() throws IOException {
-        Pair<Parent, Controller> pair = Resources.loadView("view/app.fxml", STRINGS);
+        Pair<Node, Controller> pair = Resources.loadView("view/app.fxml", STRINGS);
         AppController controller = (AppController) pair.getValue();
 
         stage.setOnHidden(event -> {
@@ -97,7 +104,7 @@ public class MainFX extends Application {
             Platform.exit();
         });
         stage.setTitle(STRINGS.getString(Resources.Strings.APPLICATION_TITLE));
-        stage.setScene(new Scene(pair.getKey(), MIN_WIDTH, MIN_HEIGHT));
+        stage.setScene(new Scene((Parent) pair.getKey(), MIN_WIDTH, MIN_HEIGHT));
         stage.setMinHeight(MIN_HEIGHT);
         stage.setMinWidth(MIN_WIDTH);
         stage.show();
@@ -113,11 +120,11 @@ public class MainFX extends Application {
 
         Window owner = stage;
 
-        // create wizard
+        // createUrlValidator wizard
         Wizard wizard = new Wizard(owner, STRINGS.getString(Resources.Strings.APPLICATION_TITLE));
 
-        // create pages
-        Pair<Parent, Controller> pairDeviceView = Resources.loadView("view/settings/pair_device.fxml", STRINGS);
+        // createUrlValidator pages
+        Pair<Node, Controller> pairDeviceView = Resources.loadView("view/settings/pair_device.fxml", STRINGS);
         PairDeviceController pairDeviceController = (PairDeviceController) pairDeviceView.getValue();
 
         DecorationPane content = new DecorationPane();
@@ -157,15 +164,54 @@ public class MainFX extends Application {
     /**
      * Shows login dialog to unlock application.
      */
-    private String showLogin() {
-       // if (0 < 1) return "heslo";
-        LoginDialog loginDialog = new LoginDialog(STRINGS.getString(Resources.Strings.APPLICATION_TITLE));
-        loginDialog.getDialogPane().getStylesheets().addAll(Resources.getStyleSheets());
-        Optional<ButtonType> result = loginDialog.showAndWait();
-        if (result.isPresent() && result.get() == LoginDialog.BUTTON_LOGIN) {
-            return loginDialog.getPassword();
+    private UserInfo showLogin() {
+        UserInfo user = null;
+
+        if (securityManager.existOwner()) {
+            LoginDialog loginDialog = new LoginDialog(STRINGS.getString(Resources.Strings.APPLICATION_TITLE));
+            loginDialog.getDialogPane().getStylesheets().addAll(Resources.getStyleSheets());
+            loginDialog.setOnAuthenticateCallback(userInfo -> userInfo != null && securityManager.authenticateOwner(userInfo));
+
+            boolean showAgain;
+            do {
+                Optional<ButtonType> result = loginDialog.showAndWait();
+                if (result.isPresent() && result.get() == LoginDialog.BUTTON_LOGIN) {
+                    if (loginDialog.isAuthenticated()) {
+                        user = loginDialog.getUser();
+                        showAgain = false;
+                    } else {
+                        new Alert(Alert.AlertType.ERROR, "wrong password", ButtonType.OK).showAndWait();
+                        showAgain = true;
+                    }
+
+                    continue;
+                } else if (result.isPresent() && result.get() == LoginDialog.BUTTON_RESET) {
+                    securityManager.resetOwner();
+                    user = showRegister();
+                }
+
+                showAgain = false;
+
+            } while (showAgain);
+
+        } else {
+            user = showRegister();
         }
-        return null;
+
+        return user;
+    }
+
+    private UserInfo showRegister() {
+        UserInfo user = null;
+        RegisterDialog registerDialog = new RegisterDialog(STRINGS.getString(Resources.Strings.APPLICATION_TITLE));
+        registerDialog.getDialogPane().getStylesheets().addAll(Resources.getStyleSheets());
+
+        Optional<ButtonType> result = registerDialog.showAndWait();
+        if (result.isPresent() && result.get() == RegisterDialog.BUTTON_CREATE) {
+            user = registerDialog.getUser();
+            securityManager.createOwner(user);
+        }
+        return user;
     }
 
     private void startConsole() {

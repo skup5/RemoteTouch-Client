@@ -82,7 +82,7 @@ public final class NotificationManager {
         final Rectangle2D bounds = screen.getVisualBounds();
         dummyPopup.setX(bounds.getMaxX() - 25);
         dummyPopup.setY(bounds.getMaxY() - 40);
-        // create/add a transparent scene
+        // createUrlValidator/add a transparent scene
         final Group root = new Group();
         dummyPopup.setScene(new Scene(root, 1d, 1d, Color.TRANSPARENT));
         // show the dummy stage

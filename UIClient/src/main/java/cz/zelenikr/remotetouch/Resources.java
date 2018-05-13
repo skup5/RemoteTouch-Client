@@ -48,19 +48,37 @@ public final class Resources {
      * Loads and returns FXML view with the specific name. If some controller is specified,
      * returns the controller associated with the root object too.
      *
-     * @param name      view resource path
+     * @param name      a view resource path
      * @param resources the resources used to resolve resource key attribute values
      * @return a view with the given resource name and its {@link Controller}
      * @throws IOException if an error occurs during loading
      */
-    public static Pair<Parent, Controller> loadView(@NotNull String name, @Nullable ResourceBundle resources) throws IOException {
+    public static Pair<Node, Controller> loadView(@NotNull String name, @Nullable ResourceBundle resources) throws IOException {
         FXMLLoader loader;
         if (resources == null) loader = new FXMLLoader(ClassLoader.getSystemResource(name));
         else loader = new FXMLLoader(ClassLoader.getSystemResource(name), resources);
 
-        Parent view = loader.load();
+        Node view = loader.load();
         Controller controller = loader.getController();
         return new Pair<>(view, controller);
+    }
+
+    /**
+     * Loads FXML view with the specific name and sets the specific {@link Controller} to that view.
+     *
+     * @param name       a view resource path
+     * @param controller the given controller
+     * @param resources  the resources used to resolve resource key attribute values
+     * @return a view with the given resource name and {@link Controller}
+     * @throws IOException if an error occurs during loading
+     */
+    public static Node loadView(@NotNull String name, @NotNull Controller controller, @Nullable ResourceBundle resources) throws IOException {
+        FXMLLoader loader;
+        if (resources == null) loader = new FXMLLoader(ClassLoader.getSystemResource(name));
+        else loader = new FXMLLoader(ClassLoader.getSystemResource(name), resources);
+
+        loader.setController(controller);
+        return loader.load();
     }
 
     /**
@@ -92,6 +110,7 @@ public final class Resources {
                 DIALOG_BUTTON_FINISH = "Dialog.Button.Finish",
 
         LOGIN_BUTTON_LOGIN = "Login.Button.Login",
+                LOGIN_BUTTON_RESET = "Login.Button.Reset",
                 LOGIN_HEADER = "Login.Header",
 
         NAVIGATION_ITEMS_PAIR = "Navigation.Items.Pair",
@@ -103,15 +122,19 @@ public final class Resources {
                 NOTIFICATION_TITLE_NOTIFICATION = "Notification.Title.Notification",
                 NOTIFICATION_TITLE_SMS = "Notification.Title.Sms",
 
-        VALIDATION_DEVICE_NAME = "Validation.Device.Name",
-                VALIDATION_DEVICE_PAIR_KEY = "Validation.Device.PairKey",
-                VALIDATION_CONNECTION_ADDRESS = "Validation.Connection.Address",
-                VALIDATION_LOGIN_PASSWORD = "Validation.Login.Password",
+        REGISTER_BUTTON_CREATE = "Register.Button.Create",
+                REGISTER_HEADER = "Register.Header",
 
         SETTINGS_DEVICE_NAME = "Settings.Device.Name",
                 SETTINGS_DEVICE_PAIR_KEY = "Settings.Device.PairKey",
 
+        VALIDATION_DEVICE_NAME = "Validation.Device.Name",
+                VALIDATION_DEVICE_PAIR_KEY = "Validation.Device.PairKey",
+                VALIDATION_CONNECTION_ADDRESS = "Validation.Connection.Address",
+                VALIDATION_REGISTER_PASSWORD = "Validation.Register.Password",
+
         WIZARD_PAIR_DEVICE_HEADER = "Wizard.PairDevice.Header";
+
     }
 
     /**

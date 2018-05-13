@@ -1,6 +1,5 @@
 package cz.zelenikr.remotetouch.dialog;
 
-
 import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.data.dto.UserInfo;
 import cz.zelenikr.remotetouch.manager.SettingsManager;
@@ -14,70 +13,45 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.util.Callback;
 import org.controlsfx.validation.ValidationSupport;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
 
 /**
- * This dialog is used to user authentication.
- * The user has to be registered like the owner via {@link RegisterDialog}
- * to successful authentication.
+ * This dialog is used to registration new app owner.
+ * The owner can be later used to authentication via {@link LoginDialog}.
  *
  * @author Roman Zelenik
  * @see SecurityManager
  */
-public class LoginDialog extends Dialog<ButtonType> {
+public class RegisterDialog extends Dialog<ButtonType> {
 
     private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
 
     public static final ButtonType
-            BUTTON_LOGIN = new ButtonType(STRINGS.getString(Resources.Strings.LOGIN_BUTTON_LOGIN), ButtonBar.ButtonData.FINISH),
-            BUTTON_RESET = new ButtonType(STRINGS.getString(Resources.Strings.LOGIN_BUTTON_RESET), ButtonBar.ButtonData.OTHER);
+            BUTTON_CREATE = new ButtonType(STRINGS.getString(Resources.Strings.REGISTER_BUTTON_CREATE), ButtonBar.ButtonData.FINISH);
 
     private final ValidationSupport validationSupport = new ValidationSupport();
     private final BooleanProperty invalidProperty = new SimpleBooleanProperty(false);
     private final StringProperty passwordProperty = new SimpleStringProperty();
-    private Callback<UserInfo, Boolean> onAuthenticateCallback;
-    private boolean authenticated = false;
 
-    public LoginDialog(String title) {
+    public RegisterDialog(String title) {
         invalidProperty.bind(validationSupport.invalidProperty());
         setTitle(title);
-        setHeaderText(STRINGS.getString(Resources.Strings.LOGIN_HEADER));
+        setHeaderText(STRINGS.getString(Resources.Strings.REGISTER_HEADER));
         setGraphic(new FontAwesomeIconView(FontAwesomeIcon.LOCK, "30"));
         getDialogPane().setContent(createContent());
-        getDialogPane().getButtonTypes().addAll(BUTTON_RESET, BUTTON_LOGIN, ButtonTypes.CANCEL);
+        getDialogPane().getButtonTypes().addAll(BUTTON_CREATE, ButtonTypes.CANCEL);
         prepareContentControls();
-        Button loginBt = (Button) getDialogPane().lookupButton(BUTTON_LOGIN);
-        if (loginBt != null) {
-            loginBt.disableProperty().bind(invalidProperty);
-            loginBt.setOnAction(event -> authenticate());
+        Button registerBt = (Button) getDialogPane().lookupButton(BUTTON_CREATE);
+        if (registerBt != null) {
+            registerBt.disableProperty().bind(invalidProperty);
         }
     }
 
-    /**
-     * @return {@link UserInfo} object created from user input values.
-     */
     public UserInfo getUser() {
         return new UserInfo(passwordProperty.get());
-    }
-
-    public boolean isAuthenticated() {
-        return authenticated;
-    }
-
-    public void setOnAuthenticateCallback(Callback<UserInfo, Boolean> onAuthenticateCallback) {
-        this.onAuthenticateCallback = onAuthenticateCallback;
-    }
-
-    private boolean authenticate() {
-        //System.out.println("authenticate()");
-        if (onAuthenticateCallback != null) {
-            authenticated = onAuthenticateCallback.call(getUser());
-        }
-        return authenticated;
     }
 
     private void prepareContentControls() {
@@ -90,7 +64,7 @@ public class LoginDialog extends Dialog<ButtonType> {
 
     private Node createContent() {
         try {
-            Node view = Resources.loadView("view/login.fxml", STRINGS).getKey();
+            Node view = Resources.loadView("view/register.fxml", STRINGS).getKey();
             DecorationPane content = new DecorationPane();
             content.getChildren().add(view);
             return content;
@@ -98,5 +72,4 @@ public class LoginDialog extends Dialog<ButtonType> {
             throw new RuntimeException(e);
         }
     }
-
 }

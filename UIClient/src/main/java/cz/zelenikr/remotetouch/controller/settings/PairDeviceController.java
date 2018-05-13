@@ -4,6 +4,7 @@ import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.manager.SettingsManager;
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.controller.Validateable;
+import cz.zelenikr.remotetouch.validation.Validators;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -72,8 +73,8 @@ public class PairDeviceController implements Controller, Initializable, Validate
     }
 
     private void initValidators(ResourceBundle resources) {
-        deviceNameValidator = Validator.createEmptyValidator(resources.getString(Resources.Strings.VALIDATION_DEVICE_NAME));
-        pairKeyValidator = Validator.createEmptyValidator(resources.getString(Resources.Strings.VALIDATION_DEVICE_PAIR_KEY));
+        deviceNameValidator = Validators.createDeviceNameValidator(resources.getString(Resources.Strings.VALIDATION_DEVICE_NAME));
+        pairKeyValidator = Validators.createPairKeyValidator(resources.getString(Resources.Strings.VALIDATION_DEVICE_PAIR_KEY));
     }
 
     private void initValidation(ResourceBundle resources) {

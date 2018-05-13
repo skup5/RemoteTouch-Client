@@ -4,12 +4,12 @@ import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.manager.SettingsManager;
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.controller.Validateable;
+import cz.zelenikr.remotetouch.validation.Validators;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
-import org.controlsfx.validation.Severity;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
@@ -67,11 +67,7 @@ public class ConnectionController implements Controller, Initializable, Validate
     }
 
     private void initValidators(ResourceBundle resources) {
-        addressValidator = Validator.createRegexValidator(
-                resources.getString(Resources.Strings.VALIDATION_CONNECTION_ADDRESS),
-                "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
-                Severity.ERROR
-        );
+        addressValidator = Validators.createUrlValidator(resources.getString(Resources.Strings.VALIDATION_CONNECTION_ADDRESS));
     }
 
     private void initValidation(ResourceBundle resources) {

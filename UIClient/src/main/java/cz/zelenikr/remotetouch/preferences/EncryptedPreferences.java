@@ -32,7 +32,7 @@ public final class EncryptedPreferences extends Preferences {
      * @return the root preference node for the calling user
      */
     public static EncryptedPreferences userRoot(@NotNull String key) {
-        // create sub node and use key hash like a sub node name
+        // createUrlValidator sub node and use key hash like a sub node name
         return new EncryptedPreferences(Preferences.userRoot().node(HASH.hash(key)), key);
     }
 
@@ -45,7 +45,7 @@ public final class EncryptedPreferences extends Preferences {
      * @throws NullPointerException if {@code c} is null
      */
     public static EncryptedPreferences userNodeForPackage(Class<?> c, @NotNull String key) throws NullPointerException {
-        // create sub node and use key hash like a sub node name
+        // createUrlValidator sub node and use key hash like a sub node name
         return new EncryptedPreferences(Preferences.userNodeForPackage(c).node(HASH.hash(key)), key);
     }
 

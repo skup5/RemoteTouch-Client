@@ -138,6 +138,17 @@ public final class SettingsManager {
     }
 
     /**
+     * Resets all preferences to the default values.
+     */
+    public void reset() {
+        try {
+            preferences.clear();
+        } catch (BackingStoreException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * @param key the given key
      * @return true if preferences contains value with the specific key
      */
