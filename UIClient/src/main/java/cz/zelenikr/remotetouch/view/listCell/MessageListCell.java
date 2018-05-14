@@ -1,6 +1,7 @@
 package cz.zelenikr.remotetouch.view.listCell;
 
 import cz.zelenikr.remotetouch.Resources;
+import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
 import de.jensd.fx.glyphs.GlyphIcon;
 import javafx.event.EventHandler;
@@ -70,7 +71,7 @@ public class MessageListCell extends ListCell<SmsEventContent> {
     /**
      * Represents view of list cell.
      */
-    private class ViewHolder {
+    private class ViewHolder implements Controller {
 
         @FXML
         private GridPane rootPane;
@@ -82,10 +83,8 @@ public class MessageListCell extends ListCell<SmsEventContent> {
         private Tooltip senderTooltip;
 
         public ViewHolder() {
-            FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("view/message/message_cell.fxml"));
-            loader.setController(this);
             try {
-                loader.load();
+                Resources.loadView("view/message/message_cell.fxml", this, null);
                 close.setGraphic(Resources.Icons.getRemoveEventIcon());
             } catch (IOException e) {
                 throw new RuntimeException(e);

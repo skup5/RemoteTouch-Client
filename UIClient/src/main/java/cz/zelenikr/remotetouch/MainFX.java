@@ -35,15 +35,12 @@ import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * JavaFX application class. This is the entry point of program.
+ * JavaFX application class. This is the entry point of the program.
  *
  * @author Roman Zelenik
  */
 public class MainFX extends Application {
 
-    // to debugging
-    private static final boolean START_CLI = false;
-    ////
     private static final double MIN_WIDTH = 500, MIN_HEIGHT = 500;
 
     private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
@@ -52,8 +49,6 @@ public class MainFX extends Application {
 
     private SettingsManager settingsManager;
     private Stage stage;
-
-    private static String[] ARGS;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -77,7 +72,6 @@ public class MainFX extends Application {
 
         if (startMain) {
             showMainWindow();
-            if (START_CLI) startConsole();
         } else {
             close();
         }
@@ -180,7 +174,10 @@ public class MainFX extends Application {
                         user = loginDialog.getUser();
                         showAgain = false;
                     } else {
-                        new Alert(Alert.AlertType.ERROR, "wrong password", ButtonType.OK).showAndWait();
+                        Alert errorDialog = new Alert(Alert.AlertType.ERROR, STRINGS.getString(Resources.Strings.LOGIN_ERROR_CONTENT), ButtonType.OK);
+                        errorDialog.setTitle(STRINGS.getString(Resources.Strings.APPLICATION_TITLE));
+                        errorDialog.setHeaderText(STRINGS.getString(Resources.Strings.LOGIN_ERROR_HEADER));
+                        errorDialog.showAndWait();
                         showAgain = true;
                     }
 
@@ -214,25 +211,8 @@ public class MainFX extends Application {
         return user;
     }
 
-    private void startConsole() {
-        Thread t = new Thread(() -> {
-            try {
-                Main.main(ARGS);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        });
-        t.setDaemon(true);
-        t.start();
-    }
-
     public static void main(String[] args) {
-//        System.out.println("Clearing SettingsManager");
-//        SETTINGS.setDeviceName(null);
-//        SETTINGS.setPairKey(null);
-
         Locale.setDefault(SettingsManager.getLocale());
-        ARGS = args;
         launch(args);
     }
 }

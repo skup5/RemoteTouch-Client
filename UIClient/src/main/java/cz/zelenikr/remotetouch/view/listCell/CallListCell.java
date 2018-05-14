@@ -1,12 +1,12 @@
 package cz.zelenikr.remotetouch.view.listCell;
 
 import cz.zelenikr.remotetouch.Resources;
+import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
 import cz.zelenikr.remotetouch.data.mapper.CallTypeToLocalStringMapper;
 import de.jensd.fx.glyphs.GlyphIcon;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -66,7 +66,7 @@ public class CallListCell extends ListCell<CallEventContent> {
     /**
      * Represents view of list cell.
      */
-    private class ViewHolder {
+    private class ViewHolder implements Controller {
 
         @FXML
         private GridPane rootPane;
@@ -76,10 +76,8 @@ public class CallListCell extends ListCell<CallEventContent> {
         private Tooltip callerTooltip;
 
         public ViewHolder() {
-            FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("view/call/call_cell.fxml"));
-            loader.setController(this);
             try {
-                loader.load();
+                Resources.loadView("view/call/call_cell.fxml", this, null);
                 close.setGraphic(Resources.Icons.getRemoveEventIcon());
             } catch (IOException e) {
                 throw new RuntimeException(e);

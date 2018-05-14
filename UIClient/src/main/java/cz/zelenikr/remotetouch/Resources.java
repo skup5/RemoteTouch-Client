@@ -112,6 +112,8 @@ public final class Resources {
         LOGIN_BUTTON_LOGIN = "Login.Button.Login",
                 LOGIN_BUTTON_RESET = "Login.Button.Reset",
                 LOGIN_HEADER = "Login.Header",
+                LOGIN_ERROR_CONTENT = "Login.Error.Content",
+                LOGIN_ERROR_HEADER = "Login.Error.Header",
 
         NAVIGATION_ITEMS_PAIR = "Navigation.Items.Pair",
                 NAVIGATION_ITEMS_SETTINGS = "Navigation.Items.Settings",

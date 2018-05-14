@@ -1,11 +1,11 @@
 package cz.zelenikr.remotetouch.view.listCell;
 
 import cz.zelenikr.remotetouch.Resources;
+import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
 import de.jensd.fx.glyphs.GlyphIcon;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -64,7 +64,7 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
     /**
      * Represents view of list cell.
      */
-    private class ViewHolder {
+    private class ViewHolder implements Controller {
 
         @FXML
         private GridPane rootPane;
@@ -74,10 +74,8 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
         private Text text;
 
         public ViewHolder() {
-            FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("view/notification/notification_cell.fxml"));
-            loader.setController(this);
             try {
-                loader.load();
+                Resources.loadView("view/notification/notification_cell.fxml", this, null);
                 close.setGraphic(Resources.Icons.getRemoveEventIcon());
             } catch (IOException e) {
                 throw new RuntimeException(e);
