@@ -27,7 +27,6 @@ import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -77,6 +76,9 @@ public class MainFX extends Application {
         }
     }
 
+    /**
+     * Closes application.
+     */
     private void close() {
         stage.close();
     }
@@ -85,10 +87,20 @@ public class MainFX extends Application {
         return settingsManager;
     }
 
+    /**
+     * Checks if user has to enter initialization values like phone name or pair key.
+     *
+     * @return true if some init value is missing
+     */
     private boolean shouldShowWizard() {
         return !getSettings().containsDeviceName() || !getSettings().containsPairKey();
     }
 
+    /**
+     * Initializes and makes the app main window visible to the user.
+     *
+     * @throws IOException if an error occurs during loading layout
+     */
     private void showMainWindow() throws IOException {
         Pair<Node, Controller> pair = Resources.loadView("view/app.fxml", STRINGS);
         AppController controller = (AppController) pair.getValue();
@@ -156,7 +168,9 @@ public class MainFX extends Application {
     }
 
     /**
-     * Shows login dialog to unlock application.
+     * Shows login dialog to unlock application. The dialog will show repeatedly if authentication failed.
+     *
+     * @return {@link UserInfo} with user input values or {@code null} if the dialog was canceled
      */
     private UserInfo showLogin() {
         UserInfo user = null;
@@ -198,6 +212,11 @@ public class MainFX extends Application {
         return user;
     }
 
+    /**
+     * Shows register dialog to initialize application {@link UserInfo owner}.
+     *
+     * @return new registered {@link UserInfo} or {@code null} if the dialog was canceled
+     */
     private UserInfo showRegister() {
         UserInfo user = null;
         RegisterDialog registerDialog = new RegisterDialog(STRINGS.getString(Resources.Strings.APPLICATION_TITLE));

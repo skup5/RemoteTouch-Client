@@ -19,6 +19,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
+ * The notifications {@link ListView} controller.
+ *
  * @author Roman Zelenik
  */
 public class NotificationsListController implements Controller, Initializable {
@@ -36,17 +38,12 @@ public class NotificationsListController implements Controller, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loadData();
         list.setItems(new SortedList<>(data, new NotificationByDatetimeComparator()));
         list.setCellFactory(listView -> {
             NotificationListCell cell = new NotificationListCell(listView);
             cell.setCloseEventHandler(this::onCloseCell);
             return cell;
         });
-    }
-
-    private void loadData() {
-        notificationDAO.loadAllAsync(notifications -> Platform.runLater(() -> data.addAll(notifications)));
     }
 
     private void onCloseCell(MouseEvent mouseEvent) {

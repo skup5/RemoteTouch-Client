@@ -19,6 +19,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
+ * The calls {@link ListView} controller.
+ *
  * @author Roman Zelenik
  */
 public class CallsListController implements Controller, Initializable {
@@ -36,7 +38,6 @@ public class CallsListController implements Controller, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loadData();
         list.setItems(new SortedList<>(data, new CallByDatetimeComparator()));
         list.setCellFactory(listView -> {
             CallListCell cell = new CallListCell();
@@ -51,10 +52,6 @@ public class CallsListController implements Controller, Initializable {
 //        System.out.println("Close cell " + userData);
         if (userData != null)
             removeItem((CallEventContent) userData);
-    }
-
-    private void loadData() {
-        callDAO.loadAllAsync(calls -> Platform.runLater(() -> data.addAll(calls)));
     }
 
     private void onNewCall(CallEventContent content) {

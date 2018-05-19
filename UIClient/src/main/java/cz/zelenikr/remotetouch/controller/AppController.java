@@ -25,6 +25,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
+ * The app main window controller.
+ *
  * @author Roman Zelenik
  */
 public class AppController implements Controller, Initializable {

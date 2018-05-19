@@ -4,16 +4,11 @@ package cz.zelenikr.remotetouch.data.dao;
 import cz.zelenikr.remotetouch.Callback;
 
 /**
+ * Provides methods to access to a remote mobile content.
+ *
  * @author Roman Zelenik
  */
 public interface MobileContentDAO<T> {
-
-    /**
-     * Initializes items loading. If it's done callback is called.
-     *
-     * @param callback it's called (only once) when items was loaded
-     */
-    void loadAllAsync(Callback<T[]> callback);
 
     /**
      * The specific {@link Callback} is called every time when new item was received.

@@ -20,6 +20,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
+ * The messages {@link ListView} controller.
+ *
  * @author Roman Zelenik
  */
 public class MessagesListController implements Controller, Initializable {
@@ -37,17 +39,12 @@ public class MessagesListController implements Controller, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loadData();
         list.setItems(new SortedList<>(data, new SmsByDatetimeComparator()));
         list.setCellFactory(listView -> {
             MessageListCell cell = new MessageListCell(listView);
             cell.setCloseEventHandler(this::onCloseCell);
             return cell;
         });
-    }
-
-    private void loadData() {
-        smsDAO.loadAllAsync(messages -> Platform.runLater(() -> data.addAll(messages)));
     }
 
     private void onCloseCell(MouseEvent mouseEvent) {
