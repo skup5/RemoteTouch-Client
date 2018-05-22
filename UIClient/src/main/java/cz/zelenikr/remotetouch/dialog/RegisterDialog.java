@@ -13,7 +13,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import org.controlsfx.validation.ValidationSupport;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -38,6 +41,7 @@ public class RegisterDialog extends Dialog<ButtonType> {
 
     public RegisterDialog(String title) {
         invalidProperty.bind(validationSupport.invalidProperty());
+        setIcon(Resources.Icons.getApplicationIcon());
         setTitle(title);
         setHeaderText(STRINGS.getString(Resources.Strings.REGISTER_HEADER));
         setGraphic(new FontAwesomeIconView(FontAwesomeIcon.LOCK, "30"));
@@ -52,6 +56,16 @@ public class RegisterDialog extends Dialog<ButtonType> {
 
     public UserInfo getUser() {
         return new UserInfo(passwordProperty.get());
+    }
+
+    /**
+     * Changes the Icon next to Title of the dialog.
+     *
+     * @param icon the Icon of the dialog
+     */
+    public void setIcon(@NotNull Image icon) {
+        Stage stage = (Stage) getDialogPane().getScene().getWindow();
+        stage.getIcons().add(icon);
     }
 
     private void prepareContentControls() {

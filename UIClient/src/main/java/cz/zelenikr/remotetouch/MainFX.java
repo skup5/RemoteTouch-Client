@@ -5,6 +5,7 @@ import cz.zelenikr.remotetouch.controller.AppController;
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.controller.settings.PairDeviceController;
 import cz.zelenikr.remotetouch.data.dto.UserInfo;
+import cz.zelenikr.remotetouch.dialog.ErrorDialog;
 import cz.zelenikr.remotetouch.dialog.LocalizedWizardPane;
 import cz.zelenikr.remotetouch.dialog.LoginDialog;
 import cz.zelenikr.remotetouch.dialog.RegisterDialog;
@@ -56,6 +57,7 @@ public class MainFX extends Application {
         stage = primaryStage;
         stage.setScene(new Scene(new Group(), 1, 1));
         stage.getScene().getStylesheets().addAll(Resources.getStyleSheets());
+        stage.getIcons().add(Resources.Icons.getApplicationIcon());
 
         UserInfo user = showLogin();
         if (user == null || user.getPassword() == null) {
@@ -188,8 +190,9 @@ public class MainFX extends Application {
                         user = loginDialog.getUser();
                         showAgain = false;
                     } else {
-                        Alert errorDialog = new Alert(Alert.AlertType.ERROR, STRINGS.getString(Resources.Strings.LOGIN_ERROR_CONTENT), ButtonType.OK);
-                        errorDialog.setTitle(STRINGS.getString(Resources.Strings.APPLICATION_TITLE));
+                        ErrorDialog errorDialog = new ErrorDialog(
+                                STRINGS.getString(Resources.Strings.APPLICATION_TITLE),
+                                STRINGS.getString(Resources.Strings.LOGIN_ERROR_CONTENT));
                         errorDialog.setHeaderText(STRINGS.getString(Resources.Strings.LOGIN_ERROR_HEADER));
                         errorDialog.showAndWait();
                         showAgain = true;

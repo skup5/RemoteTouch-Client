@@ -12,6 +12,7 @@ import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -108,6 +109,7 @@ public final class Resources {
         DIALOG_BUTTON_CANCEL = "Dialog.Button.Cancel",
                 DIALOG_BUTTON_CLOSE = "Dialog.Button.Close",
                 DIALOG_BUTTON_FINISH = "Dialog.Button.Finish",
+                DIALOG_HEADER_ERROR = "Dialog.Header.Error",
 
         LOGIN_BUTTON_LOGIN = "Login.Button.Login",
                 LOGIN_BUTTON_RESET = "Login.Button.Reset",
@@ -143,6 +145,15 @@ public final class Resources {
      * Contains all glyph icons that are used (programmatically) in application.
      */
     public static final class Icons {
+
+        /**
+         * Creates and returns icon of this JavaFX application.
+         *
+         * @return
+         */
+        public static Image getApplicationIcon() {
+            return new Image(Resources.class.getResourceAsStream("/icon.png"));
+        }
 
         /**
          * Selects icon for the specific mobile app or returns default app icon.<p/>
