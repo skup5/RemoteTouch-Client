@@ -3,6 +3,7 @@ package cz.zelenikr.remotetouch.view.listCell;
 import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
+import cz.zelenikr.remotetouch.data.formatter.EventDateTimeFormat;
 import de.jensd.fx.glyphs.GlyphIcon;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,9 +16,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * @author Roman Zelenik
@@ -25,11 +23,11 @@ import java.util.Date;
 public class NotificationListCell extends ListCell<NotificationEventContent> {
 
     private ViewHolder holder;
-    private DateFormat dateFormat;
+    private EventDateTimeFormat dateFormat;
     private EventHandler<MouseEvent> closeEventHandler;
 
     public NotificationListCell(ListView<NotificationEventContent> listView) {
-        this.dateFormat = new SimpleDateFormat();
+        this.dateFormat = new EventDateTimeFormat();
         this.holder = new ViewHolder();
         this.holder.getTextControl().wrappingWidthProperty().bind(listView.widthProperty().subtract(30));
     }
@@ -44,7 +42,7 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
             holder.setAppName(appName);
             holder.setTitle(item.getTitle());
             holder.setText(item.getText());
-            holder.setDatetime(formatDatetime(item.getWhen()));
+            holder.setDatetime(dateFormat.format(item.getWhen()));
             holder.setIcon(Resources.Icons.getIconByApp(item.getApp()));
 
             if (closeEventHandler != null) holder.setOnCloseClicked(closeEventHandler, item);
@@ -55,10 +53,6 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
 
     public void setCloseEventHandler(EventHandler<MouseEvent> closeEventHandler) {
         this.closeEventHandler = closeEventHandler;
-    }
-
-    private String formatDatetime(long timestamp) {
-        return dateFormat.format(new Date(timestamp));
     }
 
     /**

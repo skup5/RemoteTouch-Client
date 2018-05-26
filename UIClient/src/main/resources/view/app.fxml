@@ -1,91 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Accordion?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="cz.zelenikr.remotetouch.controller.AppController">
     <stylesheets>
         <URL value="@../css/style.css"/>
     </stylesheets>
-    <children>
-        <MenuBar VBox.vgrow="NEVER">
-            <menus>
-                <Menu mnemonicParsing="false" text="%Menu.App">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="%Menu.App.Lock" disable="true"/>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="false" text="%Menu.App.Preferences" onAction="#onPrefsMenuItemClick">
-                            <graphic>
-                                <MaterialIconView glyphName="SETTINGS"/>
-                            </graphic>
-                        </MenuItem>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="false" text="%Menu.App.Quit" onAction="#onQuitMenuItemClick">
-                            <graphic>
-                                <MaterialIconView glyphName="CLOSE"/>
-                            </graphic>
-                        </MenuItem>
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="%Menu.Connection">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="%Menu.Connection.Connect"
-                                  onAction="#onConnectMenuItemClick"/>
-                        <MenuItem mnemonicParsing="false" text="%Menu.Connection.Disconnect"
-                                  onAction="#onDisconnectMenuItemClick"/>
-                        <MenuItem mnemonicParsing="false" text="%Menu.Connection.Reconnect"
-                                  onAction="#onReconnectMenuItemClick"/>
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="%Menu.Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="%Menu.Help.About" onAction="#onAboutMenuItemClick">
-                            <graphic>
-                                <MaterialIconView glyphName="INFO"/>
-                            </graphic>
-                        </MenuItem>
-                    </items>
-                </Menu>
-            </menus>
-        </MenuBar>
-        <TabPane fx:id="tabPane" tabClosingPolicy="ALL_TABS" VBox.vgrow="SOMETIMES">
-            <tabs>
-                <fx:include fx:id="callsTab" source="call/calls_tab.fxml"/>
-                <fx:include fx:id="messagesTab" source="message/messages_tab.fxml"/>
-                <fx:include fx:id="notificationsTab" source="notification/notifications_tab.fxml"/>
-                <fx:include fx:id="settingsTab" source="settings/settings_tab.fxml"/>
-                <!--<Tab closable="false" text="%Navigation.Items.Settings">-->
-                <!--<content>-->
-                <!---->
-                <!--</content>-->
-                <!--</Tab>-->
-            </tabs>
-        </TabPane>
-        <HBox id="HBox" spacing="5.0" styleClass="bg-primary-dark" VBox.vgrow="NEVER">
-            <children>
-                <Label fx:id="connectionStatusIcon"/>
-                <Label fx:id="connectionStatus" HBox.hgrow="ALWAYS">
-                </Label>
-                <Pane HBox.hgrow="ALWAYS"/>
-                <Label text="" textAlignment="RIGHT" HBox.hgrow="NEVER"/>
-            </children>
-            <padding>
-                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
-            </padding>
-        </HBox>
-    </children>
+    <MenuBar VBox.vgrow="NEVER">
+        <Menu mnemonicParsing="false" text="%Menu.App">
+            <MenuItem mnemonicParsing="false" text="%Menu.App.Lock" disable="true"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem mnemonicParsing="false" text="%Menu.App.Preferences" onAction="#onPrefsMenuItemClick">
+                <graphic>
+                    <MaterialIconView glyphName="SETTINGS"/>
+                </graphic>
+            </MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem mnemonicParsing="false" text="%Menu.App.Quit" onAction="#onQuitMenuItemClick">
+                <graphic>
+                    <MaterialIconView glyphName="CLOSE"/>
+                </graphic>
+            </MenuItem>
+        </Menu>
+        <Menu mnemonicParsing="false" text="%Menu.Connection">
+            <MenuItem mnemonicParsing="false" text="%Menu.Connection.Connect"
+                      onAction="#onConnectMenuItemClick"/>
+            <MenuItem mnemonicParsing="false" text="%Menu.Connection.Disconnect"
+                      onAction="#onDisconnectMenuItemClick"/>
+            <MenuItem mnemonicParsing="false" text="%Menu.Connection.Reconnect"
+                      onAction="#onReconnectMenuItemClick"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="%Menu.Help">
+            <MenuItem mnemonicParsing="false" text="%Menu.Help.About" onAction="#onAboutMenuItemClick">
+                <graphic>
+                    <MaterialIconView glyphName="INFO"/>
+                </graphic>
+            </MenuItem>
+        </Menu>
+    </MenuBar>
+    <TabPane fx:id="tabPane" tabClosingPolicy="ALL_TABS" VBox.vgrow="SOMETIMES">
+        <fx:include fx:id="callsTab" source="call/calls_tab.fxml"/>
+        <fx:include fx:id="messagesTab" source="message/messages_tab.fxml"/>
+        <fx:include fx:id="notificationsTab" source="notification/notifications_tab.fxml"/>
+        <fx:include fx:id="settingsTab" source="settings/settings_tab.fxml"/>
+        <!--<Tab text="%Navigation.Items.Settings" >        </Tab>-->
+    </TabPane>
+    <HBox id="HBox" spacing="5.0" styleClass="bg-primary-dark" VBox.vgrow="NEVER">
+        <padding>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
+        </padding>
+        <Label fx:id="connectionStatusIcon"/>
+        <Label fx:id="connectionStatus" HBox.hgrow="ALWAYS">
+        </Label>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Label text="" textAlignment="RIGHT" HBox.hgrow="NEVER"/>
+    </HBox>
 </VBox>

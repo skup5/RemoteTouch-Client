@@ -5,6 +5,10 @@ import cz.zelenikr.remotetouch.manager.SettingsManager;
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.controller.Validateable;
 import cz.zelenikr.remotetouch.validation.Validators;
+import javafx.beans.Observable;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -15,12 +19,15 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
+ * Provides changing device pairing settings.
+ *
  * @author Roman Zelenik
  */
 public class PairDeviceController implements Controller, Initializable, Validateable {
 
     private static final SettingsManager SETTINGS = SettingsManager.getInstance();
     private final ValidationSupport validationSupport = new ValidationSupport();
+    private final BooleanProperty changedProperty = new SimpleBooleanProperty(false);
 
     @FXML
     private TextField deviceName;
@@ -46,6 +53,10 @@ public class PairDeviceController implements Controller, Initializable, Validate
         return !validationSupport.isInvalid();
     }
 
+    public ReadOnlyBooleanProperty getChangedProperty() {
+        return changedProperty;
+    }
+
     private void initControls(ResourceBundle resources) {
         deviceName.setText(SETTINGS.getDeviceName());
         deviceName.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -55,6 +66,8 @@ public class PairDeviceController implements Controller, Initializable, Validate
                 if (deviceNameValidator.apply(deviceName, deviceName.getText()).getErrors().isEmpty()) {
                     // store device name
                     SETTINGS.setDeviceName(deviceName.getText());
+
+                    notifyChanged();
                 }
             }
         });
@@ -67,6 +80,8 @@ public class PairDeviceController implements Controller, Initializable, Validate
                 if (pairKeyValidator.apply(pairKey, pairKey.getText()).getErrors().isEmpty()) {
                     // store pair key
                     SETTINGS.setPairKey(pairKey.getText());
+
+                    notifyChanged();
                 }
             }
         });
@@ -82,5 +97,9 @@ public class PairDeviceController implements Controller, Initializable, Validate
 
         validationSupport.registerValidator(deviceName, deviceNameValidator);
         validationSupport.registerValidator(pairKey, pairKeyValidator);
+    }
+
+    private void notifyChanged() {
+        changedProperty.setValue(true);
     }
 }

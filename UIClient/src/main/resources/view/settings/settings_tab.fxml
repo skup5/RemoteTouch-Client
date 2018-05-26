@@ -4,26 +4,32 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.Accordion?>
 <?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
+<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.VBox?>
 <Tab xmlns="http://javafx.com/javafx"
      xmlns:fx="http://javafx.com/fxml"
+     fx:controller="cz.zelenikr.remotetouch.controller.settings.SettingsTabController"
      text="%Navigation.Items.Settings">
     <graphic>
         <MaterialIconView glyphName="SETTINGS"/>
     </graphic>
-    <content>
-        <Accordion>
-            <panes>
-                <TitledPane alignment="TOP_LEFT" text="%Settings.Device.Title">
-                    <content>
-                        <fx:include source="pair_device.fxml"/>
-                    </content>
-                </TitledPane>
-                <TitledPane alignment="TOP_LEFT" text="%Settings.Connection.Title">
-                    <content>
-                        <fx:include source="connection.fxml"/>
-                    </content>
-                </TitledPane>
-            </panes>
-        </Accordion>
-    </content>
+    <Accordion>
+        <panes>
+            <TitledPane alignment="TOP_LEFT" text="%Settings.Device.Title">
+                <VBox fx:id="devicePaneContent">
+                    <TextFlow fx:id="deviceHeader" visible="false">
+                        <Text text="%Settings.Device.Header"/>
+                    </TextFlow>
+                </VBox>
+            </TitledPane>
+            <TitledPane alignment="TOP_LEFT" text="%Settings.Connection.Title">
+                <VBox fx:id="connectionPaneContent">
+                    <TextFlow fx:id="connectionHeader" visible="false">
+                        <Text text="%Settings.Connection.Header"/>
+                    </TextFlow>
+                </VBox>
+            </TitledPane>
+        </panes>
+    </Accordion>
 </Tab>

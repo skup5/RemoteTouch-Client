@@ -91,7 +91,7 @@ public final class SettingsManager {
      * @param deviceName if it's {@code null}, value will be reset to the default value
      */
     public void setDeviceName(String deviceName) {
-        LOGGER.info("store " + deviceName);
+//        LOGGER.info("store " + deviceName);
         if (deviceName == null) {
             preferences.remove(KEY_DEVICE_NAME);
         } else {
@@ -114,7 +114,7 @@ public final class SettingsManager {
      * @param pairKey if it's {@code null}, value will be reset to the default value
      */
     public void setPairKey(String pairKey) {
-        LOGGER.info("store " + pairKey);
+//        LOGGER.info("store " + pairKey);
         if (pairKey == null) {
             preferences.remove(KEY_PAIR_KEY);
         } else {
@@ -133,7 +133,7 @@ public final class SettingsManager {
     }
 
     public void setServerAddress(@NotNull URL address) {
-        LOGGER.info("store " + address.toExternalForm());
+//        LOGGER.info("store " + address.toExternalForm());
         preferences.put(KEY_SERVER_ADDRESS, address.toExternalForm());
     }
 

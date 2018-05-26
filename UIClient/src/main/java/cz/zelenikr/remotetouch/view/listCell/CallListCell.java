@@ -3,6 +3,7 @@ package cz.zelenikr.remotetouch.view.listCell;
 import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
+import cz.zelenikr.remotetouch.data.formatter.EventDateTimeFormat;
 import cz.zelenikr.remotetouch.data.mapper.CallTypeToLocalStringMapper;
 import de.jensd.fx.glyphs.GlyphIcon;
 import javafx.event.EventHandler;
@@ -16,9 +17,6 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * @author Roman Zelenik
@@ -26,12 +24,12 @@ import java.util.Date;
 public class CallListCell extends ListCell<CallEventContent> {
 
     private ViewHolder holder;
-    private DateFormat dateFormat;
+    private EventDateTimeFormat dateFormat;
     private EventHandler<MouseEvent> closeEventHandler;
 
     public CallListCell() {
         this.holder = new ViewHolder();
-        this.dateFormat = new SimpleDateFormat();
+        this.dateFormat = new EventDateTimeFormat();
     }
 
     @Override
@@ -46,7 +44,7 @@ public class CallListCell extends ListCell<CallEventContent> {
             holder.setCaller(caller);
             holder.setCallerTooltip(callerTooltip);
             holder.setType(CallTypeToLocalStringMapper.toString(item.getType()));
-            holder.setDatetime(formatDatetime(item.getWhen()));
+            holder.setDatetime(dateFormat.format(item.getWhen()));
             holder.setIcon(Resources.Icons.getIconByCallType(item.getType()));
 
             if (closeEventHandler != null) holder.setOnCloseClicked(closeEventHandler, item);
@@ -57,10 +55,6 @@ public class CallListCell extends ListCell<CallEventContent> {
 
     public void setCloseEventHandler(EventHandler<MouseEvent> closeEventHandler) {
         this.closeEventHandler = closeEventHandler;
-    }
-
-    private String formatDatetime(long timestamp) {
-        return dateFormat.format(new Date(timestamp));
     }
 
     /**

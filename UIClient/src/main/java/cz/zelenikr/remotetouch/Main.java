@@ -17,7 +17,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -62,6 +65,7 @@ public class Main {
 //        urlTest();
 //        cipherTest();
 //        jsonTest();
+//        dateTimeTest();
     }
 
     private static void urlTest() {
@@ -144,6 +148,19 @@ public class Main {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+
+    }
+
+    private static void dateTimeTest() {
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+
+        Date date = today.getTime();
+        System.out.println(date);
+        System.out.println("after " + new Date() + " :" + date.after(new Date()));
+        System.out.println("after " + new Date(today.getTimeInMillis() - 8000 * 3600) + " :" + date.after(new Date(today.getTimeInMillis() - 8000 * 3600)));
 
     }
 

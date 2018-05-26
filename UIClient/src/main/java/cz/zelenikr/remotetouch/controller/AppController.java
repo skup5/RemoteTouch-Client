@@ -4,6 +4,7 @@ import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
+import cz.zelenikr.remotetouch.data.formatter.EventDateTimeFormat;
 import cz.zelenikr.remotetouch.data.mapper.CallTypeToLocalStringMapper;
 import cz.zelenikr.remotetouch.data.mapper.ConnectionStatusToLocaleStringMapper;
 import cz.zelenikr.remotetouch.dialog.AboutDialog;
@@ -21,6 +22,7 @@ import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -37,6 +39,7 @@ public class AppController implements Controller, Initializable {
     private final NotificationManager notificationManager = NotificationManager.getInstance();
 
     private final EventHandler<ActionEvent> focusNotificationsTab, focusCallsTab, focusMessagesTab;
+    private final EventDateTimeFormat dateFormat = new EventDateTimeFormat();
 
     private ResourceBundle resources;
     private Stage stage;
@@ -170,7 +173,7 @@ public class AppController implements Controller, Initializable {
                 //                final String title = content.getName() == null || content.getName().isEmpty() ? content.getNumber() : content.getName();
                 notificationManager.notify(
                         Resources.Icons.getIconByCallType(content.getType()),
-                        callNtfTitle,
+                        callNtfTitle + " · " + dateFormat.format(content.getWhen()),
                         CallTypeToLocalStringMapper.toString(content.getType()),
                         focusCallsTab);
             }
@@ -182,7 +185,7 @@ public class AppController implements Controller, Initializable {
             for (NotificationEventContent content : notifications) {
                 notificationManager.notify(
                         Resources.Icons.getIconByApp(content.getApp()),
-                        notificationNtfTitle,
+                        notificationNtfTitle + " · " + dateFormat.format(content.getWhen()),
                         content.getLabel() + "\n" + content.getTitle(),
                         focusNotificationsTab);
             }
@@ -195,7 +198,7 @@ public class AppController implements Controller, Initializable {
 //                final String title = content.getName() == null || content.getName().isEmpty() ? content.getNumber() : content.getName();
                 notificationManager.notify(
                         Resources.Icons.getSmsIcon(),
-                        smsNtfTitle,
+                        smsNtfTitle + " · " + dateFormat.format(content.getWhen()),
                         "Sms",
                         focusMessagesTab);
             }

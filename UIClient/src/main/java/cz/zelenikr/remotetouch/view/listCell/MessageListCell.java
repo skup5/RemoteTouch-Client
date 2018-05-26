@@ -3,10 +3,10 @@ package cz.zelenikr.remotetouch.view.listCell;
 import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
+import cz.zelenikr.remotetouch.data.formatter.EventDateTimeFormat;
 import de.jensd.fx.glyphs.GlyphIcon;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -18,9 +18,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * @author Roman Zelenik
@@ -30,11 +28,11 @@ public class MessageListCell extends ListCell<SmsEventContent> {
     private final GlyphIcon icon = Resources.Icons.getSmsIcon();
 
     private ViewHolder holder;
-    private DateFormat dateFormat;
+    private EventDateTimeFormat dateFormat;
     private EventHandler<MouseEvent> closeEventHandler;
 
     public MessageListCell(ListView<SmsEventContent> listView) {
-        this.dateFormat = new SimpleDateFormat();
+        this.dateFormat = new EventDateTimeFormat();
         this.holder = new ViewHolder();
         this.holder.getTextControl().wrappingWidthProperty().bind(listView.widthProperty().subtract(30));
     }
@@ -51,7 +49,7 @@ public class MessageListCell extends ListCell<SmsEventContent> {
             holder.setSender(sender);
             holder.setSenderTooltip(senderTooltip);
             holder.setText(item.getContent());
-            holder.setDatetime(formatDatetime(item.getWhen()));
+            holder.setDatetime(dateFormat.format(item.getWhen()));
             holder.setIcon(icon);
 
             if (closeEventHandler != null) holder.setOnCloseClicked(closeEventHandler, item);
@@ -62,10 +60,6 @@ public class MessageListCell extends ListCell<SmsEventContent> {
 
     public void setCloseEventHandler(EventHandler<MouseEvent> closeEventHandler) {
         this.closeEventHandler = closeEventHandler;
-    }
-
-    private String formatDatetime(long timestamp) {
-        return dateFormat.format(new Date(timestamp));
     }
 
     /**
