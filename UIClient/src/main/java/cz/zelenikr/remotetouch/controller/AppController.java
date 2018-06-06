@@ -22,7 +22,6 @@ import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.text.DateFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -85,7 +84,7 @@ public class AppController implements Controller, Initializable {
 
     @FXML
     private void onReconnectMenuItemClick(ActionEvent event) {
-        connectionManager.updateAndReconnect();
+        connectionManager.reconnect();
     }
 
     //////////////////////////
@@ -124,7 +123,7 @@ public class AppController implements Controller, Initializable {
         smsNtfTitle = getString(Resources.Strings.NOTIFICATION_TITLE_SMS);
 
         onConnectionStateChanged(ConnectionStatus.DISCONNECTED);
-//        connectionManager.connect();
+        connectionManager.connect();
     }
 
     public void onClose() {
@@ -205,6 +204,9 @@ public class AppController implements Controller, Initializable {
         });
     }
 
+    /**
+     * Moves app window to the front on the screen.
+     */
     private void toFront() {
         Stage stage = getStage();
         if (stage != null) {

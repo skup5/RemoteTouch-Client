@@ -1,30 +1,44 @@
 package cz.zelenikr.remotetouch.network;
 
 import cz.zelenikr.remotetouch.Main;
+import cz.zelenikr.remotetouch.Resources;
 import cz.zelenikr.remotetouch.Utils;
-import cz.zelenikr.remotetouch.data.mapper.JsonMapper;
-import cz.zelenikr.remotetouch.data.dto.event.*;
+import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
+import cz.zelenikr.remotetouch.data.dto.event.EventDTO;
+import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
+import cz.zelenikr.remotetouch.data.dto.event.SmsEventContent;
 import cz.zelenikr.remotetouch.data.dto.message.MessageDTO;
+import cz.zelenikr.remotetouch.data.mapper.JsonMapper;
+import cz.zelenikr.remotetouch.security.AESCipher;
+import cz.zelenikr.remotetouch.security.SymmetricCipher;
+import cz.zelenikr.remotetouch.security.exception.UnsupportedCipherException;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import javafx.util.Callback;
 import okhttp3.OkHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import cz.zelenikr.remotetouch.security.AESCipher;
-import cz.zelenikr.remotetouch.security.SymmetricCipher;
-import cz.zelenikr.remotetouch.security.exception.UnsupportedCipherException;
 
-import javax.net.ssl.*;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
-import java.security.cert.X509Certificate;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Enables real-time bidirectional communication with mobile device via remote Socket.IO server.
+ *
  * @author Roman Zelenik
  */
 public class SocketIOClient implements Client {
@@ -63,7 +77,12 @@ public class SocketIOClient implements Client {
         options.secure = true;
 
 //      Code for server self-signed certificate
-        OkHttpClient okHttpClient = createSSL();
+        OkHttpClient okHttpClient = null;
+        try {
+            okHttpClient = createSSLSupport();
+        } catch (CertificateException | KeyStoreException | NoSuchAlgorithmException | IOException | KeyManagementException e) {
+            throw new RuntimeException(e);
+        }
         options.callFactory = okHttpClient;
         options.webSocketFactory = okHttpClient;
 
@@ -83,6 +102,7 @@ public class SocketIOClient implements Client {
     @Override
     public void disconnect() {
         socket.disconnect();
+
         notifyConnectionStatusChanged(ConnectionStatus.DISCONNECTED);
     }
 
@@ -153,46 +173,37 @@ public class SocketIOClient implements Client {
      *
      * @return
      */
-    private OkHttpClient createSSL() {
-        //Security.insertProviderAt(new BouncyCastleProvider(), 1);
+    private OkHttpClient createSSLSupport() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, KeyManagementException {
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        Certificate ca;
 
-        try {
-            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-
-                @Override
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                }
-
-                @Override
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
-            }};
-
-            // Install the all-trusting trust manager
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-
-            HostnameVerifier myHostnameVerifier = new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession sslSession) {
-                    //clientLogger.info("HostnameVerifier for " + hostname);
-                    return serverUri.getHost().equals(hostname);
-                }
-            };
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .hostnameVerifier(myHostnameVerifier)
-                    .sslSocketFactory(sc.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
-                    .build();
-
-            return okHttpClient;
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        // Load CAs from an InputStream
+        try (InputStream caInput = Resources.loadRaw("/raw/certificate.crt")) {
+            ca = cf.generateCertificate(caInput);
+            //System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return null;
+
+        // Create a KeyStore containing our trusted CAs
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        keyStore.load(null, null);
+        keyStore.setCertificateEntry("ca", ca);
+
+        // Create a TrustManager that trusts the CAs in our KeyStore
+        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+        tmf.init(keyStore);
+
+        // Create an SSLContext that uses our TrustManager
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, tmf.getTrustManagers(), null);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) tmf.getTrustManagers()[0])
+                .build();
+
+        return okHttpClient;
     }
 
     /**
@@ -210,7 +221,7 @@ public class SocketIOClient implements Client {
      * @param content the new call events
      */
     private void onCallReceived(CallEventContent... content) {
-        clientLogger.info("call: " + Arrays.toString(content));
+//        clientLogger.info("call: " + Arrays.toString(content));
         if (callContentReceivedListener != null) callContentReceivedListener.onReceived(content);
     }
 
@@ -262,7 +273,7 @@ public class SocketIOClient implements Client {
      * @param content the  new notifications
      */
     private void onNotificationReceived(NotificationEventContent... content) {
-        clientLogger.info("notification: " + Arrays.toString(content));
+//        clientLogger.info("notification: " + Arrays.toString(content));
         if (notificationContentReceivedListener != null) notificationContentReceivedListener.onReceived(content);
     }
 
@@ -272,7 +283,7 @@ public class SocketIOClient implements Client {
      * @param content the new sms events
      */
     private void onSmsReceived(SmsEventContent... content) {
-        clientLogger.info("sms: " + Arrays.toString(content));
+//        clientLogger.info("sms: " + Arrays.toString(content));
         if (smsContentReceivedListener != null) smsContentReceivedListener.onReceived(content);
     }
 

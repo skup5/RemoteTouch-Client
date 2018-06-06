@@ -59,26 +59,17 @@ public final class ConnectionManager {
     public void disconnect() {
         if (client != null) {
             client.disconnect();
+            client = null;
         }
     }
 
     /**
-     * Disconnects and then connects to a device.
+     * Disconnects and establishes new connection to a mobile device.
      */
     public void reconnect() {
         if (client != null && client.isConnected()) {
             client.disconnect();
         }
-        connect();
-    }
-
-    /**
-     * Disconnects client then reloads all required attributes from SettingsManager,
-     * initializes client and creates new connection.
-     */
-    public void updateAndReconnect() {
-        disconnect();
-        client = null;
         connect();
     }
 

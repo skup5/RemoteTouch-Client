@@ -4,14 +4,12 @@ import cz.zelenikr.remotetouch.controller.Controller;
 import cz.zelenikr.remotetouch.data.dto.CallType;
 import cz.zelenikr.remotetouch.network.ConnectionStatus;
 import de.jensd.fx.glyphs.GlyphIcon;
-import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import de.jensd.fx.glyphs.materialicons.MaterialIcon;
 import de.jensd.fx.glyphs.materialicons.MaterialIconView;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -80,6 +78,16 @@ public final class Resources {
 
         loader.setController(controller);
         return loader.load();
+    }
+
+    /**
+     * Finds a resource with a given name.
+     *
+     * @param name path to the file in {@code resources}
+     * @return A InputStream object or null if no resource with this name is found.
+     */
+    public static InputStream loadRaw(@NotNull String name) {
+        return Resources.class.getResourceAsStream(name);
     }
 
     /**

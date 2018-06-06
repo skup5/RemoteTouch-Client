@@ -141,7 +141,7 @@ public class Main {
             strContent = cipher.encrypt(strContent);
 //            System.out.println("Encrypted content: "+strContent);
 
-            messageDTO = new MessageDTO(messageDTO.getId(), messageDTO.getType(), strContent);
+            messageDTO = new MessageDTO(messageDTO.getId(), strContent);
             String messageJson = new Gson().toJson(messageDTO);
 //            System.out.println("Message JSON: "+messageJson);
 //            client.onEventReceived(new JSONObject(messageJson));
