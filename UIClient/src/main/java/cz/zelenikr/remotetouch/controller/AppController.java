@@ -127,7 +127,7 @@ public class AppController implements Controller, Initializable {
     }
 
     public void onClose() {
-        LOGGER.info("close called");
+        LOGGER.info("closing...");
         connectionManager.disconnect();
     }
 

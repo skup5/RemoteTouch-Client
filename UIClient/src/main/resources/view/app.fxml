@@ -12,8 +12,6 @@
     </stylesheets>
     <MenuBar VBox.vgrow="NEVER">
         <Menu mnemonicParsing="false" text="%Menu.App">
-            <MenuItem mnemonicParsing="false" text="%Menu.App.Lock" disable="true"/>
-            <SeparatorMenuItem mnemonicParsing="false"/>
             <MenuItem mnemonicParsing="false" text="%Menu.App.Preferences" onAction="#onPrefsMenuItemClick">
                 <graphic>
                     <MaterialIconView glyphName="SETTINGS"/>

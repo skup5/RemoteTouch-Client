@@ -1,8 +1,6 @@
 package cz.zelenikr.remotetouch.network;
 
-import cz.zelenikr.remotetouch.Main;
 import cz.zelenikr.remotetouch.Resources;
-import cz.zelenikr.remotetouch.Utils;
 import cz.zelenikr.remotetouch.data.dto.event.CallEventContent;
 import cz.zelenikr.remotetouch.data.dto.event.EventDTO;
 import cz.zelenikr.remotetouch.data.dto.event.NotificationEventContent;
@@ -32,7 +30,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,14 +49,6 @@ public class SocketIOClient implements Client {
 //        clientLogger.addHandler(handler);
 
         clientLogger.setLevel(Level.ALL);
-
-        if (Main.LOGGER_USE_FILE_HANDLER) {
-            try {
-                Utils.addFileHandler(clientLogger);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private final String clientToken;
@@ -329,7 +318,7 @@ public class SocketIOClient implements Client {
      */
     private void sendIntro() {
         JSONObject json = JsonMapper.toJSONObject(new MessageDTO(clientToken, ""));
-        clientLogger.info("sendIntro " + json.toString());
+        //clientLogger.info("sendIntro " + json.toString());
         socket.emit("intro", json);
     }
 

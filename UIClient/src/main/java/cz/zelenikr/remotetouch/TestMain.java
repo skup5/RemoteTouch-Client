@@ -7,7 +7,6 @@ import cz.zelenikr.remotetouch.data.dto.message.MessageContent;
 import cz.zelenikr.remotetouch.data.dto.message.MessageDTO;
 import cz.zelenikr.remotetouch.manager.ConnectionManager;
 import cz.zelenikr.remotetouch.network.SocketIOClient;
-import org.apache.commons.cli.*;
 import cz.zelenikr.remotetouch.security.AESCipher;
 import cz.zelenikr.remotetouch.security.Hash;
 import cz.zelenikr.remotetouch.security.SHAHash;
@@ -17,7 +16,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,7 +25,7 @@ import java.util.logging.Logger;
 /**
  * @author Roman Zelenik
  */
-public class Main {
+public class TestMain {
 
     private static Logger logger = Logger.getLogger("Main");
 
@@ -42,20 +40,8 @@ public class Main {
             SECURE_KEY = "",
             DEVICE = "";
 
-    public static final boolean LOGGER_USE_FILE_HANDLER = false;
-
 
     public static void main(String[] args) throws URISyntaxException {
-        Options options = setOptions();
-
-        /*try {
-            processArgs(options, args);
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            printHelp(options);
-            System.exit(1);
-        }*/
-
 //        run();
 
         test();
@@ -188,96 +174,5 @@ public class Main {
     public static String createToken(String device, String pairKey) {
         Hash hash = new SHAHash();
         return hash.hash(device + pairKey);
-    }
-
-    private static void printHelp(Options options) {
-        HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp(120, "java -jar ui-client.jar", "\nDESCRIPTION", options, null, true);
-    }
-
-    private static void processArgs(Options options, String[] args) throws ParseException {
-        CommandLineParser parser = new DefaultParser();
-        CommandLine cmd;
-
-        cmd = parser.parse(options, args);
-
-        // Parse help
-        if (cmd.hasOption("help")) {
-            printHelp(options);
-            System.exit(0);
-        }
-
-        // Parse port
-        if (cmd.hasOption("p")) {
-            String value = cmd.getOptionValue("p");
-            try {
-                PORT = Integer.parseInt(value);
-
-                if (PORT < 0 || PORT > 65535) {
-                    throw new NumberFormatException();
-                }
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Port has to be positive integer between 1 and 65535, '" + value + "' given.");
-            }
-        }
-
-        // Parse hostname
-        if (cmd.hasOption("H")) {
-            HOSTNAME = cmd.getOptionValue("H");
-        }
-
-        // Parse server sub domain
-        if (cmd.hasOption("s")) {
-            SUB_DOMAIN = cmd.getOptionValue("s");
-        }
-
-        // Parse secure key
-        if (cmd.hasOption("k")) {
-            SECURE_KEY = cmd.getOptionValue("k");
-        }
-
-        // Parse mobile device name
-        if (cmd.hasOption("d")) {
-            DEVICE = cmd.getOptionValue("d");
-        }
-    }
-
-    private static Options setOptions() {
-        Options options = new Options();
-        Option option;
-
-        // Help
-        option = new Option("h", "help", false, "display help");
-        options.addOption(option);
-
-
-        // Hostname
-        option = new Option("H", "host", true, "hostname (default: " + HOSTNAME + ")");
-        option.setArgName("hostname");
-        options.addOption(option);
-
-        // Sub domain
-        option = new Option("s", "sub-domain", true, "sub domain (default: " + SUB_DOMAIN + ")");
-        option.setArgName("subDomain");
-        options.addOption(option);
-
-        // Port
-        option = new Option("p", "port", true, "port (default: " + PORT + ")");
-        option.setArgName("port");
-        options.addOption(option);
-
-        // Secure key
-        option = new Option("k", "key", true, "secure key to pair mobile device");
-        option.setArgName("secureKey");
-        option.setRequired(true);
-        options.addOption(option);
-
-        // Mobile device name
-        option = new Option("d", "device", true, "name of mobile device you want to pair");
-        option.setArgName("mobileDevice");
-        option.setRequired(true);
-        options.addOption(option);
-
-        return options;
     }
 }
