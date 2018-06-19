@@ -56,4 +56,26 @@ public class SmsEventContent implements EventContent {
         sb.append('}');
         return sb.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SmsEventContent content1 = (SmsEventContent) o;
+
+        if (when != content1.when) return false;
+        if (!name.equals(content1.name)) return false;
+        if (!number.equals(content1.number)) return false;
+        return content.equals(content1.content);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + number.hashCode();
+        result = 31 * result + content.hashCode();
+        result = 31 * result + (int) (when ^ (when >>> 32));
+        return result;
+    }
 }

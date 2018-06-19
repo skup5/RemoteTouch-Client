@@ -66,4 +66,28 @@ public class NotificationEventContent implements EventContent {
         sb.append('}');
         return sb.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NotificationEventContent that = (NotificationEventContent) o;
+
+        if (when != that.when) return false;
+        if (!app.equals(that.app)) return false;
+        if (!label.equals(that.label)) return false;
+        if (!title.equals(that.title)) return false;
+        return text.equals(that.text);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = app.hashCode();
+        result = 31 * result + label.hashCode();
+        result = 31 * result + title.hashCode();
+        result = 31 * result + text.hashCode();
+        result = 31 * result + (int) (when ^ (when >>> 32));
+        return result;
+    }
 }

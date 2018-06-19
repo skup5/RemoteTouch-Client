@@ -55,7 +55,8 @@ public class NotificationsListController implements Controller, Initializable {
     }
 
     private void onNewNotification(NotificationEventContent content) {
-        Platform.runLater(() -> data.add(content));
+        if (!data.contains(content))
+            Platform.runLater(() -> data.add(content));
     }
 
     private void removeItem(NotificationEventContent item) {

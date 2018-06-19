@@ -67,8 +67,8 @@ public final class ConnectionManager {
      * Disconnects and establishes new connection to a mobile device.
      */
     public void reconnect() {
-        if (client != null && client.isConnected()) {
-            client.disconnect();
+        if (client != null) {
+            disconnect();
         }
         connect();
     }

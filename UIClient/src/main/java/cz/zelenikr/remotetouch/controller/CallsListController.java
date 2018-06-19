@@ -55,7 +55,8 @@ public class CallsListController implements Controller, Initializable {
     }
 
     private void onNewCall(CallEventContent content) {
-        Platform.runLater(() -> data.add(content));
+        if (!data.contains(content))
+            Platform.runLater(() -> data.add(content));
     }
 
     private void removeItem(CallEventContent item) {

@@ -57,4 +57,26 @@ public class CallEventContent implements EventContent {
         sb.append('}');
         return sb.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CallEventContent that = (CallEventContent) o;
+
+        if (when != that.when) return false;
+        if (!name.equals(that.name)) return false;
+        if (!number.equals(that.number)) return false;
+        return type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + number.hashCode();
+        result = 31 * result + type.hashCode();
+        result = 31 * result + (int) (when ^ (when >>> 32));
+        return result;
+    }
 }

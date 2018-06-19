@@ -56,7 +56,8 @@ public class MessagesListController implements Controller, Initializable {
     }
 
     private void onNewSms(SmsEventContent content) {
-        Platform.runLater(() -> data.add(content));
+        if (!data.contains(content))
+            Platform.runLater(() -> data.add(content));
     }
 
     private void removeItem(SmsEventContent item) {
