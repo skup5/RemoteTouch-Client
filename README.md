@@ -1,4 +1,1 @@
 # RemoteTouch-Client
-
-* SocketIOClient/
-* RestClient/
