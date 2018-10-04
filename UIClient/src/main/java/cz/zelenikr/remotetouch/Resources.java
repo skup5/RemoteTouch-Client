@@ -180,7 +180,7 @@ public final class Resources {
 
             else if (app.contains("facebook")) glyph = FontAwesomeIcon.FACEBOOK_OFFICIAL;
             else if (app.contains("instagram")) glyph = FontAwesomeIcon.INSTAGRAM;
-            else if (app.contains("snapchat")) glyph = FontAwesomeIcon.SNAPCHAT;
+//            else if (app.contains("snapchat")) glyph = FontAwesomeIcon.SNAPCHAT;
             else if (app.contains("twitter")) glyph = FontAwesomeIcon.TWITTER;
             else if (app.contains("linkedin")) glyph = FontAwesomeIcon.LINKEDIN;
 
@@ -196,7 +196,7 @@ public final class Resources {
 
             else if (app.contains("github")) glyph = FontAwesomeIcon.GITHUB;
             else if (app.contains("bitbucket")) glyph = FontAwesomeIcon.BITBUCKET;
-            else if (app.contains("gitlab")) glyph = FontAwesomeIcon.GITLAB;
+//            else if (app.contains("gitlab")) glyph = FontAwesomeIcon.GITLAB;
             else if (app.contains("git")) glyph = FontAwesomeIcon.GIT;
             else if (app.contains("slack")) glyph = FontAwesomeIcon.SLACK;
 

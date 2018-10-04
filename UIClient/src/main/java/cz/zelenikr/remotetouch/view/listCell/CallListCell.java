@@ -109,7 +109,7 @@ public class CallListCell extends ListCell<CallEventContent> {
             Tooltip tooltip = null;
             if (value != null && !value.isEmpty()) {
                 tooltip = new Tooltip(value);
-                tooltip.setShowDuration(Duration.INDEFINITE);
+                //tooltip.setShowDuration(Duration.INDEFINITE);
             }
             caller.setTooltip(tooltip);
         }

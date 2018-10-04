@@ -120,7 +120,7 @@ public class MessageListCell extends ListCell<SmsEventContent> {
             Tooltip tooltip = null;
             if (value != null && !value.isEmpty()) {
                 tooltip = new Tooltip(value);
-                tooltip.setShowDuration(Duration.INDEFINITE);
+                //tooltip.setShowDuration(Duration.INDEFINITE);
             }
             sender.setTooltip(tooltip);
         }

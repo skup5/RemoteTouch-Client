@@ -50,7 +50,7 @@ public class LoginDialog extends Dialog<ButtonType> {
         setIcon(Resources.Icons.getApplicationIcon());
         setTitle(title);
         setHeaderText(STRINGS.getString(Resources.Strings.LOGIN_HEADER));
-        setGraphic(new FontAwesomeIconView(FontAwesomeIcon.LOCK, "30"));
+        setGraphic(new FontAwesomeIconView(FontAwesomeIcon.LOCK));
         getDialogPane().setContent(createContent());
         getDialogPane().getButtonTypes().addAll(BUTTON_RESET, BUTTON_LOGIN, ButtonTypes.CANCEL);
         prepareContentControls();
