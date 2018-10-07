@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Tab?>
-<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <Tab xmlns="http://javafx.com/javafx"
      xmlns:fx="http://javafx.com/fxml"
      closable="false"
      text="%Navigation.Items.Notifications">
     <graphic>
-        <MaterialIconView glyphName="NOTIFICATIONS"/>
+        <MaterialDesignIconView glyphName="BELL"/>
     </graphic>
     <content>
         <fx:include source="notifications_list.fxml"/>

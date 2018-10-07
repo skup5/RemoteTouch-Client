@@ -3,7 +3,7 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.Accordion?>
-<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.layout.VBox?>
@@ -12,7 +12,7 @@
      fx:controller="cz.zelenikr.remotetouch.controller.settings.SettingsTabController"
      text="%Navigation.Items.Settings">
     <graphic>
-        <MaterialIconView glyphName="SETTINGS"/>
+        <MaterialDesignIconView glyphName="SETTINGS"/>
     </graphic>
     <Accordion>
         <panes>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import javafx.scene.control.Tab?>
-<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
 <Tab xmlns="http://javafx.com/javafx"
      xmlns:fx="http://javafx.com/fxml"
      closable="false"
      text="%Navigation.Items.Messages">
     <graphic>
-        <MaterialIconView glyphName="MESSAGE"/>
+        <MaterialDesignIconView glyphName="MESSAGE_TEXT"/>
     </graphic>
     <content>
         <fx:include source="messages_list.fxml"/>

@@ -6,8 +6,8 @@ import cz.zelenikr.remotetouch.network.ConnectionStatus;
 import de.jensd.fx.glyphs.GlyphIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import de.jensd.fx.glyphs.materialicons.MaterialIcon;
-import de.jensd.fx.glyphs.materialicons.MaterialIconView;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -215,69 +215,69 @@ public final class Resources {
             else if (app.contains("calendar")) glyph = FontAwesomeIcon.CALENDAR;
             else if (app.contains("com.android")) glyph = FontAwesomeIcon.ANDROID;
 
-            return glyph == null ? new MaterialIconView(MaterialIcon.APPS) : new FontAwesomeIconView(glyph);
+            return glyph == null ? new MaterialDesignIconView(MaterialDesignIcon.APPS) : new FontAwesomeIconView(glyph);
         }
 
         public static GlyphIcon getIconByCallType(CallType type) {
-            MaterialIcon glyph;
+            MaterialDesignIcon glyph;
             switch (type) {
                 case ENDED:
-                    glyph = MaterialIcon.CALL_END;
+                    glyph = MaterialDesignIcon.PHONE_HANGUP;
                     break;
                 case INCOMING:
-                    glyph = MaterialIcon.RING_VOLUME;
+                    glyph = MaterialDesignIcon.PHONE_INCOMING;
                     break;
                 case MISSED:
-                    glyph = MaterialIcon.PHONE_MISSED;
+                    glyph = MaterialDesignIcon.PHONE_MISSED;
                     break;
                 case ONGOING:
-                    glyph = MaterialIcon.PHONE_IN_TALK;
+                    glyph = MaterialDesignIcon.PHONE_IN_TALK;
                     break;
                 case OUTGOING:
-                    glyph = MaterialIcon.PHONE_FORWARDED;
+                    glyph = MaterialDesignIcon.PHONE_OUTGOING;
                     break;
                 default:
-                    glyph = MaterialIcon.PHONE;
+                    glyph = MaterialDesignIcon.PHONE;
                     break;
             }
-            return new MaterialIconView(glyph);
+            return new MaterialDesignIconView(glyph);
         }
 
         public static GlyphIcon getSmsIcon() {
-            return new MaterialIconView(MaterialIcon.TEXTSMS);
+            return new MaterialDesignIconView(MaterialDesignIcon.MESSAGE_TEXT);
         }
 
         public static GlyphIcon getIconByConnectionStatus(ConnectionStatus status) {
-            MaterialIcon glyph;
+            MaterialDesignIcon glyph;
             switch (status) {
                 case CONNECTING:
                 case RECONNECTING:
-                    glyph = MaterialIcon.SWAP_HORIZ;
+                    glyph = MaterialDesignIcon.SWAP_HORIZONTAL;
                     break;
 
                 case CONNECTED:
                 case RECONNECTED:
-                    glyph = MaterialIcon.SYNC;
+                    glyph = MaterialDesignIcon.SYNC;
                     break;
 
                 case CONNECT_ERROR:
                 case RECONNECT_ERROR:
-                    glyph = MaterialIcon.SYNC_PROBLEM;
+                    glyph = MaterialDesignIcon.SYNC_ALERT;
                     break;
 
                 case DISCONNECTED:
-                    glyph = MaterialIcon.SYNC_DISABLED;
+                    glyph = MaterialDesignIcon.SYNC_OFF;
                     break;
 
                 default:
-                    glyph = MaterialIcon.SYNC_PROBLEM;
+                    glyph = MaterialDesignIcon.SYNC_ALERT;
 
             }
-            return new MaterialIconView(glyph);
+            return new MaterialDesignIconView(glyph);
         }
 
         public static GlyphIcon getRemoveEventIcon() {
-            return new MaterialIconView(MaterialIcon.CLOSE);
+            return new MaterialDesignIconView(MaterialDesignIcon.CLOSE);
         }
     }
 

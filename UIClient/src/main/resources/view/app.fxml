@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.jensd.fx.glyphs.materialicons.MaterialIconView?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -14,13 +14,13 @@
         <Menu mnemonicParsing="false" text="%Menu.App">
             <MenuItem mnemonicParsing="false" text="%Menu.App.Preferences" onAction="#onPrefsMenuItemClick">
                 <graphic>
-                    <MaterialIconView glyphName="SETTINGS"/>
+                    <MaterialDesignIconView glyphName="SETTINGS"/>
                 </graphic>
             </MenuItem>
             <SeparatorMenuItem mnemonicParsing="false"/>
             <MenuItem mnemonicParsing="false" text="%Menu.App.Quit" onAction="#onQuitMenuItemClick">
                 <graphic>
-                    <MaterialIconView glyphName="CLOSE"/>
+                    <MaterialDesignIconView  glyphName="WINDOW_CLOSE"/>
                 </graphic>
             </MenuItem>
         </Menu>
@@ -35,7 +35,7 @@
         <Menu mnemonicParsing="false" text="%Menu.Help">
             <MenuItem mnemonicParsing="false" text="%Menu.Help.About" onAction="#onAboutMenuItemClick">
                 <graphic>
-                    <MaterialIconView glyphName="INFO"/>
+                    <MaterialDesignIconView glyphName="INFORMATION_OUTLINE"/>
                 </graphic>
             </MenuItem>
         </Menu>
