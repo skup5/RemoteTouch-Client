@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 public class LocalizedWizardPane extends WizardPane {
 
     protected static ResourceBundle getStrings() {
-        return Resources.loadStrings(SettingsManager.getLocale());
+        return Resources.INSTANCE.loadStrings(SettingsManager.getLocale());
     }
 
     @Override

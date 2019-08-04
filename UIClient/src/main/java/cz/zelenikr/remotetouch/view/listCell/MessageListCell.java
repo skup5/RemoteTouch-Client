@@ -18,14 +18,13 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 
 /**
  * @author Roman Zelenik
  */
 public class MessageListCell extends ListCell<SmsEventContent> {
 
-    private final GlyphIcon icon = Resources.Icons.getSmsIcon();
+    private final GlyphIcon icon = Resources.Icons.INSTANCE.getSmsIcon();
 
     private ViewHolder holder;
     private EventDateTimeFormat dateFormat;
@@ -78,8 +77,8 @@ public class MessageListCell extends ListCell<SmsEventContent> {
 
         public ViewHolder() {
             try {
-                Resources.loadView("view/message/message_cell.fxml", this, null);
-                close.setGraphic(Resources.Icons.getRemoveEventIcon());
+                Resources.INSTANCE.loadView("view/message/message_cell.fxml", this, null);
+                close.setGraphic(Resources.Icons.INSTANCE.getRemoveEventIcon());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

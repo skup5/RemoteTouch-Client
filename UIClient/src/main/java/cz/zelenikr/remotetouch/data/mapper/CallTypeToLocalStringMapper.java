@@ -1,8 +1,8 @@
 package cz.zelenikr.remotetouch.data.mapper;
 
 import cz.zelenikr.remotetouch.Resources;
-import cz.zelenikr.remotetouch.manager.SettingsManager;
 import cz.zelenikr.remotetouch.data.dto.CallType;
+import cz.zelenikr.remotetouch.manager.SettingsManager;
 
 import java.util.ResourceBundle;
 
@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
  */
 public final class CallTypeToLocalStringMapper {
 
-    private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
+    private static final ResourceBundle STRINGS = Resources.INSTANCE.loadStrings(SettingsManager.getLocale());
 
     public static String toString(CallType value) {
         switch (value) {

@@ -167,7 +167,7 @@ public class SocketIOClient implements Client {
         Certificate ca;
 
         // Load CAs from an InputStream
-        try (InputStream caInput = Resources.loadRaw("/raw/certificate.crt")) {
+        try (InputStream caInput = Resources.INSTANCE.loadRaw("/raw/certificate.crt")) {
             ca = cf.generateCertificate(caInput);
             //System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
         } catch (IOException e) {

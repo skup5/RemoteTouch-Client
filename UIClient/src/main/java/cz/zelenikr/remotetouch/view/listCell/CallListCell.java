@@ -45,7 +45,7 @@ public class CallListCell extends ListCell<CallEventContent> {
             holder.setCallerTooltip(callerTooltip);
             holder.setType(CallTypeToLocalStringMapper.toString(item.getType()));
             holder.setDatetime(dateFormat.format(item.getWhen()));
-            holder.setIcon(Resources.Icons.getIconByCallType(item.getType()));
+            holder.setIcon(Resources.Icons.INSTANCE.getIconByCallType(item.getType()));
 
             if (closeEventHandler != null) holder.setOnCloseClicked(closeEventHandler, item);
 
@@ -71,8 +71,8 @@ public class CallListCell extends ListCell<CallEventContent> {
 
         public ViewHolder() {
             try {
-                Resources.loadView("view/call/call_cell.fxml", this, null);
-                close.setGraphic(Resources.Icons.getRemoveEventIcon());
+                Resources.INSTANCE.loadView("view/call/call_cell.fxml", this, null);
+                close.setGraphic(Resources.Icons.INSTANCE.getRemoveEventIcon());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

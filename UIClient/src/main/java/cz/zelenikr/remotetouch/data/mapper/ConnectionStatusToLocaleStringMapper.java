@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
  */
 public class ConnectionStatusToLocaleStringMapper {
 
-    private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
+    private static final ResourceBundle STRINGS = Resources.INSTANCE.loadStrings(SettingsManager.getLocale());
 
     public static String toString(ConnectionStatus value) {
         switch (value) {

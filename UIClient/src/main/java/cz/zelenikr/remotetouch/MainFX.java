@@ -43,7 +43,7 @@ public class MainFX extends Application {
 
     private static final double MIN_WIDTH = 500, MIN_HEIGHT = 500;
 
-    private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
+    private static final ResourceBundle STRINGS = Resources.INSTANCE.loadStrings(SettingsManager.getLocale());
 
     private final SecurityManager securityManager = SecurityManager.getInstance();
 
@@ -56,8 +56,8 @@ public class MainFX extends Application {
 
         stage = primaryStage;
         stage.setScene(new Scene(new Group(), 1, 1));
-        stage.getScene().getStylesheets().addAll(Resources.getStyleSheets());
-        stage.getIcons().add(Resources.Icons.getApplicationIcon());
+        stage.getScene().getStylesheets().addAll(Resources.INSTANCE.getStyleSheets());
+        stage.getIcons().add(Resources.Icons.INSTANCE.getApplicationIcon());
 
         UserInfo user = showLogin();
         if (user == null || user.getPassword() == null) {
@@ -104,7 +104,7 @@ public class MainFX extends Application {
      * @throws IOException if an error occurs during loading layout
      */
     private void showMainWindow() throws IOException {
-        Pair<Node, Controller> pair = Resources.loadView("view/app.fxml", STRINGS);
+        Pair<Node, Controller> pair = Resources.INSTANCE.loadView("view/app.fxml", STRINGS);
         AppController controller = (AppController) pair.getValue();
 
         stage.setOnHidden(event -> {
@@ -132,7 +132,7 @@ public class MainFX extends Application {
         Wizard wizard = new Wizard(owner, STRINGS.getString(Resources.Strings.APPLICATION_TITLE));
 
         // createUrlValidator pages
-        Pair<Node, Controller> pairDeviceView = Resources.loadView("view/settings/pair_device.fxml", STRINGS);
+        Pair<Node, Controller> pairDeviceView = Resources.INSTANCE.loadView("view/settings/pair_device.fxml", STRINGS);
         PairDeviceController pairDeviceController = (PairDeviceController) pairDeviceView.getValue();
 
         DecorationPane content = new DecorationPane();
@@ -179,7 +179,7 @@ public class MainFX extends Application {
 
         if (securityManager.existOwner()) {
             LoginDialog loginDialog = new LoginDialog(STRINGS.getString(Resources.Strings.APPLICATION_TITLE));
-            loginDialog.getDialogPane().getStylesheets().addAll(Resources.getStyleSheets());
+            loginDialog.getDialogPane().getStylesheets().addAll(Resources.INSTANCE.getStyleSheets());
             loginDialog.setOnAuthenticateCallback(userInfo -> userInfo != null && securityManager.authenticateOwner(userInfo));
 
             boolean showAgain;
@@ -223,7 +223,7 @@ public class MainFX extends Application {
     private UserInfo showRegister() {
         UserInfo user = null;
         RegisterDialog registerDialog = new RegisterDialog(STRINGS.getString(Resources.Strings.APPLICATION_TITLE));
-        registerDialog.getDialogPane().getStylesheets().addAll(Resources.getStyleSheets());
+        registerDialog.getDialogPane().getStylesheets().addAll(Resources.INSTANCE.getStyleSheets());
 
         Optional<ButtonType> result = registerDialog.showAndWait();
         if (result.isPresent() && result.get() == RegisterDialog.BUTTON_CREATE) {

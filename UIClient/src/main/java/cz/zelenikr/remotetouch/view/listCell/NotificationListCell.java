@@ -43,7 +43,7 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
             holder.setTitle(item.getTitle());
             holder.setText(item.getText());
             holder.setDatetime(dateFormat.format(item.getWhen()));
-            holder.setIcon(Resources.Icons.getIconByApp(item.getApp()));
+            holder.setIcon(Resources.Icons.INSTANCE.getIconByApp(item.getApp()));
 
             if (closeEventHandler != null) holder.setOnCloseClicked(closeEventHandler, item);
 
@@ -69,8 +69,8 @@ public class NotificationListCell extends ListCell<NotificationEventContent> {
 
         public ViewHolder() {
             try {
-                Resources.loadView("view/notification/notification_cell.fxml", this, null);
-                close.setGraphic(Resources.Icons.getRemoveEventIcon());
+                Resources.INSTANCE.loadView("view/notification/notification_cell.fxml", this, null);
+                close.setGraphic(Resources.Icons.INSTANCE.getRemoveEventIcon());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

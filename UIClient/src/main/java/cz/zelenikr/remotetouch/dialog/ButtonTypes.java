@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
  */
 public final class ButtonTypes {
 
-    private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
+    private static final ResourceBundle STRINGS = Resources.INSTANCE.loadStrings(SettingsManager.getLocale());
 
     public static final javafx.scene.control.ButtonType
             /**

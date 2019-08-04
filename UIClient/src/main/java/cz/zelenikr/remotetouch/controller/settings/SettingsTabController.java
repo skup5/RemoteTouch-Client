@@ -27,12 +27,12 @@ public class SettingsTabController implements Controller, Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            Pair<Node, Controller> view = Resources.loadView("view/settings/connection.fxml", resources);
+            Pair<Node, Controller> view = Resources.INSTANCE.loadView("view/settings/connection.fxml", resources);
             connectionPaneContent.getChildren().add(view.getKey());
             ConnectionController cController = (ConnectionController) view.getValue();
             connectionHeader.visibleProperty().bind(cController.getChangedProperty());
 
-            view = Resources.loadView("view/settings/pair_device.fxml", resources);
+            view = Resources.INSTANCE.loadView("view/settings/pair_device.fxml", resources);
             devicePaneContent.getChildren().add(view.getKey());
             PairDeviceController pdController = (PairDeviceController) view.getValue();
             deviceHeader.visibleProperty().bind(pdController.getChangedProperty());

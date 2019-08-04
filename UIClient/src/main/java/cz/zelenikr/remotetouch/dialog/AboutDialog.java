@@ -14,14 +14,14 @@ import java.util.ResourceBundle;
  */
 public class AboutDialog {
 
-    private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
+    private static final ResourceBundle STRINGS = Resources.INSTANCE.loadStrings(SettingsManager.getLocale());
 
     private final Alert dialog;
 
     public AboutDialog(String title) {
         dialog = new Alert(Alert.AlertType.INFORMATION, STRINGS.getString(Resources.Strings.ABOUT_CONTENT), ButtonTypes.CLOSE);
         dialog.setHeaderText(STRINGS.getString(Resources.Strings.ABOUT_HEADER));
-        setIcon(Resources.Icons.getApplicationIcon());
+        setIcon(Resources.Icons.INSTANCE.getApplicationIcon());
         setTitle(title);
     }
 

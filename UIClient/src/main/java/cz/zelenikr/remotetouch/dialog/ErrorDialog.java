@@ -15,14 +15,14 @@ import java.util.ResourceBundle;
  */
 public class ErrorDialog {
 
-    private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
+    private static final ResourceBundle STRINGS = Resources.INSTANCE.loadStrings(SettingsManager.getLocale());
 
     private final Alert dialog;
 
     public ErrorDialog(String title, String content) {
         dialog = new Alert(Alert.AlertType.ERROR, content, ButtonType.OK);
         setTitle(title);
-        setIcon(Resources.Icons.getApplicationIcon());
+        setIcon(Resources.Icons.INSTANCE.getApplicationIcon());
         setHeaderText(STRINGS.getString(Resources.Strings.DIALOG_HEADER_ERROR));
     }
 

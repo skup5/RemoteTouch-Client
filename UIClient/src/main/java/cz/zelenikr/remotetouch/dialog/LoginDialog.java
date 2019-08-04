@@ -33,7 +33,7 @@ import java.util.ResourceBundle;
  */
 public class LoginDialog extends Dialog<ButtonType> {
 
-    private static final ResourceBundle STRINGS = Resources.loadStrings(SettingsManager.getLocale());
+    private static final ResourceBundle STRINGS = Resources.INSTANCE.loadStrings(SettingsManager.getLocale());
 
     public static final ButtonType
             BUTTON_LOGIN = new ButtonType(STRINGS.getString(Resources.Strings.LOGIN_BUTTON_LOGIN), ButtonBar.ButtonData.FINISH),
@@ -47,7 +47,7 @@ public class LoginDialog extends Dialog<ButtonType> {
 
     public LoginDialog(String title) {
         invalidProperty.bind(validationSupport.invalidProperty());
-        setIcon(Resources.Icons.getApplicationIcon());
+        setIcon(Resources.Icons.INSTANCE.getApplicationIcon());
         setTitle(title);
         setHeaderText(STRINGS.getString(Resources.Strings.LOGIN_HEADER));
         setGraphic(new FontAwesomeIconView(FontAwesomeIcon.LOCK, "30"));
@@ -104,7 +104,7 @@ public class LoginDialog extends Dialog<ButtonType> {
 
     private Node createContent() {
         try {
-            Node view = Resources.loadView("view/login.fxml", STRINGS).getKey();
+            Node view = Resources.INSTANCE.loadView("view/login.fxml", STRINGS).getKey();
             DecorationPane content = new DecorationPane();
             content.getChildren().add(view);
             return content;

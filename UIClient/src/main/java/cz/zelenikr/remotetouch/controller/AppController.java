@@ -158,7 +158,7 @@ public class AppController implements Controller, Initializable {
 
     private void onConnectionStateChanged(ConnectionStatus status) {
         connectionStatus.setText(ConnectionStatusToLocaleStringMapper.toString(status));
-        connectionStatusIcon.setGraphic(Resources.Icons.getIconByConnectionStatus(status));
+        connectionStatusIcon.setGraphic(Resources.Icons.INSTANCE.getIconByConnectionStatus(status));
     }
 
     private void onConnectionStateChangedAsync(ConnectionStatus status) {
@@ -171,7 +171,7 @@ public class AppController implements Controller, Initializable {
             for (CallEventContent content : calls) {
                 //                final String title = content.getName() == null || content.getName().isEmpty() ? content.getNumber() : content.getName();
                 notificationManager.notify(
-                        Resources.Icons.getIconByCallType(content.getType()),
+                        Resources.Icons.INSTANCE.getIconByCallType(content.getType()),
                         callNtfTitle + " · " + dateFormat.format(content.getWhen()),
                         CallTypeToLocalStringMapper.toString(content.getType()),
                         focusCallsTab);
@@ -183,7 +183,7 @@ public class AppController implements Controller, Initializable {
         Platform.runLater(() -> {
             for (NotificationEventContent content : notifications) {
                 notificationManager.notify(
-                        Resources.Icons.getIconByApp(content.getApp()),
+                        Resources.Icons.INSTANCE.getIconByApp(content.getApp()),
                         notificationNtfTitle + " · " + dateFormat.format(content.getWhen()),
                         content.getLabel() + "\n" + content.getTitle(),
                         focusNotificationsTab);
@@ -196,7 +196,7 @@ public class AppController implements Controller, Initializable {
             for (SmsEventContent content : sms) {
 //                final String title = content.getName() == null || content.getName().isEmpty() ? content.getNumber() : content.getName();
                 notificationManager.notify(
-                        Resources.Icons.getSmsIcon(),
+                        Resources.Icons.INSTANCE.getSmsIcon(),
                         smsNtfTitle + " · " + dateFormat.format(content.getWhen()),
                         "Sms",
                         focusMessagesTab);
