@@ -3,3 +3,4 @@ out/
 target/
 javaDoc/
 *.iml
+*.zip
