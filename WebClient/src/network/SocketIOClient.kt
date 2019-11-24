@@ -9,8 +9,6 @@ import lib.socketio.client.*
 import log.Logger
 import kotlin.js.Json
 
-typealias Callback<T> = (T) -> Unit
-
 
 /**
  * Enables real-time bidirectional communication with mobile device via remote Socket.IO server.
@@ -23,7 +21,7 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
     val socket: Socket
 //    private val symmetricCipher: SymmetricCipher
 
-    private var connectionStatusChangedListener: Callback<ConnectionStatus>? = null
+    private var connectionStatusChangedListener: ((ConnectionStatus) -> Unit)? = null
     private var callContentReceivedListener: ContentReceivedListener<CallEventContent>? = null
     private var notificationContentReceivedListener: ContentReceivedListener<NotificationEventContent>? = null
     private var smsContentReceivedListener: ContentReceivedListener<SmsEventContent>? = null
@@ -90,36 +88,35 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
      * Initializes [Socket] listeners.
      */
     private fun initSocket() {
-        socket.on(EVENT_CONNECTING) { args ->
+        socket.on(EVENT_CONNECTING) {
             clientLogger.debug("connecting to $serverUri")
             notifyConnectionStatusChanged(ConnectionStatus.CONNECTING)
-        }.on(EVENT_CONNECT) { args ->
+        }.on(EVENT_CONNECT) {
             clientLogger.debug("connected to $serverUri")
             notifyConnectionStatusChanged(ConnectionStatus.CONNECTED)
             sendIntro()
-        }.on(EVENT_CONNECT_ERROR) { args ->
+        }.on(EVENT_CONNECT_ERROR) {
             clientLogger.debug("connection error")
             notifyConnectionStatusChanged(ConnectionStatus.CONNECT_ERROR)
-        }.on(EVENT_DISCONNECT) { args ->
+        }.on(EVENT_DISCONNECT) {
             clientLogger.debug("disconnected from $serverUri")
             notifyConnectionStatusChanged(ConnectionStatus.DISCONNECTED)
-        }.on(EVENT_RECONNECTING) { args ->
+        }.on(EVENT_RECONNECTING) {
             clientLogger.debug("reconnecting to $serverUri")
             notifyConnectionStatusChanged(ConnectionStatus.RECONNECTING)
-        }.on(EVENT_RECONNECT) { args ->
+        }.on(EVENT_RECONNECT) {
             clientLogger.debug("reconnected to $serverUri")
             notifyConnectionStatusChanged(ConnectionStatus.RECONNECTED)
-        }.on(EVENT_RECONNECT_ERROR) { args ->
+        }.on(EVENT_RECONNECT_ERROR) {
             clientLogger.debug("reconnection error")
             notifyConnectionStatusChanged(ConnectionStatus.RECONNECT_ERROR)
-        }.on(EVENT_EVENT) { args ->
+        }.on(EVENT_EVENT) { data ->
             clientLogger.info("received 'event'")
-            if (args != null) {
-                val data = args
+            if (data != null) {
                 //logFine(data.toString());
                 onEventReceived(data)
             }
-        }.on(EVENT_MESSAGE) { args -> clientLogger.info(JSON.stringify(args)) }
+        }.on(EVENT_MESSAGE) { data -> clientLogger.info(JSON.stringify(data)) }
     }
 
     /**
@@ -132,7 +129,7 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
     }
 
     /**
-     * Notifies registered [ContentRecivedListener<CallEventContent&gt;][ContentReceivedListener] of new call events.
+     * Notifies registered [ContentReceivedListener<CallEventContent&gt;][ContentReceivedListener] of new call events.
      *
      * @param content the new call events
      */
@@ -142,7 +139,7 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
     }
 
     /**
-     * Processes received 'event' type [MessageDTO] from server. The message is expected in [JSONObject] format.
+     * Processes received 'event' type [MessageDTO] from server. The message is expected in [Json] format.
      *
      * @param data the received message like a JSON
      */
@@ -175,7 +172,7 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
     }
 
     /**
-     * Notifies registered [ContentReceivedListener&amp;lt;NotificationEventContent&amp;gt;][ContentReceivedListener] of new notifications.
+     * Notifies registered [ContentReceivedListener<NotificationEventContent&gt;][ContentReceivedListener] of new notifications.
      *
      * @param content the  new notifications
      */
@@ -185,7 +182,7 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
     }
 
     /**
-     * Notifies registered [ContentReceivedListener&amp;lt;SmsEventContent&amp;gt;][ContentReceivedListener] of new sms events.
+     * Notifies registered [ContentReceivedListener<SmsEventContent&gt;][ContentReceivedListener] of new sms events.
      *
      * @param content the new sms events
      */
@@ -195,11 +192,11 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
     }
 
     /**
-     * Reads and decrypts 'content' in the specific [JSONObject]. Returns decrypted 'content' like [JSONArray].
-     * If `jsonObject` doesn't contain 'content' or it's empty, this method returns empty [JSONArray].
+     * Reads and decrypts 'content' in the specific [Json]. Returns decrypted 'content' like Json[].
+     * If `jsonObject` doesn't contain 'content' or it's empty, this method returns empty [Array<>].
      *
      * @param jsonObject the given object to parsing
-     * @return 'content' value of `jsonObject` like [JSONArray]
+     * @return 'content' value of `jsonObject` like [Array<>]
      */
     private fun parseMessageContent(jsonObject: Json): Array<Json> {
         /*var contentArray = JSONArray()
@@ -237,7 +234,7 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
     private fun sendIntro() {
         val json = MessageDTO(clientToken)
         //clientLogger.info("sendIntro " + json.toString());
-        socket.emit("intro", json)
+        socket.emit(EVENT_INTRO, json)
     }
 
 //    private fun decryptMessage(encrypted: String): String {
@@ -246,6 +243,7 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
 
     companion object {
         private val clientLogger = Logger.getLogger("SocketIOClient")
-        private val EVENT_EVENT = "event"
+        private const val EVENT_EVENT = "event"
+        private const val EVENT_INTRO = "intro"
     }
 }
