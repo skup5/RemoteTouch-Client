@@ -16,5 +16,9 @@ class Logger(val name: String) {
         console.info(format(msg))
     }
 
+    fun debug(msg: Number) {
+        debug(msg.toString())
+    }
+
     private fun format(msg: String) = "$name: $msg"
 }

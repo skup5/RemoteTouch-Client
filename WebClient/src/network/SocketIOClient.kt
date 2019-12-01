@@ -3,8 +3,8 @@ package network
 import data.dto.event.CallEventContent
 import data.dto.event.NotificationEventContent
 import data.dto.event.SmsEventContent
-import data.dto.event.EventType
 import data.dto.message.MessageDTO
+import lib.js.Callback
 import lib.socketio.client.*
 import log.Logger
 import kotlin.js.Json
@@ -68,7 +68,7 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
         notifyConnectionStatusChanged(ConnectionStatus.DISCONNECTED)
     }
 
-    override fun setOnConnectionStatusChanged(listener: (ConnectionStatus) -> Unit) {
+    override fun setOnConnectionStatusChanged(listener: Callback<ConnectionStatus>) {
         connectionStatusChangedListener = listener
     }
 

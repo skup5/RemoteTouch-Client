@@ -1,44 +1,65 @@
 package app
 
 import kotlinx.html.js.onClickFunction
-import network.Client
-import network.SocketIOClient
+import manager.ConnectionManager
+import network.ConnectionStatus
 import react.*
 import react.dom.button
+import react.dom.div
 import react.dom.h1
+import view.simpleList
+import view.status.status
 
 /**
  *
  * @author Roman Zelenik
  */
-class App : RComponent<RProps, RState>() {
+class App : RComponent<RProps, AppState>() {
 
-    val socket: Client
+    private val socket = ConnectionManager
 
     init {
-        val clientToken = "zelr"
-        val serverUri = "localhost:8080/socket"
-        val secureKey = ""
-        socket = SocketIOClient(clientToken, serverUri, secureKey);
+        state = AppState(ConnectionStatus.DISCONNECTED)
+
+    }
+
+    override fun componentDidMount() {
+        socket.registerConnectionStateChangedListener { value: ConnectionStatus -> setState { connectionStatus = value } }
+        socket.connect()
     }
 
     override fun RBuilder.render() {
-        h1 { +"React Kotlin Template" }
+        val connectionStatus = state.connectionStatus
+
+        h1 { +"RemoteTouch" }
 
         button {
             attrs {
                 onClickFunction = {
-                    if (socket.isConnected) {
+                    if (connectionStatus == ConnectionStatus.CONNECTED) {
                         socket.disconnect()
                     } else {
                         socket.connect()
                     }
                 }
-                +"Socket.IO"
+                +"""Socket.IO ${if (connectionStatus == ConnectionStatus.CONNECTED) "disconnect" else "connect"}"""
             }
         }
+
+        div {
+            status {
+                content = connectionStatus.name
+            }
+        }
+
+        simpleList {
+            items = listOf()
+        }
     }
+
 }
+
+data class AppState(var connectionStatus: ConnectionStatus) : RState
 
 fun RBuilder.app(): ReactElement {
     return child(App::class) {}
