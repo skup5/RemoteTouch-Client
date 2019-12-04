@@ -1,6 +1,8 @@
 package app
 
 import kotlinx.html.js.onClickFunction
+import lib.materialui.core.MButtonColor
+import lib.materialui.core.mButton
 import manager.ConnectionManager
 import network.ConnectionStatus
 import react.*
@@ -25,7 +27,7 @@ class App : RComponent<RProps, AppState>() {
 
     override fun componentDidMount() {
         socket.registerConnectionStateChangedListener { value: ConnectionStatus -> setState { connectionStatus = value } }
-        socket.connect()
+//        socket.connect()
     }
 
     override fun RBuilder.render() {
@@ -44,6 +46,24 @@ class App : RComponent<RProps, AppState>() {
                 }
                 +"""Socket.IO ${if (connectionStatus == ConnectionStatus.CONNECTED) "disconnect" else "connect"}"""
             }
+        }
+
+        mButton {
+            attrs {
+                variant = "contained"
+                color = MButtonColor.primary.toString()
+
+            }
+            +"Socket.IO"
+        }
+
+        mButton {
+            attrs {
+                variant = "outlined"
+                color = MButtonColor.primary.toString()
+
+            }
+            +"Socket.IO"
         }
 
         div {
