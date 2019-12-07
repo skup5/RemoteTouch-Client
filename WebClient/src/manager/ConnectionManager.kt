@@ -7,6 +7,8 @@ import network.Client
 import network.ConnectionStatus
 import network.ContentReceivedListener
 import network.SocketIOClient
+import security.Hash
+import security.SHAHash
 
 
 /**
@@ -17,6 +19,8 @@ import network.SocketIOClient
 object ConnectionManager {
 
     private val logger: Logger = Logger.getLogger("ConnectionManager")
+    private val hash: Hash = SHAHash()
+
     private var client: Client? = null
 
     // ContentReceivedListener sets
@@ -138,15 +142,16 @@ object ConnectionManager {
 //            return SETTINGS.getServerAddress().toURI();
     }
 
+    private fun loadDeviceName() = "XA1"
+
     private fun loadClientToken(): String {
-        return createToken("", loadPairKey())
+        return createToken(loadDeviceName(), loadPairKey())
 //        return createToken(SETTINGS.getDeviceName(), loadPairKey());
     }
 
     private fun createToken(device: String, pairKey: String): String {
-        return "R7eG00h/U9wVRkiITVOpZWQJT9E1YZmTAIXBuRbNfz4="
-//        Hash hash = new SHAHash();
-//        return hash.hash(device + pairKey);
+//        return "R7eG00h/U9wVRkiITVOpZWQJT9E1YZmTAIXBuRbNfz4="
+       return hash.hash(device + pairKey);
     }
 
 }
