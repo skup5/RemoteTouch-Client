@@ -1,10 +1,12 @@
 package app
 
+import data.dto.event.NotificationEventContent
 import kotlinx.html.js.onClickFunction
 import lib.materialui.core.MButtonColor
 import lib.materialui.core.mButton
 import manager.ConnectionManager
 import network.ConnectionStatus
+import network.ContentReceivedListener
 import react.*
 import react.dom.button
 import react.dom.div
@@ -21,12 +23,20 @@ class App : RComponent<RProps, AppState>() {
     private val socket = ConnectionManager
 
     init {
-        state = AppState(ConnectionStatus.DISCONNECTED)
+        state = AppState(ConnectionStatus.DISCONNECTED, mutableListOf())
 
     }
 
     override fun componentDidMount() {
-        socket.registerConnectionStateChangedListener { value: ConnectionStatus -> setState { connectionStatus = value } }
+        with(socket) {
+            registerConnectionStateChangedListener { value: ConnectionStatus -> setState { connectionStatus = value } }
+
+            registerNotificationReceivedListener(object : ContentReceivedListener<NotificationEventContent> {
+                    override fun onReceived(vararg contents: NotificationEventContent) {
+                        setState { notifications += contents }
+                    }
+                })
+        }
 //        socket.connect()
     }
 
@@ -73,13 +83,13 @@ class App : RComponent<RProps, AppState>() {
         }
 
         simpleList {
-            items = listOf()
+            items = state.notifications
         }
     }
 
 }
 
-data class AppState(var connectionStatus: ConnectionStatus) : RState
+data class AppState(var connectionStatus: ConnectionStatus, var notifications: List<NotificationEventContent>) : RState
 
 fun RBuilder.app(): ReactElement {
     return child(App::class) {}

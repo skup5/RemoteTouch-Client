@@ -104,12 +104,17 @@ object ConnectionManager {
     private fun initClient(): Client {
         return SocketIOClient(loadClientToken(), loadServerAddress(), loadPairKey()).also {
             //        client.setOnCallReceived(contents -> notifyCallReceived(contents));
-//            it.setOnNotificationReceived{notifyNotificationReceived(contents)}
+            it.setOnNotificationReceived(object : ContentReceivedListener<NotificationEventContent> {
+                override fun onReceived(vararg contents: NotificationEventContent) {
+                    notifyNotificationReceived(arrayOf(*contents))
+                }
+            })
 
 //        client.setOnSMSReceived(contents -> notifySmsReceived(contents));
             it.setOnConnectionStatusChanged { status ->
                 notifyConnectionStateChanged(status)
             }
+
         }
     }
 

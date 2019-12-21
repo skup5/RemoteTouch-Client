@@ -4,6 +4,7 @@ import data.dto.event.CallEventContent
 import data.dto.event.NotificationEventContent
 import data.dto.event.SmsEventContent
 import data.dto.message.MessageDTO
+import kotlinx.html.currentTimeMillis
 import lib.js.Callback
 import lib.socketio.client.*
 import log.Logger
@@ -116,7 +117,10 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
                 //logFine(data.toString());
                 onEventReceived(data)
             }
-        }.on(EVENT_MESSAGE) { data -> clientLogger.info(JSON.stringify(data)) }
+        }.on(EVENT_MESSAGE) { data ->
+            clientLogger.info(JSON.stringify(data))
+            onNotificationReceived(NotificationEventContent("Test app", "Test label", "Test title", data?.get("res").toString(), currentTimeMillis()))
+        }
     }
 
     /**
