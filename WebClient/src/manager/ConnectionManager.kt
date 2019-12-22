@@ -7,6 +7,7 @@ import network.Client
 import network.ConnectionStatus
 import network.ContentReceivedListener
 import network.SocketIOClient
+import security.AESCipher
 import security.Hash
 import security.SHAHash
 
@@ -157,6 +158,17 @@ object ConnectionManager {
     private fun createToken(device: String, pairKey: String): String {
 //        return "R7eG00h/U9wVRkiITVOpZWQJT9E1YZmTAIXBuRbNfz4="
         return hash.hash(device + pairKey);
+    }
+
+    init {
+        logger.debug("R7eG00h/U9wVRkiITVOpZWQJT9E1YZmTAIXBuRbNfz4=")
+        logger.debug(loadClientToken())
+        val cipher = AESCipher("myKey")
+        val plainText = "some plain text"
+        val encrypted = cipher.encrypt(plainText)
+        logger.debug(encrypted ?: "?")
+        val decrypted = encrypted?.let { cipher.decrypt(it) } ?: "?"
+        logger.debug("${(plainText == decrypted)}: $decrypted")
     }
 
 }
