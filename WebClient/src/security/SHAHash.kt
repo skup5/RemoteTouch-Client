@@ -1,5 +1,7 @@
 package security
 
+import lib.node.Crypto
+
 
 /**
  * Simple class to make SHA hash of plain text. It is using Node.js crypto module.
@@ -15,18 +17,11 @@ class SHAHash(
         var useLineSeparator: Boolean = true
 ) : Hash {
 
-    private val crypto = kotlinext.js.require("crypto");
-    private val hashJs = crypto.createHash(SHA_VERSION);
+    private val hashJs = Crypto.createHash(SHA_VERSION);
 
     override fun hash(text: String): String {
-//        val hash: ByteArray = hash(text.getBytes(charset))
-//        val encoder: Base64.Encoder = if (useLineSeparator) Base64.getMimeEncoder() else Base64.getMimeEncoder(0, ByteArray(0))
-//        return String(encoder.encode(hash), charset)
-
         hashJs.update(text, CHARSET);
-        val hashedText = hashJs.digest(ENCODING)
-
-        return hashedText
+        return hashJs.digest(ENCODING)
     }
 
     companion object {

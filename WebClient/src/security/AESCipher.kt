@@ -1,6 +1,8 @@
 package security
 
+import lib.node.Cipher
 import lib.node.Crypto
+import lib.node.Decipher
 
 class AESCipher
 /**
@@ -28,10 +30,10 @@ class AESCipher
           }
           return null */
 
-        val cipher = initCipher(secretKey)
-        val encrypted = cipher.update(plainText, CHARSET, ENCODING);
-        encrypted += cipher.final(ENCODING);
-        return encrypted as? String
+        val cipherJs = initCipher(secretKey)
+        var encrypted = cipherJs.update(plainText, CHARSET, ENCODING);
+        encrypted += cipherJs.final(ENCODING);
+        return encrypted
     }
 
 
@@ -47,11 +49,11 @@ class AESCipher
          }
          return null */
 
-        val decipher = initDecipher(secretKey)
+        val decipherJs = initDecipher(secretKey)
         // encryptedText is base64 encrypted message
-        val decrypted = decipher.update(encryptedText, ENCODING, CHARSET);
-        decrypted += decipher.final(CHARSET);
-        return decrypted as? String
+        var decrypted = decipherJs.update(encryptedText, ENCODING, CHARSET);
+        decrypted += decipherJs.final(CHARSET);
+        return decrypted
     }
 
 
@@ -65,50 +67,19 @@ class AESCipher
         private const val IV_BITS_LENGTH = 16
         private const val ALGORITHM = "aes$KEY_BITS_LENGTH"
 
-        private const val HASH_VERSION = "SHA-1"
         private const val CHARSET = "utf8"
         private const val ENCODING = "base64"
 
-
         private val buffer = kotlinext.js.require("buffer");
 
-
-        /**
-         * Generates new random key for AES cipher and returns it.
-         *
-         * @return new random key or null if some error occurred
-         */
-        /* fun generateAESKey(): ByteArray? {
-             return try {
-                 generateKey().getEncoded()
-             } catch (e: NoSuchAlgorithmException) {
-                 e.printStackTrace()
-                 null
-             }
-         }*/
-
-        /**
-         * Generates new random key for AES cipher and returns it like a plain text.
-         *
-         * @return new random key or null if some error occurred
-         */
-        /* fun generatePlainAESKey(): String? {
-             return try {
-                 generateKey().getEncoded().toString()
-             } catch (e: NoSuchAlgorithmException) {
-                 e.printStackTrace()
-                 null
-             }
-         }*/
-
         /**
          *
          */
-        private fun initCipher(key: dynamic): dynamic {
+        private fun initCipher(key: dynamic): Cipher {
             return Crypto.createCipheriv(ALGORITHM, key, generateIV())
         }
 
-        private fun initDecipher(key: dynamic): dynamic {
+        private fun initDecipher(key: dynamic): Decipher {
             return Crypto.createDecipheriv(ALGORITHM, key, generateIV())
         }
 
@@ -121,25 +92,6 @@ class AESCipher
         private fun toSecretKey(plainKey: String): dynamic {
             return Crypto.scryptSync(plainKey, "salt", IV_BITS_LENGTH)
         }
-
-        /*  private fun generateKey(): SecretKey {
-              val kgen: KeyGenerator = KeyGenerator.getInstance("AES")
-              kgen.init(KEY_BITS_LENGTH)
-              return kgen.generateKey()
-          }*/
-
-        /*  private fun hashKey(rawKey: ByteArray): ByteArray {
-              var sha: MessageDigest? = null
-              try {
-                  sha = MessageDigest.getInstance(HASH_VERSION)
-              } catch (e: NoSuchAlgorithmException) {
-                  e.printStackTrace()
-              }
-              var key: ByteArray = sha.digest(rawKey)
-              key = Arrays.copyOf(key, 16) // use only first 128 bit
-              return key
-          }*/
     }
-
 }
 
