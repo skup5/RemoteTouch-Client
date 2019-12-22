@@ -7,6 +7,7 @@
     "@jetbrains/kotlin-css-js": "^1.0.0-pre.83",
     "@jetbrains/kotlin-styled": "^1.0.0-pre.83",
     "@material-ui/core": "^4.7.1",
+    "browserify-scrypt": "github:crypto-browserify/scrypt",
     "inline-style-prefixer": "^5.1.0",
     "kotlinx-coroutines-core": "^1.3.2",
     "react": "^16.10.2",

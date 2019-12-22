@@ -5,9 +5,12 @@ import data.dto.event.NotificationEventContent
 import data.dto.event.SmsEventContent
 import data.dto.message.MessageDTO
 import kotlinx.html.currentTimeMillis
+import kotlinext.js.asJsObject
 import lib.js.Callback
 import lib.socketio.client.*
 import log.Logger
+import security.AESCipher
+import security.SymmetricCipher
 import kotlin.js.Json
 
 
@@ -20,7 +23,7 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
 
 
     val socket: Socket
-//    private val symmetricCipher: SymmetricCipher
+    private val symmetricCipher: SymmetricCipher<String>
 
     private var connectionStatusChangedListener: ((ConnectionStatus) -> Unit)? = null
     private var callContentReceivedListener: ContentReceivedListener<CallEventContent>? = null
@@ -54,7 +57,7 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
              options.webSocketFactory = okHttpClient*/
 //        this.socket = IO.socket(serverUri, options)
         this.socket = IO.socket(serverUri)
-//        this.symmetricCipher = AESCipher(secureKey)
+        this.symmetricCipher = AESCipher(secureKey)
 
         initSocket()
     }
@@ -202,34 +205,29 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
      * @param jsonObject the given object to parsing
      * @return 'content' value of `jsonObject` like [Array<>]
      */
-    private fun parseMessageContent(jsonObject: Json): Array<Json> {
-        /*var contentArray = JSONArray()
+    private fun parseMessageContent(jsonObject: Json): Array<String> {
+        // Get 'content' (JSONArray) from JSON
+        var contentArray = jsonObject["content"]?.unsafeCast<Array<String>>() ?: emptyArray()
 
         // JSON is empty or doesn't contain 'content'
-        if (json.length() === 0 || !json.has("content")) {
-            return contentArray
+        if (contentArray.isEmpty()) {
+            return emptyArray()
         }
 
-        try {
-            // Get 'content' (JSONArray) from JSON
-            contentArray = json.optJSONArray("content")
-
             // Get encrypted text content
-            var content = contentArray.optString(0)
+            var content = contentArray[0]
             if (content.isEmpty()) {
-                return JSONArray()
+                return emptyArray()
             }
 
             // Decrypt text content
             content = decryptMessage(content)
 
             // Parse decrypted text to JSONArray of JSON objects
-            contentArray = JSONArray(content)
-        } catch (e: RuntimeException) {
-            e.printStackTrace()
-        }*/
+            contentArray = arrayOf(content)
 
-        return arrayOf(jsonObject)
+
+        return contentArray
     }
 
     /**
@@ -241,9 +239,9 @@ class SocketIOClient(private val clientToken: String, private val serverUri: Str
         socket.emit(EVENT_INTRO, json)
     }
 
-//    private fun decryptMessage(encrypted: String): String {
-//        return symmetricCipher.decrypt(encrypted)
-//    }
+    private fun decryptMessage(encrypted: String): String {
+        return symmetricCipher.decrypt(encrypted)?:"###"
+    }
 
     companion object {
         private val clientLogger = Logger.getLogger("SocketIOClient")
