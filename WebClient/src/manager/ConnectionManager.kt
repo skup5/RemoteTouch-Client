@@ -156,7 +156,7 @@ object ConnectionManager {
 
     private fun createToken(device: String, pairKey: String): String {
 //        return "R7eG00h/U9wVRkiITVOpZWQJT9E1YZmTAIXBuRbNfz4="
-       return hash.hash(device + pairKey);
+        return hash.hash(device + pairKey);
     }
 
 }
