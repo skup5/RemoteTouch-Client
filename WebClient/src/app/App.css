@@ -1,3 +1,7 @@
 h1 {
     text-align: center;
 }
+
+div.MuiBottomNavigation-root {
+    background-color: rgb(144, 202, 249);
+}

@@ -1,6 +1,6 @@
 package lib.materialui.core
 
-import kotlinx.html.CommonAttributeGroupFacade
+import lib.materialui.MProps
 import react.*
 
 @JsModule("@material-ui/core/Button")
@@ -13,8 +13,7 @@ fun RBuilder.mButton(handler: RHandler<MButtonProps>): ReactElement {
     return child(buttonComponent, js("{}"), handler)
 }
 
-external interface MButtonProps : RProps {
-    var color: String?
+interface MButtonProps : MProps {
     var fullWidth: Boolean?
     var href: String?
     var mini: Boolean?
