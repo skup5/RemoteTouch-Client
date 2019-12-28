@@ -13,9 +13,14 @@ class SecurityTest {
         return AESCipher("g1JSX7uwb4gmUlmGEe4mFQ==")
     }
 
-    fun hash() {
+    fun hashOld() {
         logger.debug("R7eG00h/U9wVRkiITVOpZWQJT9E1YZmTAIXBuRbNfz4=")
         logger.debug(SHAHash().hash("XA1[B@6799e8e"))
+    }
+
+    fun hashNew() {
+        logger.debug("KGuP8oQUhmTHg++1IYODoC8Aa9hSFZYUfimiEC03CdM=")
+        logger.debug(SHAHash().hash("XA1g1JSX7uwb4gmUlmGEe4mFQ=="))
     }
 
     fun cipher() {

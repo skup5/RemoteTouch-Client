@@ -130,7 +130,8 @@ class App : RComponent<RProps, AppState>() {
 
     private fun securityTests() {
         val securityTest = SecurityTest()
-        securityTest.hash()
+        securityTest.hashOld()
+        securityTest.hashNew()
         securityTest.cipher()
         securityTest.decryptEvent()
     }
