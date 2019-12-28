@@ -13,7 +13,6 @@ import network.ConnectionStatus
 import network.ContentReceivedListener
 import react.*
 import react.dom.button
-import react.dom.col
 import react.dom.div
 import react.dom.h1
 import test.SecurityTest
@@ -126,7 +125,12 @@ class App : RComponent<RProps, AppState>() {
 
 
     private fun runTests() {
+        securityTests()
+    }
+
+    private fun securityTests() {
         val securityTest = SecurityTest()
+        securityTest.hash()
         securityTest.cipher()
         securityTest.decryptEvent()
     }

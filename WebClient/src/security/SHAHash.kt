@@ -1,6 +1,7 @@
 package security
 
 import lib.node.Crypto
+import lib.node.Encoding
 
 
 /**
@@ -26,8 +27,8 @@ class SHAHash(
 
     companion object {
         private const val SHA_VERSION = "sha256"
-        private const val ENCODING = "base64"
-        private const val CHARSET = "UTF-8"
+        private val ENCODING = Encoding.base64.name
+        private val CHARSET = Encoding.utf8.name
     }
 
 }

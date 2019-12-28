@@ -14,21 +14,19 @@ object Crypto {
         }
     }
 
-    fun createCipheriv(algorithm: String, key: Any, generateIV: Any?, options: JsObject? = null): Cipher {
-        return crypto.createCipheriv(algorithm, key, generateIV, options)
-    }
+    fun createCipheriv(algorithm: String, key: Any, generateIV: Any?, options: JsObject? = null): Cipher =
+            crypto.createCipheriv(algorithm, key, generateIV, options)
 
-    fun createDecipheriv(algorithm: String, key: Any, generateIV: Any?, options: JsObject? = null): Decipher {
-        return crypto.createDecipheriv(algorithm, key, generateIV, options)
-    }
+    fun createDecipheriv(algorithm: String, key: Any, generateIV: Any?, options: JsObject? = null): Decipher =
+            crypto.createDecipheriv(algorithm, key, generateIV, options)
 
-    fun scryptSync(password: String, salt: String, keylen: Int, options: JsObject? = null): dynamic {
-        return crypto.scryptSync(password, salt, keylen, options)
-    }
+    fun pbkdf2Sync(password: Any, salt: String, iterations: Int, keylen: Int, digest: String): Buffer =
+            crypto.pbkdf2Sync(password, salt, iterations, keylen, digest)
 
-    fun createHash(algorithm: String, options: JsObject? = null): Hash {
-        return crypto.createHash(algorithm, options)
-    }
+    fun scryptSync(password: Any, salt: String, keylen: Int, options: JsObject? = null): Buffer =
+            crypto.scryptSync(password, salt, keylen, options)
+
+    fun createHash(algorithm: String, options: JsObject? = null): Hash = crypto.createHash(algorithm, options)
 }
 
 /**
@@ -37,6 +35,7 @@ object Crypto {
 external class Cipher {
     fun final(outputEncoding: String? = definedExternally): String
     fun update(data: String, inputEncoding: String? = definedExternally, outputEncoding: String? = definedExternally): String
+    fun setAutoPadding(autoPadding: Boolean)
 }
 
 /**
@@ -45,6 +44,7 @@ external class Cipher {
 external class Decipher {
     fun final(outputEncoding: String? = definedExternally): String
     fun update(data: String, inputEncoding: String? = definedExternally, outputEncoding: String? = definedExternally): String
+    fun setAutoPadding(autoPadding: Boolean)
 }
 
 /**

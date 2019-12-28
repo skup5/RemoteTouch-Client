@@ -1,8 +1,6 @@
 package security
 
-import lib.node.Cipher
-import lib.node.Crypto
-import lib.node.Decipher
+import lib.node.*
 
 class AESCipher
 /**
@@ -19,17 +17,6 @@ class AESCipher
     }
 
     override fun encrypt(plainText: String): String? {
-        /*  try { //            return Base64.encode(encrypt(plainData.getBytes(charset)));
-              return String(Base64.getMimeEncoder().encode(encrypt(plainData.getBytes(charset))), charset)
-          } catch (e: InvalidKeyException) {
-              e.printStackTrace()
-          } catch (e: BadPaddingException) {
-              e.printStackTrace()
-          } catch (e: IllegalBlockSizeException) {
-              e.printStackTrace()
-          }
-          return null */
-
         val cipherJs = initCipher(secretKey)
         var encrypted = cipherJs.update(plainText, CHARSET, ENCODING);
         encrypted += cipherJs.final(ENCODING);
@@ -38,17 +25,6 @@ class AESCipher
 
 
     override fun decrypt(encryptedText: String): String? {
-        /* try {
-             return String(decrypt(Base64.getMimeDecoder().decode(encryptedText.getBytes(charset))), charset)
-         } catch (e: BadPaddingException) {
-             e.printStackTrace()
-         } catch (e: IllegalBlockSizeException) {
-             e.printStackTrace()
-         } catch (e: InvalidKeyException) {
-             e.printStackTrace()
-         }
-         return null */
-
         val decipherJs = initDecipher(secretKey)
         // encryptedText is base64 encrypted message
         var decrypted = decipherJs.update(encryptedText, ENCODING, CHARSET);
@@ -64,17 +40,11 @@ class AESCipher
 
     companion object {
         private const val KEY_BITS_LENGTH = 128 // 192 and 256 bits may not be available
-        private const val IV_BITS_LENGTH = 16
-        private const val ALGORITHM = "aes$KEY_BITS_LENGTH"
+        private const val ALGORITHM = "aes-$KEY_BITS_LENGTH-cbc"
 
-        private const val CHARSET = "utf8"
-        private const val ENCODING = "base64"
+        private val CHARSET = Encoding.utf8.name
+        private val ENCODING = Encoding.base64.name
 
-        private val buffer = kotlinext.js.require("buffer");
-
-        /**
-         *
-         */
         private fun initCipher(key: dynamic): Cipher {
             return Crypto.createCipheriv(ALGORITHM, key, generateIV())
         }
@@ -83,15 +53,9 @@ class AESCipher
             return Crypto.createDecipheriv(ALGORITHM, key, generateIV())
         }
 
-        private fun generateIV(): dynamic {
-            // Use `crypto.randomBytes` to generate a random iv instead of the static iv
-            // shown here.
-            return buffer.Buffer.alloc(IV_BITS_LENGTH, 0) // Initialization vector.
-        }
+        private fun generateIV(): String = "encryptionIntVec"
 
-        private fun toSecretKey(plainKey: String): dynamic {
-            return Crypto.scryptSync(plainKey, "salt", IV_BITS_LENGTH)
-        }
+        private fun toSecretKey(plainKey: String): Buffer = Base64.decode(plainKey)
     }
 }
 
