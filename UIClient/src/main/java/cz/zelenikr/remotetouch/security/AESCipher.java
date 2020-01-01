@@ -4,22 +4,28 @@ import cz.zelenikr.remotetouch.security.exception.UnsupportedCipherException;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+import java.security.*;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class AESCipher implements SymmetricCipher<String> {
 
     private static final int KEY_BITS_LENGTH = 128; // 192 and 256 bits may not be available
-    private static final String HASH_VERSION = "SHA-1";
+    private static final int PLAIN_KEY_BYTE_LENGTH = 10;
+    private static final String HASH_VERSION = "MD5";
     private static final Charset charset = StandardCharsets.UTF_8;
+    private static final String ALGORITHM = "AES";
+    private static final String CIPHER = "AES/CBC/PKCS5Padding";
 
     private final Cipher cipher;
+    private final IvParameterSpec initVector;
     private SecretKey secretKey;
 
     /**
@@ -39,20 +45,7 @@ public final class AESCipher implements SymmetricCipher<String> {
     private AESCipher(SecretKey secretKey) throws UnsupportedCipherException {
         this.secretKey = secretKey;
         this.cipher = initCipher();
-    }
-
-    /**
-     * Generates new random key for AES cipher and returns it.
-     *
-     * @return new random key or null if some error occurred
-     */
-    public static byte[] generateAESKey() {
-        try {
-            return generateKey().getEncoded();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
+        this.initVector = toInitVector("encryptionIntVec");
     }
 
     /**
@@ -61,57 +54,79 @@ public final class AESCipher implements SymmetricCipher<String> {
      * @return new random key or null if some error occurred
      */
     public static String generatePlainAESKey() {
-        try {
-            return generateKey().getEncoded().toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return generatePassword(PLAIN_KEY_BYTE_LENGTH);
     }
 
     private static Cipher initCipher() throws UnsupportedCipherException {
         try {
-            return Cipher.getInstance("AES");
+            return Cipher.getInstance(CIPHER);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             e.printStackTrace();
-            throw new UnsupportedCipherException("AES");
+            throw new UnsupportedCipherException(CIPHER);
         }
     }
 
     private static SecretKey toSecretKey(String plainKey) {
-        byte[] key = plainKey.getBytes(charset);
-        key = hashKey(key);
-        return new SecretKeySpec(key, "AES");
+        final byte[] key = hashKey(plainKey.getBytes(charset));
+        return new SecretKeySpec(key, ALGORITHM);
+    }
+
+    private static IvParameterSpec toInitVector(String iv) {
+        return new IvParameterSpec(iv.getBytes(charset));
     }
 
     private static SecretKey generateKey() throws NoSuchAlgorithmException {
-        KeyGenerator kgen = KeyGenerator.getInstance("AES");
+        final KeyGenerator kgen = KeyGenerator.getInstance(ALGORITHM);
         kgen.init(KEY_BITS_LENGTH);
         return kgen.generateKey();
     }
 
     private static byte[] hashKey(byte[] rawKey) {
-        MessageDigest sha = null;
         try {
-            sha = MessageDigest.getInstance(HASH_VERSION);
+            return MessageDigest.getInstance(HASH_VERSION).digest(rawKey);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+            return new byte[0];
         }
-        byte[] key = sha.digest(rawKey);
-        key = Arrays.copyOf(key, 16); // use only first 128 bit
-        return key;
+    }
+
+    private static String generatePassword(int count) {
+        List<Character> list = Stream.concat(
+                getRandomAlphabets(count, true),
+                getRandomAlphabets(count, false)
+        ).collect(Collectors.toList());
+        list.addAll(getRandomNumbers(count).collect(Collectors.toList()));
+        Collections.shuffle(list);
+        return list.subList(0, count).stream().collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+    }
+
+    private static Stream<Character> getRandomAlphabets(int count, boolean upperCase) {
+        int randomNumberOrigin = 97;
+        int randomNumberBound = 123;
+
+        if (upperCase) {
+            randomNumberOrigin = 65;
+            randomNumberBound = 91;
+        }
+
+        return new SecureRandom().ints(count, randomNumberOrigin, randomNumberBound).mapToObj(data -> (char) data);
+    }
+
+    private static Stream<Character> getRandomNumbers(int count) {
+        return new SecureRandom().ints(count, 48, 58).mapToObj(data -> (char) data);
     }
 
     @Override
     public String encrypt(String plainData) {
         try {
-//            return Base64.encode(encrypt(plainData.getBytes(charset)));
             return new String(Base64.getMimeEncoder().encode(encrypt(plainData.getBytes(charset))), charset);
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         } catch (BadPaddingException e) {
             e.printStackTrace();
         } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
         return null;
@@ -127,6 +142,8 @@ public final class AESCipher implements SymmetricCipher<String> {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
             e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -137,14 +154,13 @@ public final class AESCipher implements SymmetricCipher<String> {
         return true;
     }
 
-    private byte[] encrypt(byte[] input) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+    private byte[] encrypt(byte[] input) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException {
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, initVector);
         return cipher.doFinal(input);
     }
 
-    private byte[] decrypt(byte[] input) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
+    private byte[] decrypt(byte[] input) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException {
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, initVector);
         return cipher.doFinal(input);
     }
-
 }
