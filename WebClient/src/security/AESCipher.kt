@@ -53,9 +53,15 @@ class AESCipher
             return Crypto.createDecipheriv(ALGORITHM, key, generateIV())
         }
 
-        private fun generateIV(): String = "encryptionIntVec"
+        private fun generateIV(): Buffer = BufferJS.from("encryptionIntVec", Encoding.valueOf(CHARSET))
 
-        private fun toSecretKey(plainKey: String): Buffer = Base64.decode(plainKey)
+        private fun toSecretKey(plainKey: String): Buffer = hashKey(plainKey)
+
+        private fun hashKey(key: String): Buffer {
+            val hash = Crypto.createHash("md5");
+            hash.update(BufferJS.from(key, Encoding.valueOf(CHARSET)))
+            return hash.digest()
+        }
     }
 }
 

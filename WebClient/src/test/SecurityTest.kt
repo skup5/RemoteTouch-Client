@@ -10,7 +10,7 @@ class SecurityTest {
     private val logger: Logger = Logger.getLogger("SecurityTest")
 
     private fun createCipher(): SymmetricCipher<String> {
-        return AESCipher("g1JSX7uwb4gmUlmGEe4mFQ==")
+        return AESCipher("hO7nA1nNK4")
     }
 
     fun hashOld() {
@@ -19,8 +19,8 @@ class SecurityTest {
     }
 
     fun hashNew() {
-        logger.debug("KGuP8oQUhmTHg++1IYODoC8Aa9hSFZYUfimiEC03CdM=")
-        logger.debug(SHAHash().hash("XA1g1JSX7uwb4gmUlmGEe4mFQ=="))
+        logger.debug("W3pj4LHfgr/269ifY/FgqENwVJKV4zfYuHThJVcxugo=")
+        logger.debug(SHAHash().hash("XA1hO7nA1nNK4"))
     }
 
     fun cipher() {
@@ -33,8 +33,8 @@ class SecurityTest {
     }
 
     fun decryptEvent() {
-        val encryptedEvent = """+kIGBYEJeunQKELM16pIxoUvLmTOa+Ab+df8lAB3+5G9lPe1qdfItgr+AMf4SD9YCGFs1BYkYAZR
-WIX5dJloWbx6Abpa/EtI+woHfnna6DEPtwPDn2KGfJxBwliz37ns"""
+        val encryptedEvent = """IYQSZxvZx6CdSEoqvs+KEJrJYTxKJdv92LfAlt0ANSc3PGL+L+epD0JNQaRLReAUr2c3fss1O+CN
+CitLZ0Rj2ro+p78IsCSsu9OqxDRL759H85CH7iTD0nkOEr+l2Zkn"""
         val cipher = createCipher()
         val decrypted = cipher.decrypt(encryptedEvent)
         logger.debug(decrypted ?: "?")

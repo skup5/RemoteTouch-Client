@@ -138,7 +138,7 @@ object ConnectionManager {
 //        }
 
     private fun loadPairKey(): String {
-        return "[B@6799e8e"
+        return "hO7nA1nNK4"
 //        return SETTINGS.getPairKey();
     }
 

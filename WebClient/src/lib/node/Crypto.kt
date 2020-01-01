@@ -51,6 +51,8 @@ external class Decipher {
  * [nodejs/crypto.Hash](https://nodejs.org/api/crypto.html#crypto_class_hash)
  */
 external class Hash {
-    fun digest(inputEncoding: String? = definedExternally): String
-    fun update(data: String, inputEncoding: String? = definedExternally)
+    fun digest(): Buffer
+    fun digest(inputEncoding: String?): String
+    fun update(buffer: Buffer): Buffer
+    fun update(data: String, inputEncoding: String?): String
 }
