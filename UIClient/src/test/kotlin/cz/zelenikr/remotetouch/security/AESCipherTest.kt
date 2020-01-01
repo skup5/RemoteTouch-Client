@@ -12,13 +12,15 @@ class AESCipherTest {
 
     @Before
     fun beforeTest() {
-        val key ="g1JSX7uwb4gmUlmGEe4mFQ=="
+        val key ="hO7nA1nNK4"
         cipher = AESCipher(key)
     }
 
     @Test
     fun cipher() {
-        val cipher = AESCipher(AESCipher.generatePlainAESKey())
+        val plainAESKey = AESCipher.generatePlainAESKey()
+        logger.severe("key: $plainAESKey")
+        val cipher = AESCipher(plainAESKey)
         val plainText = "some plain text\nsecond plain text"
         val encrypted = cipher.encrypt(plainText)
         logger.severe("$plainText \n->")
@@ -40,8 +42,8 @@ class AESCipherTest {
     @Test
     fun decrypt() {
         val plainText = """{"type":"sms", "content": {"number": 789456123, "text": "some plain text,${'\n'}some another text"}}"""
-        val encrypted = """+kIGBYEJeunQKELM16pIxoUvLmTOa+Ab+df8lAB3+5G9lPe1qdfItgr+AMf4SD9YCGFs1BYkYAZR
-WIX5dJloWbx6Abpa/EtI+woHfnna6DEPtwPDn2KGfJxBwliz37ns"""
+        val encrypted = """IYQSZxvZx6CdSEoqvs+KEJrJYTxKJdv92LfAlt0ANSc3PGL+L+epD0JNQaRLReAUr2c3fss1O+CN
+CitLZ0Rj2ro+p78IsCSsu9OqxDRL759H85CH7iTD0nkOEr+l2Zkn"""
         val decrypted = cipher.decrypt(encrypted)
         assertEquals(plainText, decrypted)
     }

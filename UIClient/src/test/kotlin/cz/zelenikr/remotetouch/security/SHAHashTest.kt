@@ -12,6 +12,6 @@ class SHAHashTest {
 
     @Test
     fun `hash new generated key`(){
-        assertEquals("KGuP8oQUhmTHg++1IYODoC8Aa9hSFZYUfimiEC03CdM=", SHAHash().hash("XA1g1JSX7uwb4gmUlmGEe4mFQ=="))
+        assertEquals("W3pj4LHfgr/269ifY/FgqENwVJKV4zfYuHThJVcxugo=", SHAHash().hash("XA1hO7nA1nNK4"))
     }
 }
