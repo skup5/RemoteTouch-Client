@@ -8,14 +8,18 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class AESCipher implements SymmetricCipher<String> {
 
     private static final int KEY_BITS_LENGTH = 128; // 192 and 256 bits may not be available
+    private static final int PLAIN_KEY_BYTE_LENGTH = 10;
+    private static final String HASH_VERSION = "MD5";
     private static final Charset charset = StandardCharsets.UTF_8;
     private static final String ALGORITHM = "AES";
     private static final String CIPHER = "AES/CBC/PKCS5Padding";
@@ -45,26 +49,12 @@ public final class AESCipher implements SymmetricCipher<String> {
     }
 
     /**
-     * Generates new random key for AES cipher and returns it.
-     *
-     * @return new random key or null if some error occurred
-     */
-    public static byte[] generateAESKey() {
-        try {
-            return generateKey().getEncoded();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
      * Generates new random key for AES cipher and returns it like a plain text.
      *
      * @return new random key or null if some error occurred
      */
     public static String generatePlainAESKey() {
-        return Base64.getEncoder().encodeToString(generateAESKey());
+        return generatePassword(PLAIN_KEY_BYTE_LENGTH);
     }
 
     private static Cipher initCipher() throws UnsupportedCipherException {
@@ -77,7 +67,7 @@ public final class AESCipher implements SymmetricCipher<String> {
     }
 
     private static SecretKey toSecretKey(String plainKey) {
-        final byte[] key = Base64.getDecoder().decode(plainKey);
+        final byte[] key = hashKey(plainKey.getBytes(charset));
         return new SecretKeySpec(key, ALGORITHM);
     }
 
@@ -91,10 +81,44 @@ public final class AESCipher implements SymmetricCipher<String> {
         return kgen.generateKey();
     }
 
+    private static byte[] hashKey(byte[] rawKey) {
+        try {
+            return MessageDigest.getInstance(HASH_VERSION).digest(rawKey);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return new byte[0];
+        }
+    }
+
+    private static String generatePassword(int count) {
+        List<Character> list = Stream.concat(
+                getRandomAlphabets(count, true),
+                getRandomAlphabets(count, false)
+        ).collect(Collectors.toList());
+        list.addAll(getRandomNumbers(count).collect(Collectors.toList()));
+        Collections.shuffle(list);
+        return list.subList(0, count).stream().collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+    }
+
+    private static Stream<Character> getRandomAlphabets(int count, boolean upperCase) {
+        int randomNumberOrigin = 97;
+        int randomNumberBound = 123;
+
+        if (upperCase) {
+            randomNumberOrigin = 65;
+            randomNumberBound = 91;
+        }
+
+        return new SecureRandom().ints(count, randomNumberOrigin, randomNumberBound).mapToObj(data -> (char) data);
+    }
+
+    private static Stream<Character> getRandomNumbers(int count) {
+        return new SecureRandom().ints(count, 48, 58).mapToObj(data -> (char) data);
+    }
+
     @Override
     public String encrypt(String plainData) {
         try {
-//            return Base64.encode(encrypt(plainData.getBytes(charset)));
             return new String(Base64.getMimeEncoder().encode(encrypt(plainData.getBytes(charset))), charset);
         } catch (InvalidKeyException e) {
             e.printStackTrace();
@@ -139,5 +163,4 @@ public final class AESCipher implements SymmetricCipher<String> {
         cipher.init(Cipher.DECRYPT_MODE, secretKey, initVector);
         return cipher.doFinal(input);
     }
-
 }
